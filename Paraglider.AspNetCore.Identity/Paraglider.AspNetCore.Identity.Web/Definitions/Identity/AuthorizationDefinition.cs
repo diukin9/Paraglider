@@ -1,8 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Paraglider.AspNetCore.Identity.Infrastructure;
-using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
+﻿using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 using System.Security.Claims;
-using System.Text;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.Identity
 {
@@ -30,6 +27,17 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Identity
                     builder.RequireClaim(ClaimTypes.Role, "StandartUser");
                 });
             });
+
+            //TODO make extension
+            services.AddAuthentication()
+                .AddOAuth("Yandex.ru", "Yandex", config =>
+                {
+                    config.ClientId = configuration["Authentication:Yandex:ClientId"];
+                    config.ClientSecret = configuration["Authentication:Yandex:ClientSecret"];
+                    config.AuthorizationEndpoint = configuration["Authentication:Yandex:AuthorizationEndpoint"];
+                    config.TokenEndpoint = configuration["Authentication:Yandex:TokenEndpoint"];
+                    config.CallbackPath = "/api/yandex-authorization";
+                });
         }
 
         /// <summary>
@@ -39,9 +47,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Identity
         /// <param name="env"></param>
         public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
         {
-            app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
         }

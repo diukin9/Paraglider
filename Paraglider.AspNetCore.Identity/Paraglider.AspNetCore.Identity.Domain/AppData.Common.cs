@@ -11,11 +11,6 @@
         public const string ServiceName = "Paraglider.AspNetCore.Identity";
 
         /// <summary>
-        /// Default policy name
-        /// </summary>
-        public const string PolicyName = "CorsPolicy";
-
-        /// <summary>
         /// "Administrator"
         /// </summary>
         public const string AdministratorRoleName = "Administrator";

@@ -15,34 +15,14 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Cors
         /// <param name="configuration"></param>
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            var origins = configuration.GetSection("Cors")?.GetSection("Origins")?.Value?.Split(',');
-            services.AddCors(options =>
-            {
-                options.AddPolicy(AppData.PolicyName, builder =>
-                {
-                    builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();
-                    if (origins is not { Length: > 0 })
-                    {
-                        return;
-                    }
+            services.AddCors();
+        }
 
-                    if (origins.Contains("*"))
-                    {
-                        builder.AllowAnyHeader();
-                        builder.AllowAnyMethod();
-                        builder.SetIsOriginAllowed(host => true);
-                        builder.AllowCredentials();
-                    }
-                    else
-                    {
-                        foreach (var origin in origins)
-                        {
-                            builder.WithOrigins(origin);
-                        }
-                    }
-                });
-            });
+        public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
+        {
+            app.UseCors(
+                options => options.AllowAnyOrigin().AllowAnyMethod()
+            );
         }
     }
 }
