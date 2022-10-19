@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Paraglider.AspNetCore.Identity.Domain;
 
-namespace Paraglider.AspNetCore.Identity.Infrastructure.Base
+namespace Paraglider.AspNetCore.Identity.Infrastructure.Data.Base
 {
     /// <summary>
     /// Base DbContext with predefined configuration

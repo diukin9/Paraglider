@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Paraglider.AspNetCore.Identity.Infrastructure.Base;
+using Paraglider.AspNetCore.Identity.Infrastructure.Data.Base;
 
-namespace Paraglider.AspNetCore.Identity.Infrastructure
+namespace Paraglider.AspNetCore.Identity.Infrastructure.Data
 {
     /// <summary>
     /// Database context for current application

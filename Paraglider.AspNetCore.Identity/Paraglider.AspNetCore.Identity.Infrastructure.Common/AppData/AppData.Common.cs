@@ -1,4 +1,4 @@
-﻿namespace Paraglider.AspNetCore.Identity.Domain
+﻿namespace Paraglider.AspNetCore.Identity.Infrastructure.AppData
 {
     /// <summary>
     /// Static data container

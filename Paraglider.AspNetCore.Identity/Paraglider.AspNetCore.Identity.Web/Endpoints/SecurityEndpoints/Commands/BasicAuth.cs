@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Paraglider.AspNetCore.Identity.Domain;
-using Paraglider.AspNetCore.Identity.Infrastructure;
+using Paraglider.AspNetCore.Identity.Infrastructure.Data;
+using Paraglider.AspNetCore.Identity.Infrastructure.OperationResults;
 using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.ViewModels;
-using static Paraglider.AspNetCore.Identity.Domain.AppData;
+using static Paraglider.AspNetCore.Identity.Infrastructure.AppData.AppData;
 
 namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Commands
 {

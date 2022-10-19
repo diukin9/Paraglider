@@ -1,4 +1,4 @@
-﻿namespace Paraglider.AspNetCore.Identity.Domain
+﻿namespace Paraglider.AspNetCore.Identity.Infrastructure.AppData
 {
     public static partial class AppData
     {

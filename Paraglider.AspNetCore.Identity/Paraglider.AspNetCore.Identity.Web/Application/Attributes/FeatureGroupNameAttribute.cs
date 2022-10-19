@@ -1,4 +1,4 @@
-﻿namespace Paraglider.AspNetCore.Identity.Web.Application
+﻿namespace Paraglider.AspNetCore.Identity.Web.Application.Attributes
 {
     /// <summary>
     /// Swagger controller group attribute

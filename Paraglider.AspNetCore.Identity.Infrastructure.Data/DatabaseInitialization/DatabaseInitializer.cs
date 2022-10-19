@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Paraglider.AspNetCore.Identity.Infrastructure.DatabaseInitialization
+namespace Paraglider.AspNetCore.Identity.Infrastructure.Data.DatabaseInitialization
 {
     /// <summary>
     /// Database Initializer

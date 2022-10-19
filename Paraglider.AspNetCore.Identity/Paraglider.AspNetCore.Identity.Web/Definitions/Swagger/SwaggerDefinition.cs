@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
-using Paraglider.AspNetCore.Identity.Domain;
-using Paraglider.AspNetCore.Identity.Web.Application;
+using Paraglider.AspNetCore.Identity.Infrastructure.AppData;
+using Paraglider.AspNetCore.Identity.Web.Application.Attributes;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 using Swashbuckle.AspNetCore.SwaggerUI;
 

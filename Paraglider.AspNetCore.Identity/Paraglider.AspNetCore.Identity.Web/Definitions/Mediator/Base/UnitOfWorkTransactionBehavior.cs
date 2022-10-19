@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using Paraglider.AspNetCore.Identity.Infrastructure;
+using Paraglider.AspNetCore.Identity.Infrastructure.Data;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.Mediator.Base
 {

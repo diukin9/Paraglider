@@ -2,7 +2,7 @@
 using static Paraglider.AspNetCore.Identity.Domain.AppData;
 using Paraglider.AspNetCore.Identity.Domain.Exceptions;
 
-namespace Paraglider.AspNetCore.Identity.Web.Application
+namespace Paraglider.AspNetCore.Identity.Web.Application.Attributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class UnAuthorizeAttribute : ActionFilterAttribute
