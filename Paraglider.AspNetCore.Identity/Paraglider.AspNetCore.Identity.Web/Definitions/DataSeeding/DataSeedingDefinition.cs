@@ -1,4 +1,4 @@
-﻿using Paraglider.AspNetCore.Identity.Infrastructure.DatabaseInitialization;
+﻿using Paraglider.AspNetCore.Identity.Infrastructure.Data.DatabaseInitialization;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.DataSeeding

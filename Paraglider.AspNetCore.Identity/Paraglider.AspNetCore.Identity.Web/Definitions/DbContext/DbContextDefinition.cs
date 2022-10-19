@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Paraglider.AspNetCore.Identity.Infrastructure;
+using Paraglider.AspNetCore.Identity.Infrastructure.Data;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.DbContext
@@ -32,7 +32,6 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.DbContext
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddTransient<IdentityErrorDescriber>();
-            services.AddTransient<ApplicationUserStore>();
         }
     }
 }

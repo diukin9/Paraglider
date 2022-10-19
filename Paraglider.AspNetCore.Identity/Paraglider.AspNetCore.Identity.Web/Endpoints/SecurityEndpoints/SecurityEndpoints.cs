@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Paraglider.AspNetCore.Identity.Domain;
-using Paraglider.AspNetCore.Identity.Web.Application;
+using Paraglider.AspNetCore.Identity.Infrastructure.OperationResults;
+using Paraglider.AspNetCore.Identity.Web.Application.Attributes;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Commands;
 using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.ViewModels;

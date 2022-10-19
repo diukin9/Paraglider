@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Net;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Paraglider.AspNetCore.Identity.Infrastructure;
-using Paraglider.AspNetCore.Identity.Web.Application;
-using System.Net;
-using System.Security.Claims;
-using static Paraglider.AspNetCore.Identity.Domain.AppData;
+using Paraglider.AspNetCore.Identity.Infrastructure.Data;
+using Paraglider.AspNetCore.Identity.Web.Application.Attributes;
+using static Paraglider.AspNetCore.Identity.Infrastructure.AppData.AppData;
 
 namespace Paraglider.AspNetCore.Identity.Web.Controllers
 {
@@ -30,7 +30,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Controllers
         [FeatureGroupName("Security")]
         public IActionResult YandexAuthenticate([FromQuery] string provider, [FromQuery] string returnUrl = "/")
         {
-            if (provider != Enum.GetName(typeof(AuthProvider), AuthProvider.Yandex))
+            if (provider != Enum.GetName(typeof(ExternalAuthProvider), ExternalAuthProvider.Yandex))
             {
                 _logger.LogError(Messages.InvalidExternalAuthProvider(provider));
                 return BadRequest(Messages.InvalidExternalAuthProvider(provider));
@@ -55,7 +55,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Controllers
 
             var externalId = info.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
             var email = info.Principal.Claims.Single(c => c.Type == ClaimTypes.Email).Value;
-            var provider = (AuthProvider)Enum.Parse(typeof(AuthProvider), info.LoginProvider);
+            var provider = (ExternalAuthProvider) Enum.Parse(typeof(ExternalAuthProvider), info.LoginProvider);
 
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey)
                 ?? await _userManager.FindByEmailAsync(info.Principal.Claims.Single(c => c.Type == ClaimTypes.Email).Value)
@@ -74,7 +74,8 @@ namespace Paraglider.AspNetCore.Identity.Web.Controllers
                 var externalInfo = new ExternalInfo()
                 {
                     ExternalId = info.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value,
-                    ExternalProvider = (AuthProvider)Enum.Parse(typeof(AuthProvider), info.LoginProvider)
+                    ExternalProvider =
+                        (ExternalAuthProvider) Enum.Parse(typeof(ExternalAuthProvider), info.LoginProvider)
                 };
 
                 user = new ApplicationUser()

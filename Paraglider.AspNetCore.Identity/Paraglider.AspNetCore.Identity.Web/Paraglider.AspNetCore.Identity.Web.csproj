@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="wwwroot\**" />
-    <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="wwwroot\**" />
-    <None Remove="wwwroot\**" />
+      <Compile Remove="wwwroot\**"/>
+      <Content Remove="wwwroot\**"/>
+      <EmbeddedResource Remove="wwwroot\**"/>
+      <None Remove="wwwroot\**"/>
+      <Compile Remove="Endpoints\SecurityEndpoints\Queries\**"/>
+      <EmbeddedResource Remove="Endpoints\SecurityEndpoints\Queries\**"/>
+      <None Remove="Endpoints\SecurityEndpoints\Queries\**"/>
+      <Content Remove="Endpoints\SecurityEndpoints\Queries\**"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -18,26 +22,30 @@
     <PackageReference Include="Automapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="FluentValidation" Version="11.2.2" />
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
-    <PackageReference Include="MediatR" Version="11.0.0" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10" />
-    <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+      <PackageReference Include="FluentValidation" Version="11.2.2"/>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2"/>
+      <PackageReference Include="MediatR" Version="11.0.0"/>
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.10"/>
+      <PackageReference Include="Serilog.AspNetCore" Version="6.0.1"/>
+      <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Paraglider.AspNetCore.Identity.Infrastructure\Paraglider.AspNetCore.Identity.Infrastructure.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Paraglider.AspNetCore.Identity.Infrastructure.Data\Paraglider.AspNetCore.Identity.Infrastructure.Data.csproj"/>
+        <ProjectReference Include="..\Paraglider.AspNetCore.Identity.Infrastructure.Common\Paraglider.AspNetCore.Identity.Infrastructure.Common.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Endpoints\SecurityEndpoints\Queries\" />
-    <Folder Include="Endpoints\SecurityEndpoints\ViewModels\MapperConfigurations\" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Endpoints\SecurityEndpoints\ViewModels\MapperConfigurations\"/>
+    </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+    <ProjectExtensions>
+        <VisualStudio>
+            <UserProperties properties_4launchsettings_1json__JsonSchema=""/>
+        </VisualStudio>
+    </ProjectExtensions>
 
 
 </Project>

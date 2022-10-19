@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Paraglider.AspNetCore.Identity.Domain;
-using Paraglider.AspNetCore.Identity.Infrastructure;
-using static Paraglider.AspNetCore.Identity.Domain.AppData;
+using Paraglider.AspNetCore.Identity.Infrastructure.Data;
+using Paraglider.AspNetCore.Identity.Infrastructure.OperationResults;
+using static Paraglider.AspNetCore.Identity.Infrastructure.AppData.AppData;
 
 namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Commands
 {
