@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using static Paraglider.AspNetCore.Identity.Domain.AppData;
 using Paraglider.AspNetCore.Identity.Domain.Exceptions;
+using static Paraglider.AspNetCore.Identity.Infrastructure.AppData.AppData;
 
 namespace Paraglider.AspNetCore.Identity.Web.Application.Attributes
 {
