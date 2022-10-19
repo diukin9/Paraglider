@@ -2,7 +2,7 @@
 
 namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.ViewModels
 {
-    public class BasicAuthorizeViewModel : IViewModel
+    public class BasicAuthViewModel : IViewModel
     {
         public string Email { get; set; }
         public string Password { get; set; }

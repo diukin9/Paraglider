@@ -6,7 +6,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Identity
     /// <summary>
     /// Authorization Policy registration
     /// </summary>
-    public class AuthorizationDefinition : AppDefinition
+    public class AuthDefinition : AppDefinition
     {
         /// <summary>
         /// Configure services for current application
@@ -15,29 +15,14 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Identity
         /// <param name="configuration"></param>
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Administrator", builder =>
-                {
-                    builder.RequireClaim(ClaimTypes.Role, "Administrator");
-                });
-
-                options.AddPolicy("StandartUser", builder =>
-                {
-                    builder.RequireClaim(ClaimTypes.Role, "StandartUser");
-                });
-            });
-
-            //TODO make extension
             services.AddAuthentication()
-                .AddOAuth("Yandex.ru", "Yandex", config =>
+                .AddYandex(config =>
                 {
                     config.ClientId = configuration["Authentication:Yandex:ClientId"];
                     config.ClientSecret = configuration["Authentication:Yandex:ClientSecret"];
-                    config.AuthorizationEndpoint = configuration["Authentication:Yandex:AuthorizationEndpoint"];
-                    config.TokenEndpoint = configuration["Authentication:Yandex:TokenEndpoint"];
-                    config.CallbackPath = "/api/yandex-authorization";
                 });
+
+            services.AddAuthorization();
         }
 
         /// <summary>

@@ -9,10 +9,5 @@
         /// Current service name
         /// </summary>
         public const string ServiceName = "Paraglider.AspNetCore.Identity";
-
-        /// <summary>
-        /// "Administrator"
-        /// </summary>
-        public const string AdministratorRoleName = "Administrator";
     }
 }

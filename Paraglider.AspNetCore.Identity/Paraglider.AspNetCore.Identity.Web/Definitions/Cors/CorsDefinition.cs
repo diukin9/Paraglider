@@ -1,5 +1,4 @@
-﻿using Paraglider.AspNetCore.Identity.Domain;
-using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
+﻿using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.Cors
 {
@@ -15,14 +14,39 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Cors
         /// <param name="configuration"></param>
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddCors();
+            var origins = configuration.GetSection("Cors")?.GetSection("Origins")?.Value?.Split(',');
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyHeader();
+                    builder.AllowAnyMethod();
+                    if (origins is not { Length: > 0 })
+                    {
+                        return;
+                    }
+
+                    if (origins.Contains("*"))
+                    {
+                        builder.AllowAnyHeader();
+                        builder.AllowAnyMethod();
+                        builder.SetIsOriginAllowed(host => true);
+                        builder.AllowCredentials();
+                    }
+                    else
+                    {
+                        foreach (var origin in origins)
+                        {
+                            builder.WithOrigins(origin);
+                        }
+                    }
+                });
+            });
         }
 
         public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
         {
-            app.UseCors(
-                options => options.AllowAnyOrigin().AllowAnyMethod()
-            );
+            app.UseCors();
         }
     }
 }

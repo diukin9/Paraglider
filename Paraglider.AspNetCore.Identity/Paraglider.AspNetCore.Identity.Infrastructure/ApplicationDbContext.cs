@@ -9,5 +9,7 @@ namespace Paraglider.AspNetCore.Identity.Infrastructure
     public class ApplicationDbContext : DbContextBase
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
+
+        public DbSet<ExternalInfo> ExternalInfo { get; set; }
     }
 }

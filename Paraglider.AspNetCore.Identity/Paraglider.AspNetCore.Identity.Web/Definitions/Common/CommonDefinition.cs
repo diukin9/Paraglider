@@ -20,7 +20,6 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Common
             services.AddMemoryCache();
 
             services.AddMvc();
-            services.AddRazorPages();
         }
 
         /// <summary>
@@ -31,7 +30,6 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Common
         public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
         {
             app.UseHttpsRedirection();
-            app.MapRazorPages();
             app.MapDefaultControllerRoute();
         }
     }

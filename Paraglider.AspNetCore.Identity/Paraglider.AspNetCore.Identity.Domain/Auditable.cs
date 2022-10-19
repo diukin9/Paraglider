@@ -3,8 +3,10 @@
     /// <summary>
     /// Represents 'Audit-able' table from the Property Database
     /// </summary>
-    public abstract class Auditable : Identity, IAuditable
+    public abstract class Auditable : IHaveId, IAuditable
     {
+        public Guid Id { get; set; }
+
         /// <summary>
         /// DateTime when entity created.
         /// It's never changed
@@ -26,6 +28,5 @@
         /// Author of last updated
         /// </summary>
         public string UpdatedBy { get; set; }
-
     }
 }

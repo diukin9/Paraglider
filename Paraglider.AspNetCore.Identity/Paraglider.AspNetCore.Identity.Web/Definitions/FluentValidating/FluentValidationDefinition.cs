@@ -17,7 +17,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.FluentValidating
         /// <param name="configuration"></param>
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IValidator<BasicAuthorizeViewModel>, BasicAuthorizeValidator>();
+            services.AddScoped<IValidator<BasicAuthViewModel>, BasicAuthValidator>();
 
             services.AddValidatorsFromAssembly(typeof(Program).Assembly);
         }

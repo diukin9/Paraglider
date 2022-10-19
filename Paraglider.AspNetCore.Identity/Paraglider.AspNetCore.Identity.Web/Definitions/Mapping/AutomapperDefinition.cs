@@ -13,7 +13,9 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Mapping
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-            => services.AddAutoMapper(typeof(Program));
+        {
+            services.AddAutoMapper(typeof(Program));
+        }
 
         /// <summary>
         /// Configure application for current application
