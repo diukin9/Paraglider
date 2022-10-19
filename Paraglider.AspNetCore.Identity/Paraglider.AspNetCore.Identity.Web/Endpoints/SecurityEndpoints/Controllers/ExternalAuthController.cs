@@ -28,7 +28,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Controllers
         [HttpGet]
         [Route("api/external-auth")]
         [FeatureGroupName("Security")]
-        public IActionResult YandexAuthenticate([FromQuery] string provider, [FromQuery] string returnUrl = "/")
+        public IActionResult ExternalAuth([FromQuery] string provider, [FromQuery] string returnUrl = "/")
         {
             if (provider != Enum.GetName(typeof(AuthProvider), AuthProvider.Yandex))
             {

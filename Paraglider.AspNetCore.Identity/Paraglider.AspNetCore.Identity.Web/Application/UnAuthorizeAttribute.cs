@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
 using static Paraglider.AspNetCore.Identity.Domain.AppData;
+using Paraglider.AspNetCore.Identity.Domain.Exceptions;
 
 namespace Paraglider.AspNetCore.Identity.Web.Application
 {
@@ -14,9 +14,8 @@ namespace Paraglider.AspNetCore.Identity.Web.Application
                 return base.OnActionExecutionAsync(context, next);
             }
 
-            //TODO create custom exception
             var email = context.HttpContext.User.Identity!.Name;
-            context!.Result = new BadRequestObjectResult(Messages.UserAlreadyAuthorized(email!));
+            context!.Result = new StatuCodeResultWithMessage(403, Messages.UserAlreadyAuthorized(email!));
             return Task.CompletedTask;
         }
     }

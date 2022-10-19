@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 
 namespace Paraglider.AspNetCore.Identity.Infrastructure
 {
@@ -13,15 +12,5 @@ namespace Paraglider.AspNetCore.Identity.Infrastructure
         {
 
         }
-
-        //public override Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken = default)
-        //    => Users
-        //        .Include(x => x.ApplicationUserProfile).ThenInclude(x => x.Permissions)
-        //        .FirstOrDefaultAsync(u => u.Id.ToString() == userId, cancellationToken: cancellationToken)!;
-
-        //public override Task<ApplicationUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default)
-        //    => Users
-        //        .Include(x => x.ApplicationUserProfile).ThenInclude(x => x.Permissions)
-        //        .FirstOrDefaultAsync(u => u.NormalizedUserName.ToString() == normalizedUserName, cancellationToken: cancellationToken)!;
     }
 }

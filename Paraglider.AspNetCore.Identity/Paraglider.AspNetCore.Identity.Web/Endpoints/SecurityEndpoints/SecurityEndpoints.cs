@@ -17,8 +17,6 @@ namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints
         }
 
         [UnAuthorize]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(401)]
         [FeatureGroupName("Security")]
         private async Task<OperationResult> BasicAuth(
             [FromServices] IMediator mediator, 
@@ -26,9 +24,10 @@ namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints
             HttpContext context)
         => await mediator.Send(new BasicAuth.Command(model), context.RequestAborted);
 
+        [Microsoft.AspNetCore.Authorization.Authorize]
+        [FeatureGroupName("Security")]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
-        [FeatureGroupName("Security")]
         private async Task<OperationResult> LogOut([FromServices] IMediator mediator, HttpContext context)
         => await mediator.Send(new LogOut.Command(), context.RequestAborted);
     }
