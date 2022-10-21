@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Paraglider.AspNetCore.Identity.Infrastructure.Data.Base;
+using Paraglider.AspNetCore.Identity.Domain.Entities;
 
-namespace Paraglider.AspNetCore.Identity.Infrastructure.Data
+namespace Paraglider.AspNetCore.Identity.Domain
 {
     /// <summary>
     /// Database context for current application
@@ -10,7 +10,7 @@ namespace Paraglider.AspNetCore.Identity.Infrastructure.Data
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        public DbSet<ExternalInfo> ExternalInfo { get; set; }
+        public DbSet<ExternalInfo> ExternalInfo { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

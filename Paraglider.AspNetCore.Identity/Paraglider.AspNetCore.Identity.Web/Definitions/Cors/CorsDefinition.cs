@@ -44,6 +44,11 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Cors
             });
         }
 
+        /// <summary>
+        /// Configure application for current application
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
         {
             app.UseCors();

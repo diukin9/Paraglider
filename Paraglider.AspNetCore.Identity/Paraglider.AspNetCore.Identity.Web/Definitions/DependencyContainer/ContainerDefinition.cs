@@ -1,6 +1,7 @@
-﻿using Paraglider.AspNetCore.Identity.Web.Application.Services;
+﻿using Paraglider.AspNetCore.Identity.Domain.Entities;
+using Paraglider.AspNetCore.Identity.Domain.Services;
+using Paraglider.AspNetCore.Identity.Domain.Services.Interfaces;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
-using Paraglider.AspNetCore.Identity.Web.Definitions.Identity;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.DependencyContainer
 {
@@ -12,7 +13,9 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.DependencyContainer
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton(configuration);
-            services.AddTransient<IAccountService, AccountService>();
+
+            services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IUserService, UserService>();
         }
     }
 }

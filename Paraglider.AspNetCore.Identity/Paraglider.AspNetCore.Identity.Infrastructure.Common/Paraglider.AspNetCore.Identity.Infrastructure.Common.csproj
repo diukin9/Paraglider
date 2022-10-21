@@ -8,15 +8,18 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.10.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.10" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
 	</ItemGroup>
 
-  <ItemGroup>
-      <ProjectReference Include="..\Paraglider.AspNetCore.Identity.Domain.Core\Paraglider.AspNetCore.Identity.Domain.Core.csproj"/>
-  </ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Exceptions\" />
+	  <Folder Include="Extensions\" />
+	</ItemGroup>
 
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.OpenApi.Models;
-using Paraglider.AspNetCore.Identity.Infrastructure.AppData;
-using Paraglider.AspNetCore.Identity.Web.Application.Attributes;
+using Paraglider.AspNetCore.Identity.Infrastructure;
+using Paraglider.AspNetCore.Identity.Infrastructure.Attributes;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -11,6 +11,11 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Swagger
     /// </summary>
     public class SwaggerDefinition : AppDefinition
     {
+        /// <summary>
+        /// Configure services for current application
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             services.AddEndpointsApiExplorer();
@@ -44,6 +49,11 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Swagger
             });
         }
 
+        /// <summary>
+        /// Configure application for current application
+        /// </summary>
+        /// <param name="app"></param>
+        /// <param name="env"></param>
         public override void ConfigureApplication(WebApplication app, IWebHostEnvironment environment)
         {
             if (!app.Environment.IsDevelopment())

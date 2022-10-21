@@ -2,6 +2,12 @@
 {
     public static class AppDefinitionExtensions
     {
+        /// <summary>
+        /// Filling the 'Configure Services' method
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="builder"></param>
+        /// <param name="entryPointsAssembly"></param>
         public static void AddDefinitions(this IServiceCollection source, WebApplicationBuilder builder, params Type[] entryPointsAssembly)
         {
             var definitions = new List<IAppDefinition>();
@@ -17,6 +23,10 @@
             source.AddSingleton(definitions as IReadOnlyCollection<IAppDefinition>);
         }
 
+        /// <summary>
+        /// Filling the 'Configure' method
+        /// </summary>
+        /// <param name="source"></param>
         public static void UseDefinitions(this WebApplication source)
         {
             var definitions = source.Services.GetRequiredService<IReadOnlyCollection<IAppDefinition>>();

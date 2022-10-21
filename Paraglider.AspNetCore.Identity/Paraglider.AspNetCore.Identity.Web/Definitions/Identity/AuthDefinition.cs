@@ -21,7 +21,6 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Identity
                     config.ClientId = configuration["Authentication:Yandex:ClientId"];
                     config.ClientSecret = configuration["Authentication:Yandex:ClientSecret"];
                 });
-
             services.AddAuthorization();
         }
 

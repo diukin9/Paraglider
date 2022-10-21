@@ -1,9 +1,11 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Paraglider.AspNetCore.Identity.Infrastructure.OperationResults;
-using Paraglider.AspNetCore.Identity.Web.Application.Attributes;
+using Paraglider.AspNetCore.Identity.Infrastructure.Attributes;
+using Paraglider.AspNetCore.Identity.Infrastructure.Responses.OperationResult;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Commands;
+using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Queries;
 using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.ViewModels;
 
 namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints
@@ -18,17 +20,14 @@ namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints
 
         [UnAuthorize]
         [FeatureGroupName("Security")]
-        private async Task<OperationResult> BasicAuth(
-            [FromServices] IMediator mediator, 
-            [FromBody] BasicAuthViewModel model, 
-            HttpContext context)
-        => await mediator.Send(new BasicAuth.Command(model), context.RequestAborted);
+        private async Task<OperationResult> BasicAuth([FromServices] IMediator mediator, [FromBody] BasicAuthViewModel model, HttpContext context)
+            => await mediator.Send(new BasicAuthCommand(model), context.RequestAborted);
 
-        [Microsoft.AspNetCore.Authorization.Authorize]
-        [FeatureGroupName("Security")]
+        [Authorize]
         [ProducesResponseType(200)]
         [ProducesResponseType(401)]
+        [FeatureGroupName("Security")]
         private async Task<OperationResult> LogOut([FromServices] IMediator mediator, HttpContext context)
-        => await mediator.Send(new LogOut.Command(), context.RequestAborted);
+            => await mediator.Send(new PostLogOutRequest(), context.RequestAborted);
     }
 }

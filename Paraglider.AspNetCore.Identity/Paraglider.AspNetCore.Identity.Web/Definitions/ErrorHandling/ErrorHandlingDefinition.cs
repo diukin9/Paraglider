@@ -16,7 +16,8 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.ErrorHandling
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env) =>
+        public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
+        {
             app.UseExceptionHandler(error => error.Run(async context =>
             {
                 context.Response.ContentType = "application/json";
@@ -45,5 +46,6 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.ErrorHandling
                     }
                 }
             }));
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Paraglider.AspNetCore.Identity.Infrastructure.Data;
+using Paraglider.AspNetCore.Identity.Domain;
+using Paraglider.AspNetCore.Identity.Domain.Entities;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.DbContext
