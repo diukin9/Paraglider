@@ -6,6 +6,6 @@
     public enum ExternalAuthProvider
     {
         Yandex,
-        Vk
+        Vkontakte
     }
 }

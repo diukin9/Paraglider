@@ -1,5 +1,4 @@
 ﻿using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
-using System.Security.Claims;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.Identity
 {
@@ -20,6 +19,11 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Identity
                 {
                     config.ClientId = configuration["Authentication:Yandex:ClientId"];
                     config.ClientSecret = configuration["Authentication:Yandex:ClientSecret"];
+                })
+                .AddVkontakte(config =>
+                {
+                    config.ClientId = configuration["Authentication:Vkontakte:ClientId"];
+                    config.ClientSecret = configuration["Authentication:Vkontakte:ClientSecret"];
                 });
             services.AddAuthorization();
         }
