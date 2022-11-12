@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.API", "Paraglider.Application\Paraglider.API.csproj", "{BE68F287-AC03-44D0-A277-F91DC5AB9D72}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Data", "Paraglider.Data\Paraglider.Data.csproj", "{E8742138-91F1-455A-AE40-5F4FA9782B13}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Domain.Core", "Paraglider.Domain.Core\Paraglider.Domain.Core.csproj", "{1FEDAE9F-0887-4B6F-93FD-1150D76D02B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Infrastructure.Common", "Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj", "{B4177DA2-B293-428E-98FD-BF307A36743D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{325F9549-2FBC-4574-9999-9CC84452AC6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{F003D42D-2584-4DF3-A823-2C16F90A1D2D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{C44F003B-047B-42FE-A1BC-AD909372308A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8742138-91F1-455A-AE40-5F4FA9782B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8742138-91F1-455A-AE40-5F4FA9782B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8742138-91F1-455A-AE40-5F4FA9782B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8742138-91F1-455A-AE40-5F4FA9782B13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FEDAE9F-0887-4B6F-93FD-1150D76D02B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FEDAE9F-0887-4B6F-93FD-1150D76D02B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FEDAE9F-0887-4B6F-93FD-1150D76D02B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FEDAE9F-0887-4B6F-93FD-1150D76D02B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4177DA2-B293-428E-98FD-BF307A36743D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4177DA2-B293-428E-98FD-BF307A36743D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4177DA2-B293-428E-98FD-BF307A36743D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4177DA2-B293-428E-98FD-BF307A36743D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E8742138-91F1-455A-AE40-5F4FA9782B13} = {F003D42D-2584-4DF3-A823-2C16F90A1D2D}
+		{1FEDAE9F-0887-4B6F-93FD-1150D76D02B9} = {325F9549-2FBC-4574-9999-9CC84452AC6B}
+		{B4177DA2-B293-428E-98FD-BF307A36743D} = {C44F003B-047B-42FE-A1BC-AD909372308A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4D5E558-541B-4569-BAF2-341EEDD5C1EE}
+	EndGlobalSection
+EndGlobal
