@@ -52,7 +52,7 @@ namespace Paraglider.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WPItemDescs",
+                name: "WeddingComponentsDesc",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -71,7 +71,7 @@ namespace Paraglider.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WPItemDescs", x => x.Id);
+                    table.PrimaryKey("PK_WeddingComponentsDesc", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -156,15 +156,15 @@ namespace Paraglider.Data.Migrations
                     Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
                     Sum = table.Column<decimal>(type: "numeric", nullable: true),
-                    WPItemDescId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingComponentDescId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Payments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payments_WPItemDescs_WPItemDescId",
-                        column: x => x.WPItemDescId,
-                        principalTable: "WPItemDescs",
+                        name: "FK_Payments_WeddingComponentsDesc_WeddingComponentDescId",
+                        column: x => x.WeddingComponentDescId,
+                        principalTable: "WeddingComponentsDesc",
                         principalColumn: "Id");
                 });
 
@@ -297,13 +297,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -356,13 +356,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -397,13 +397,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -438,13 +438,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -479,13 +479,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -523,13 +523,13 @@ namespace Paraglider.Data.Migrations
                     ManufactureYear = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     MinRentLength = table.Column<TimeSpan>(type: "interval", nullable: true),
                     Capacity = table.Column<int>(type: "integer", nullable: true),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -564,13 +564,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -605,13 +605,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -646,13 +646,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -687,13 +687,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -728,13 +728,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -769,13 +769,13 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
                     ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -1176,9 +1176,9 @@ namespace Paraglider.Data.Migrations
                 column: "AlbumId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Payments_WPItemDescId",
+                name: "IX_Payments_WeddingComponentDescId",
                 table: "Payments",
-                column: "WPItemDescId");
+                column: "WeddingComponentDescId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Photographers_AlbumId",
@@ -1466,7 +1466,7 @@ namespace Paraglider.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "WPItemDescs");
+                name: "WeddingComponentsDesc");
 
             migrationBuilder.DropTable(
                 name: "BanquetHalls");

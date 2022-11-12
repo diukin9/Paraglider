@@ -584,12 +584,12 @@ namespace Paraglider.Data.Migrations
                     b.Property<decimal?>("Sum")
                         .HasColumnType("numeric");
 
-                    b.Property<Guid?>("WPItemDescId")
+                    b.Property<Guid?>("WeddingComponentDescId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WPItemDescId");
+                    b.HasIndex("WeddingComponentDescId");
 
                     b.ToTable("Payments");
                 });
@@ -1006,7 +1006,7 @@ namespace Paraglider.Data.Migrations
                     b.ToTable("Videographers");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.Entities.WPItemDesc", b =>
+            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingComponentDesc", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -1020,7 +1020,7 @@ namespace Paraglider.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WPItemDescs");
+                    b.ToTable("WeddingComponentsDesc");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.WeddingPlanning", b =>
@@ -1162,7 +1162,7 @@ namespace Paraglider.Data.Migrations
             modelBuilder.Entity("Paraglider.Domain.Entities.Category", b =>
                 {
                     b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
-                        .WithMany("UsedCategories")
+                        .WithMany("SelectedCategories")
                         .HasForeignKey("WeddingPlanningId");
                 });
 
@@ -1442,9 +1442,9 @@ namespace Paraglider.Data.Migrations
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Payment", b =>
                 {
-                    b.HasOne("Paraglider.Domain.Entities.WPItemDesc", null)
+                    b.HasOne("Paraglider.Domain.Entities.WeddingComponentDesc", null)
                         .WithMany("Payments")
-                        .HasForeignKey("WPItemDescId");
+                        .HasForeignKey("WeddingComponentDescId");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.PhotoStudio", b =>
@@ -1940,26 +1940,26 @@ namespace Paraglider.Data.Migrations
                     b.Navigation("ExternalInfo");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.Entities.WPItemDesc", b =>
+            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingComponentDesc", b =>
                 {
                     b.OwnsOne("Paraglider.Domain.ValueObjects.TimeStamp", "TimeStamp", b1 =>
                         {
-                            b1.Property<Guid>("WPItemDescId")
+                            b1.Property<Guid>("WeddingComponentDescId")
                                 .HasColumnType("uuid");
 
                             b1.Property<int>("Type")
                                 .HasColumnType("integer");
 
-                            b1.HasKey("WPItemDescId");
+                            b1.HasKey("WeddingComponentDescId");
 
-                            b1.ToTable("WPItemDescs");
+                            b1.ToTable("WeddingComponentsDesc");
 
                             b1.WithOwner()
-                                .HasForeignKey("WPItemDescId");
+                                .HasForeignKey("WeddingComponentDescId");
 
                             b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "ExactTime", b2 =>
                                 {
-                                    b2.Property<Guid>("TimeStampWPItemDescId")
+                                    b2.Property<Guid>("TimeStampWeddingComponentDescId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<int>("Hour")
@@ -1974,17 +1974,17 @@ namespace Paraglider.Data.Migrations
                                         .HasColumnType("integer")
                                         .HasColumnName("ExactTime_Second");
 
-                                    b2.HasKey("TimeStampWPItemDescId");
+                                    b2.HasKey("TimeStampWeddingComponentDescId");
 
-                                    b2.ToTable("WPItemDescs");
+                                    b2.ToTable("WeddingComponentsDesc");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TimeStampWPItemDescId");
+                                        .HasForeignKey("TimeStampWeddingComponentDescId");
                                 });
 
                             b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "IntervalEnd", b2 =>
                                 {
-                                    b2.Property<Guid>("TimeStampWPItemDescId")
+                                    b2.Property<Guid>("TimeStampWeddingComponentDescId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<int>("Hour")
@@ -1999,17 +1999,17 @@ namespace Paraglider.Data.Migrations
                                         .HasColumnType("integer")
                                         .HasColumnName("IntervalEnd_Second");
 
-                                    b2.HasKey("TimeStampWPItemDescId");
+                                    b2.HasKey("TimeStampWeddingComponentDescId");
 
-                                    b2.ToTable("WPItemDescs");
+                                    b2.ToTable("WeddingComponentsDesc");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TimeStampWPItemDescId");
+                                        .HasForeignKey("TimeStampWeddingComponentDescId");
                                 });
 
                             b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "IntervalStart", b2 =>
                                 {
-                                    b2.Property<Guid>("TimeStampWPItemDescId")
+                                    b2.Property<Guid>("TimeStampWeddingComponentDescId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<int>("Hour")
@@ -2024,12 +2024,12 @@ namespace Paraglider.Data.Migrations
                                         .HasColumnType("integer")
                                         .HasColumnName("IntervalStart_Second");
 
-                                    b2.HasKey("TimeStampWPItemDescId");
+                                    b2.HasKey("TimeStampWeddingComponentDescId");
 
-                                    b2.ToTable("WPItemDescs");
+                                    b2.ToTable("WeddingComponentsDesc");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TimeStampWPItemDescId");
+                                        .HasForeignKey("TimeStampWeddingComponentDescId");
                                 });
 
                             b1.Navigation("ExactTime");
@@ -2046,7 +2046,7 @@ namespace Paraglider.Data.Migrations
             modelBuilder.Entity("Paraglider.Domain.Entities.WeddingPlanning", b =>
                 {
                     b.HasOne("Paraglider.Domain.Entities.ApplicationUser", null)
-                        .WithMany("WeddingPlans")
+                        .WithMany("WeddingPlannings")
                         .HasForeignKey("ApplicationUserId");
                 });
 
@@ -2059,7 +2059,7 @@ namespace Paraglider.Data.Migrations
                 {
                     b.Navigation("ExternalAuthInfo");
 
-                    b.Navigation("WeddingPlans");
+                    b.Navigation("WeddingPlannings");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.BanquetHall", b =>
@@ -2144,7 +2144,7 @@ namespace Paraglider.Data.Migrations
                     b.Navigation("Services");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.Entities.WPItemDesc", b =>
+            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingComponentDesc", b =>
                 {
                     b.Navigation("Payments");
                 });
@@ -2169,11 +2169,11 @@ namespace Paraglider.Data.Migrations
 
                     b.Navigation("Registrars");
 
+                    b.Navigation("SelectedCategories");
+
                     b.Navigation("Stylists");
 
                     b.Navigation("Toastmasters");
-
-                    b.Navigation("UsedCategories");
 
                     b.Navigation("Videographers");
                 });
