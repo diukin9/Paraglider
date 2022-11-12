@@ -3,7 +3,7 @@
     /// <summary>
     /// Identifier common interface
     /// </summary>
-    public interface IHaveId
+    public interface IIdentified
     {
         /// <summary>
         /// Identifier

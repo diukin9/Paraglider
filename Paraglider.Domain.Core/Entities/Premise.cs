@@ -3,7 +3,7 @@ using Paraglider.Domain.ValueObjects;
 
 namespace Paraglider.Domain.Entities
 {
-    public class Premise : IHaveId
+    public class Premise : IIdentified
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;

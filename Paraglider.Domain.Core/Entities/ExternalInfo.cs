@@ -6,7 +6,7 @@ namespace Paraglider.Domain.Entities
     /// <summary>
     /// External login information
     /// </summary>
-    public class TempExternalInfo : IHaveId
+    public class ExternalInfo : IIdentified
     {
         /// <summary>
         /// Identifier

@@ -6,14 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Paraglider.Data;
-using Paraglider.Domain;
 
 #nullable disable
 
-namespace Paraglider.Domain.Data.Migrations
+namespace Paraglider.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221112065714_Initial")]
+    [Migration("20221112100657_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -264,11 +263,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -277,7 +279,9 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("BanquetHalls");
                 });
@@ -292,12 +296,12 @@ namespace Paraglider.Domain.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("Categories");
                 });
@@ -317,11 +321,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -330,7 +337,9 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("Caterings");
                 });
@@ -354,6 +363,44 @@ namespace Paraglider.Domain.Data.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("Paraglider.Domain.Entities.Confectioner", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AlbumId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("WeddingPlanningId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
+
+                    b.ToTable("Confectioners");
+                });
+
             modelBuilder.Entity("Paraglider.Domain.Entities.Decorator", b =>
                 {
                     b.Property<Guid>("Id")
@@ -369,11 +416,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -382,7 +432,9 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("Decorators");
                 });
@@ -402,11 +454,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -415,9 +470,36 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("Djs");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.ExternalInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ApplicationUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ExternalProvider")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("ExternalProvider", "ExternalId");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Limousine", b =>
@@ -438,6 +520,9 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime?>("ManufactureYear")
                         .HasColumnType("timestamp with time zone");
 
@@ -448,7 +533,7 @@ namespace Paraglider.Domain.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -457,7 +542,9 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("Limousines");
                 });
@@ -525,11 +612,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -538,7 +628,9 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("PhotoStudios");
                 });
@@ -558,11 +650,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -571,7 +666,9 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("Photographers");
                 });
@@ -607,6 +704,44 @@ namespace Paraglider.Domain.Data.Migrations
                     b.ToTable("Premises");
                 });
 
+            modelBuilder.Entity("Paraglider.Domain.Entities.Registrar", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AlbumId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("WeddingPlanningId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("CityId");
+
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
+
+                    b.ToTable("Registrars");
+                });
+
             modelBuilder.Entity("Paraglider.Domain.Entities.Review", b =>
                 {
                     b.Property<Guid>("Id")
@@ -627,6 +762,9 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<Guid?>("CateringId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("ConfectionerId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("DecoratorId")
                         .HasColumnType("uuid");
 
@@ -645,22 +783,19 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<Guid?>("PhotographerId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("RegistrarId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("StylistId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Text")
                         .HasColumnType("text");
 
+                    b.Property<Guid?>("ToastmasterId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid?>("VideographerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("WeddingCakeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("WeddingHostId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("WeddingRegistrarId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -668,6 +803,8 @@ namespace Paraglider.Domain.Data.Migrations
                     b.HasIndex("BanquetHallId");
 
                     b.HasIndex("CateringId");
+
+                    b.HasIndex("ConfectionerId");
 
                     b.HasIndex("DecoratorId");
 
@@ -679,17 +816,83 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("PhotographerId");
 
+                    b.HasIndex("RegistrarId");
+
                     b.HasIndex("StylistId");
+
+                    b.HasIndex("ToastmasterId");
 
                     b.HasIndex("VideographerId");
 
-                    b.HasIndex("WeddingCakeId");
-
-                    b.HasIndex("WeddingHostId");
-
-                    b.HasIndex("WeddingRegistrarId");
-
                     b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CateringId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ConfectionerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("DecoratorId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("DjId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("PhotoStudioId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("PhotographerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("RegistrarId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("StylistId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ToastmasterId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("VideographerId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CateringId");
+
+                    b.HasIndex("ConfectionerId");
+
+                    b.HasIndex("DecoratorId");
+
+                    b.HasIndex("DjId");
+
+                    b.HasIndex("PhotoStudioId");
+
+                    b.HasIndex("PhotographerId");
+
+                    b.HasIndex("RegistrarId");
+
+                    b.HasIndex("StylistId");
+
+                    b.HasIndex("ToastmasterId");
+
+                    b.HasIndex("VideographerId");
+
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Stylist", b =>
@@ -707,11 +910,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -720,34 +926,49 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("Stylists");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.Entities.TempExternalInfo", b =>
+            modelBuilder.Entity("Paraglider.Domain.Entities.Toastmaster", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ApplicationUserId")
+                    b.Property<Guid>("AlbumId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ExternalId")
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ExternalProvider")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("WeddingPlanningId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ExternalProvider", "ExternalId");
+                    b.HasIndex("AlbumId");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("CityId");
 
-                    b.ToTable("ExternalInfo");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
+
+                    b.ToTable("Toastmasters");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Videographer", b =>
@@ -765,11 +986,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ExternalInfoId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("WeddingPlanId")
+                    b.Property<Guid?>("WeddingPlanningId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -778,7 +1002,9 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("CityId");
 
-                    b.HasIndex("WeddingPlanId");
+                    b.HasIndex("ExternalInfoId");
+
+                    b.HasIndex("WeddingPlanningId");
 
                     b.ToTable("Videographers");
                 });
@@ -800,73 +1026,7 @@ namespace Paraglider.Domain.Data.Migrations
                     b.ToTable("WPItemDescs");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingCake", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AlbumId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CityId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("WeddingPlanId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlbumId");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("WeddingPlanId");
-
-                    b.ToTable("WeddingCakes");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingHost", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AlbumId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CityId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("WeddingPlanId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlbumId");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("WeddingPlanId");
-
-                    b.ToTable("WeddingHosts");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingPlan", b =>
+            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingPlanning", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -885,108 +1045,7 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.ToTable("WeddingPlans");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingRegistrar", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AlbumId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("CityId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("WeddingPlanId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlbumId");
-
-                    b.HasIndex("CityId");
-
-                    b.HasIndex("WeddingPlanId");
-
-                    b.ToTable("WeddingRegistrars");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingService", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("CateringId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("DecoratorId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("DjId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("PhotoStudioId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("PhotographerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("StylistId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("VideographerId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("WeddingCakeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("WeddingHostId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("WeddingRegistrarId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CateringId");
-
-                    b.HasIndex("DecoratorId");
-
-                    b.HasIndex("DjId");
-
-                    b.HasIndex("PhotoStudioId");
-
-                    b.HasIndex("PhotographerId");
-
-                    b.HasIndex("StylistId");
-
-                    b.HasIndex("VideographerId");
-
-                    b.HasIndex("WeddingCakeId");
-
-                    b.HasIndex("WeddingHostId");
-
-                    b.HasIndex("WeddingRegistrarId");
-
-                    b.ToTable("WeddingServices");
+                    b.ToTable("WeddingPlannings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -1065,9 +1124,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("BanquetHalls")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1087,28 +1152,6 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("BanquetHallId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("BanquetHallId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("BanquetHallId");
-
-                            b1.ToTable("BanquetHalls");
-
-                            b1.WithOwner()
-                                .HasForeignKey("BanquetHallId");
-                        });
-
                     b.Navigation("Album");
 
                     b.Navigation("City");
@@ -1116,15 +1159,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
+                    b.Navigation("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Category", b =>
                 {
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("UsedCategories")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Catering", b =>
@@ -1141,9 +1183,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("Caterings")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1163,26 +1211,56 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("CateringId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
+                    b.Navigation("Album");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Contacts")
+                        .IsRequired();
+
+                    b.Navigation("ExternalInfo");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.Confectioner", b =>
+                {
+                    b.HasOne("Paraglider.Domain.Entities.Album", "Album")
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
+                        .WithMany("Confectioners")
+                        .HasForeignKey("WeddingPlanningId");
+
+                    b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
-                            b1.Property<Guid>("CateringId")
+                            b1.Property<Guid>("ConfectionerId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Id")
+                            b1.Property<string>("PhoneNumber")
                                 .IsRequired()
                                 .HasColumnType("text")
-                                .HasColumnName("ExternalId");
+                                .HasColumnName("PhoneNumber");
 
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
+                            b1.HasKey("ConfectionerId");
 
-                            b1.HasKey("CateringId");
-
-                            b1.ToTable("Caterings");
+                            b1.ToTable("Confectioners");
 
                             b1.WithOwner()
-                                .HasForeignKey("CateringId");
+                                .HasForeignKey("ConfectionerId");
                         });
 
                     b.Navigation("Album");
@@ -1192,8 +1270,7 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
+                    b.Navigation("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Decorator", b =>
@@ -1210,9 +1287,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("Decorators")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1232,28 +1315,6 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("DecoratorId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("DecoratorId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("DecoratorId");
-
-                            b1.ToTable("Decorators");
-
-                            b1.WithOwner()
-                                .HasForeignKey("DecoratorId");
-                        });
-
                     b.Navigation("Album");
 
                     b.Navigation("City");
@@ -1261,8 +1322,7 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
+                    b.Navigation("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Dj", b =>
@@ -1279,9 +1339,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("Djs")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1301,28 +1367,6 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("DjId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("DjId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("DjId");
-
-                            b1.ToTable("Djs");
-
-                            b1.WithOwner()
-                                .HasForeignKey("DjId");
-                        });
-
                     b.Navigation("Album");
 
                     b.Navigation("City");
@@ -1330,8 +1374,14 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
+                    b.Navigation("ExternalInfo");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.ExternalInfo", b =>
+                {
+                    b.HasOne("Paraglider.Domain.Entities.ApplicationUser", null)
+                        .WithMany("ExternalAuthInfo")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Limousine", b =>
@@ -1348,9 +1398,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("Limousines")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1370,28 +1426,6 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("LimousineId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("LimousineId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("LimousineId");
-
-                            b1.ToTable("Limousines");
-
-                            b1.WithOwner()
-                                .HasForeignKey("LimousineId");
-                        });
-
                     b.Navigation("Album");
 
                     b.Navigation("City");
@@ -1399,8 +1433,7 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
+                    b.Navigation("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Media", b =>
@@ -1431,9 +1464,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("PhotoStudios")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1453,28 +1492,6 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("PhotoStudioId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("PhotoStudioId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("PhotoStudioId");
-
-                            b1.ToTable("PhotoStudios");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PhotoStudioId");
-                        });
-
                     b.Navigation("Album");
 
                     b.Navigation("City");
@@ -1482,8 +1499,7 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
+                    b.Navigation("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Photographer", b =>
@@ -1500,9 +1516,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("Photographers")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1522,28 +1544,6 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("PhotographerId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("PhotographerId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("PhotographerId");
-
-                            b1.ToTable("Photographers");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PhotographerId");
-                        });
-
                     b.Navigation("Album");
 
                     b.Navigation("City");
@@ -1551,8 +1551,7 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
+                    b.Navigation("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Premise", b =>
@@ -1618,6 +1617,58 @@ namespace Paraglider.Domain.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Paraglider.Domain.Entities.Registrar", b =>
+                {
+                    b.HasOne("Paraglider.Domain.Entities.Album", "Album")
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
+                        .WithMany("Registrars")
+                        .HasForeignKey("WeddingPlanningId");
+
+                    b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
+                        {
+                            b1.Property<Guid>("RegistrarId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("PhoneNumber")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("PhoneNumber");
+
+                            b1.HasKey("RegistrarId");
+
+                            b1.ToTable("Registrars");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RegistrarId");
+                        });
+
+                    b.Navigation("Album");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Contacts")
+                        .IsRequired();
+
+                    b.Navigation("ExternalInfo");
+                });
+
             modelBuilder.Entity("Paraglider.Domain.Entities.Review", b =>
                 {
                     b.HasOne("Paraglider.Domain.Entities.BanquetHall", null)
@@ -1627,6 +1678,10 @@ namespace Paraglider.Domain.Data.Migrations
                     b.HasOne("Paraglider.Domain.Entities.Catering", null)
                         .WithMany("Reviews")
                         .HasForeignKey("CateringId");
+
+                    b.HasOne("Paraglider.Domain.Entities.Confectioner", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("ConfectionerId");
 
                     b.HasOne("Paraglider.Domain.Entities.Decorator", null)
                         .WithMany("Reviews")
@@ -1648,25 +1703,88 @@ namespace Paraglider.Domain.Data.Migrations
                         .WithMany("Reviews")
                         .HasForeignKey("PhotographerId");
 
+                    b.HasOne("Paraglider.Domain.Entities.Registrar", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("RegistrarId");
+
                     b.HasOne("Paraglider.Domain.Entities.Stylist", null)
                         .WithMany("Reviews")
                         .HasForeignKey("StylistId");
 
+                    b.HasOne("Paraglider.Domain.Entities.Toastmaster", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("ToastmasterId");
+
                     b.HasOne("Paraglider.Domain.Entities.Videographer", null)
                         .WithMany("Reviews")
                         .HasForeignKey("VideographerId");
+                });
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingCake", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("WeddingCakeId");
+            modelBuilder.Entity("Paraglider.Domain.Entities.Service", b =>
+                {
+                    b.HasOne("Paraglider.Domain.Entities.Catering", null)
+                        .WithMany("Services")
+                        .HasForeignKey("CateringId");
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingHost", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("WeddingHostId");
+                    b.HasOne("Paraglider.Domain.Entities.Confectioner", null)
+                        .WithMany("Services")
+                        .HasForeignKey("ConfectionerId");
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingRegistrar", null)
-                        .WithMany("Reviews")
-                        .HasForeignKey("WeddingRegistrarId");
+                    b.HasOne("Paraglider.Domain.Entities.Decorator", null)
+                        .WithMany("Services")
+                        .HasForeignKey("DecoratorId");
+
+                    b.HasOne("Paraglider.Domain.Entities.Dj", null)
+                        .WithMany("Services")
+                        .HasForeignKey("DjId");
+
+                    b.HasOne("Paraglider.Domain.Entities.PhotoStudio", null)
+                        .WithMany("Services")
+                        .HasForeignKey("PhotoStudioId");
+
+                    b.HasOne("Paraglider.Domain.Entities.Photographer", null)
+                        .WithMany("Services")
+                        .HasForeignKey("PhotographerId");
+
+                    b.HasOne("Paraglider.Domain.Entities.Registrar", null)
+                        .WithMany("Services")
+                        .HasForeignKey("RegistrarId");
+
+                    b.HasOne("Paraglider.Domain.Entities.Stylist", null)
+                        .WithMany("Services")
+                        .HasForeignKey("StylistId");
+
+                    b.HasOne("Paraglider.Domain.Entities.Toastmaster", null)
+                        .WithMany("Services")
+                        .HasForeignKey("ToastmasterId");
+
+                    b.HasOne("Paraglider.Domain.Entities.Videographer", null)
+                        .WithMany("Services")
+                        .HasForeignKey("VideographerId");
+
+                    b.OwnsOne("Paraglider.Domain.ValueObjects.Price", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal?>("Max")
+                                .HasColumnType("numeric")
+                                .HasColumnName("MaxPrice");
+
+                            b1.Property<decimal?>("Min")
+                                .HasColumnType("numeric")
+                                .HasColumnName("MinPrice");
+
+                            b1.HasKey("ServiceId");
+
+                            b1.ToTable("Services");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceId");
+                        });
+
+                    b.Navigation("Price")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Stylist", b =>
@@ -1683,9 +1801,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("Stylists")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1705,26 +1829,56 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("StylistId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
+                    b.Navigation("Album");
+
+                    b.Navigation("City");
+
+                    b.Navigation("Contacts")
+                        .IsRequired();
+
+                    b.Navigation("ExternalInfo");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.Toastmaster", b =>
+                {
+                    b.HasOne("Paraglider.Domain.Entities.Album", "Album")
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
+                        .WithMany("Toastmasters")
+                        .HasForeignKey("WeddingPlanningId");
+
+                    b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
-                            b1.Property<Guid>("StylistId")
+                            b1.Property<Guid>("ToastmasterId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Id")
+                            b1.Property<string>("PhoneNumber")
                                 .IsRequired()
                                 .HasColumnType("text")
-                                .HasColumnName("ExternalId");
+                                .HasColumnName("PhoneNumber");
 
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
+                            b1.HasKey("ToastmasterId");
 
-                            b1.HasKey("StylistId");
-
-                            b1.ToTable("Stylists");
+                            b1.ToTable("Toastmasters");
 
                             b1.WithOwner()
-                                .HasForeignKey("StylistId");
+                                .HasForeignKey("ToastmasterId");
                         });
 
                     b.Navigation("Album");
@@ -1734,15 +1888,7 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.TempExternalInfo", b =>
-                {
-                    b.HasOne("Paraglider.Domain.Entities.ApplicationUser", null)
-                        .WithMany("ExternalInfo")
-                        .HasForeignKey("ApplicationUserId");
+                    b.Navigation("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Videographer", b =>
@@ -1759,9 +1905,15 @@ namespace Paraglider.Domain.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
+                    b.HasOne("Paraglider.Domain.Entities.ExternalInfo", "ExternalInfo")
+                        .WithMany()
+                        .HasForeignKey("ExternalInfoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.WeddingPlanning", null)
                         .WithMany("Videographers")
-                        .HasForeignKey("WeddingPlanId");
+                        .HasForeignKey("WeddingPlanningId");
 
                     b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
                         {
@@ -1781,28 +1933,6 @@ namespace Paraglider.Domain.Data.Migrations
                                 .HasForeignKey("VideographerId");
                         });
 
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("VideographerId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("VideographerId");
-
-                            b1.ToTable("Videographers");
-
-                            b1.WithOwner()
-                                .HasForeignKey("VideographerId");
-                        });
-
                     b.Navigation("Album");
 
                     b.Navigation("City");
@@ -1810,13 +1940,12 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Contacts")
                         .IsRequired();
 
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
+                    b.Navigation("ExternalInfo");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.WPItemDesc", b =>
                 {
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.Time", "TimeData", b1 =>
+                    b.OwnsOne("Paraglider.Domain.ValueObjects.TimeStamp", "TimeStamp", b1 =>
                         {
                             b1.Property<Guid>("WPItemDescId")
                                 .HasColumnType("uuid");
@@ -1833,7 +1962,7 @@ namespace Paraglider.Domain.Data.Migrations
 
                             b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "ExactTime", b2 =>
                                 {
-                                    b2.Property<Guid>("TimeWPItemDescId")
+                                    b2.Property<Guid>("TimeStampWPItemDescId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<int>("Hour")
@@ -1848,17 +1977,17 @@ namespace Paraglider.Domain.Data.Migrations
                                         .HasColumnType("integer")
                                         .HasColumnName("ExactTime_Second");
 
-                                    b2.HasKey("TimeWPItemDescId");
+                                    b2.HasKey("TimeStampWPItemDescId");
 
                                     b2.ToTable("WPItemDescs");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TimeWPItemDescId");
+                                        .HasForeignKey("TimeStampWPItemDescId");
                                 });
 
                             b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "IntervalEnd", b2 =>
                                 {
-                                    b2.Property<Guid>("TimeWPItemDescId")
+                                    b2.Property<Guid>("TimeStampWPItemDescId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<int>("Hour")
@@ -1873,17 +2002,17 @@ namespace Paraglider.Domain.Data.Migrations
                                         .HasColumnType("integer")
                                         .HasColumnName("IntervalEnd_Second");
 
-                                    b2.HasKey("TimeWPItemDescId");
+                                    b2.HasKey("TimeStampWPItemDescId");
 
                                     b2.ToTable("WPItemDescs");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TimeWPItemDescId");
+                                        .HasForeignKey("TimeStampWPItemDescId");
                                 });
 
                             b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "IntervalStart", b2 =>
                                 {
-                                    b2.Property<Guid>("TimeWPItemDescId")
+                                    b2.Property<Guid>("TimeStampWPItemDescId")
                                         .HasColumnType("uuid");
 
                                     b2.Property<int>("Hour")
@@ -1898,12 +2027,12 @@ namespace Paraglider.Domain.Data.Migrations
                                         .HasColumnType("integer")
                                         .HasColumnName("IntervalStart_Second");
 
-                                    b2.HasKey("TimeWPItemDescId");
+                                    b2.HasKey("TimeStampWPItemDescId");
 
                                     b2.ToTable("WPItemDescs");
 
                                     b2.WithOwner()
-                                        .HasForeignKey("TimeWPItemDescId");
+                                        .HasForeignKey("TimeStampWPItemDescId");
                                 });
 
                             b1.Navigation("ExactTime");
@@ -1913,289 +2042,15 @@ namespace Paraglider.Domain.Data.Migrations
                             b1.Navigation("IntervalStart");
                         });
 
-                    b.Navigation("TimeData")
+                    b.Navigation("TimeStamp")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingCake", b =>
-                {
-                    b.HasOne("Paraglider.Domain.Entities.Album", "Album")
-                        .WithMany()
-                        .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Paraglider.Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
-                        .WithMany("WeddingCakes")
-                        .HasForeignKey("WeddingPlanId");
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
-                        {
-                            b1.Property<Guid>("WeddingCakeId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("PhoneNumber")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("PhoneNumber");
-
-                            b1.HasKey("WeddingCakeId");
-
-                            b1.ToTable("WeddingCakes");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeddingCakeId");
-                        });
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("WeddingCakeId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("WeddingCakeId");
-
-                            b1.ToTable("WeddingCakes");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeddingCakeId");
-                        });
-
-                    b.Navigation("Album");
-
-                    b.Navigation("City");
-
-                    b.Navigation("Contacts")
-                        .IsRequired();
-
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingHost", b =>
-                {
-                    b.HasOne("Paraglider.Domain.Entities.Album", "Album")
-                        .WithMany()
-                        .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Paraglider.Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
-                        .WithMany("WeddingHosts")
-                        .HasForeignKey("WeddingPlanId");
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
-                        {
-                            b1.Property<Guid>("WeddingHostId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("PhoneNumber")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("PhoneNumber");
-
-                            b1.HasKey("WeddingHostId");
-
-                            b1.ToTable("WeddingHosts");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeddingHostId");
-                        });
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("WeddingHostId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("WeddingHostId");
-
-                            b1.ToTable("WeddingHosts");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeddingHostId");
-                        });
-
-                    b.Navigation("Album");
-
-                    b.Navigation("City");
-
-                    b.Navigation("Contacts")
-                        .IsRequired();
-
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingPlan", b =>
+            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingPlanning", b =>
                 {
                     b.HasOne("Paraglider.Domain.Entities.ApplicationUser", null)
-                        .WithMany("Plans")
+                        .WithMany("WeddingPlans")
                         .HasForeignKey("ApplicationUserId");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingRegistrar", b =>
-                {
-                    b.HasOne("Paraglider.Domain.Entities.Album", "Album")
-                        .WithMany()
-                        .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Paraglider.Domain.Entities.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Paraglider.Domain.Entities.WeddingPlan", null)
-                        .WithMany("Registrars")
-                        .HasForeignKey("WeddingPlanId");
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.Contacts", "Contacts", b1 =>
-                        {
-                            b1.Property<Guid>("WeddingRegistrarId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("PhoneNumber")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("PhoneNumber");
-
-                            b1.HasKey("WeddingRegistrarId");
-
-                            b1.ToTable("WeddingRegistrars");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeddingRegistrarId");
-                        });
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.ExternalInfo", "ExternalInfo", b1 =>
-                        {
-                            b1.Property<Guid>("WeddingRegistrarId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<string>("Id")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("ExternalId");
-
-                            b1.Property<int>("Provider")
-                                .HasColumnType("integer")
-                                .HasColumnName("Provider");
-
-                            b1.HasKey("WeddingRegistrarId");
-
-                            b1.ToTable("WeddingRegistrars");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeddingRegistrarId");
-                        });
-
-                    b.Navigation("Album");
-
-                    b.Navigation("City");
-
-                    b.Navigation("Contacts")
-                        .IsRequired();
-
-                    b.Navigation("ExternalInfo")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingService", b =>
-                {
-                    b.HasOne("Paraglider.Domain.Entities.Catering", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("CateringId");
-
-                    b.HasOne("Paraglider.Domain.Entities.Decorator", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("DecoratorId");
-
-                    b.HasOne("Paraglider.Domain.Entities.Dj", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("DjId");
-
-                    b.HasOne("Paraglider.Domain.Entities.PhotoStudio", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("PhotoStudioId");
-
-                    b.HasOne("Paraglider.Domain.Entities.Photographer", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("PhotographerId");
-
-                    b.HasOne("Paraglider.Domain.Entities.Stylist", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("StylistId");
-
-                    b.HasOne("Paraglider.Domain.Entities.Videographer", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("VideographerId");
-
-                    b.HasOne("Paraglider.Domain.Entities.WeddingCake", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("WeddingCakeId");
-
-                    b.HasOne("Paraglider.Domain.Entities.WeddingHost", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("WeddingHostId");
-
-                    b.HasOne("Paraglider.Domain.Entities.WeddingRegistrar", null)
-                        .WithMany("WeddingServices")
-                        .HasForeignKey("WeddingRegistrarId");
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.Price", "Price", b1 =>
-                        {
-                            b1.Property<Guid>("WeddingServiceId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<decimal?>("Max")
-                                .HasColumnType("numeric")
-                                .HasColumnName("MaxPrice");
-
-                            b1.Property<decimal?>("Min")
-                                .HasColumnType("numeric")
-                                .HasColumnName("MinPrice");
-
-                            b1.HasKey("WeddingServiceId");
-
-                            b1.ToTable("WeddingServices");
-
-                            b1.WithOwner()
-                                .HasForeignKey("WeddingServiceId");
-                        });
-
-                    b.Navigation("Price")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Album", b =>
@@ -2205,9 +2060,9 @@ namespace Paraglider.Domain.Data.Migrations
 
             modelBuilder.Entity("Paraglider.Domain.Entities.ApplicationUser", b =>
                 {
-                    b.Navigation("ExternalInfo");
+                    b.Navigation("ExternalAuthInfo");
 
-                    b.Navigation("Plans");
+                    b.Navigation("WeddingPlans");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.BanquetHall", b =>
@@ -2221,21 +2076,28 @@ namespace Paraglider.Domain.Data.Migrations
                 {
                     b.Navigation("Reviews");
 
-                    b.Navigation("WeddingServices");
+                    b.Navigation("Services");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.Confectioner", b =>
+                {
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Decorator", b =>
                 {
                     b.Navigation("Reviews");
 
-                    b.Navigation("WeddingServices");
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Dj", b =>
                 {
                     b.Navigation("Reviews");
 
-                    b.Navigation("WeddingServices");
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Limousine", b =>
@@ -2247,28 +2109,42 @@ namespace Paraglider.Domain.Data.Migrations
                 {
                     b.Navigation("Reviews");
 
-                    b.Navigation("WeddingServices");
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Photographer", b =>
                 {
                     b.Navigation("Reviews");
 
-                    b.Navigation("WeddingServices");
+                    b.Navigation("Services");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.Registrar", b =>
+                {
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Stylist", b =>
                 {
                     b.Navigation("Reviews");
 
-                    b.Navigation("WeddingServices");
+                    b.Navigation("Services");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.Toastmaster", b =>
+                {
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Videographer", b =>
                 {
                     b.Navigation("Reviews");
 
-                    b.Navigation("WeddingServices");
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.WPItemDesc", b =>
@@ -2276,25 +2152,13 @@ namespace Paraglider.Domain.Data.Migrations
                     b.Navigation("Payments");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingCake", b =>
-                {
-                    b.Navigation("Reviews");
-
-                    b.Navigation("WeddingServices");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingHost", b =>
-                {
-                    b.Navigation("Reviews");
-
-                    b.Navigation("WeddingServices");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingPlan", b =>
+            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingPlanning", b =>
                 {
                     b.Navigation("BanquetHalls");
 
                     b.Navigation("Caterings");
+
+                    b.Navigation("Confectioners");
 
                     b.Navigation("Decorators");
 
@@ -2310,20 +2174,11 @@ namespace Paraglider.Domain.Data.Migrations
 
                     b.Navigation("Stylists");
 
+                    b.Navigation("Toastmasters");
+
                     b.Navigation("UsedCategories");
 
                     b.Navigation("Videographers");
-
-                    b.Navigation("WeddingCakes");
-
-                    b.Navigation("WeddingHosts");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.WeddingRegistrar", b =>
-                {
-                    b.Navigation("Reviews");
-
-                    b.Navigation("WeddingServices");
                 });
 #pragma warning restore 612, 618
         }

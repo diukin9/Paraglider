@@ -44,7 +44,7 @@ namespace Paraglider.Domain.Services.Interfaces
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Task<OperationResult<ApplicationUser>> FindByExternalInfo(TempExternalInfo info);
+        public Task<OperationResult<ApplicationUser>> FindByExternalInfo(ExternalInfo info);
 
         /// <summary>
         /// Create a user using an external provider

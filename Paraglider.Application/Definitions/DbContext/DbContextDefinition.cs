@@ -21,7 +21,7 @@ namespace Paraglider.Web.Definitions.DbContext
         {
             services.AddDbContext<ApplicationDbContext>(config =>
             {
-                config.UseNpgsql("Host=localhost;Port=5432;Database=paragliderDb;Username=postgres;Password=2Hi7go22;Pooling=true;");
+                config.UseNpgsql(configuration["ConnectionStrings:DefaultConnection"]);
             });
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(config =>

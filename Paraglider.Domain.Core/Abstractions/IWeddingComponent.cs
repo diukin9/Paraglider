@@ -3,7 +3,7 @@ using Paraglider.Domain.ValueObjects;
 
 namespace Paraglider.Domain.Abstractions
 {
-    public interface IWPItem
+    public interface IWeddingComponent : IIdentified
     {
         public string Name { get; set; }
         public string? Description { get; set; }

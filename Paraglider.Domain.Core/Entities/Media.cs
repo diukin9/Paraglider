@@ -3,7 +3,7 @@ using Paraglider.Domain.Enums;
 
 namespace Paraglider.Domain.Entities
 {
-    public class Media : IHaveId 
+    public class Media : IIdentified 
     {
         public Guid Id { get; set; }
         public MediaType Type { get; set; }

@@ -2,7 +2,7 @@
 
 namespace Paraglider.Domain.Entities
 {
-    public class Category : IHaveId
+    public class Category : IIdentified
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;

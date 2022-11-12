@@ -4,7 +4,10 @@ namespace Paraglider.Domain.ValueObjects
 {
     public class Contacts
     {
-        public Contacts() { }
+        public Contacts() 
+        {
+            throw new NotImplementedException();
+        }
 
         public Contacts(string phoneNumber)
         {

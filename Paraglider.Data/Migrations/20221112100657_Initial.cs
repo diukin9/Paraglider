@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Paraglider.Domain.Data.Migrations
+namespace Paraglider.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -58,7 +58,7 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ConfigurationItemId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    TimeDataType = table.Column<int>(name: "TimeData_Type", type: "integer", nullable: false),
+                    TimeStampType = table.Column<int>(name: "TimeStamp_Type", type: "integer", nullable: false),
                     ExactTimeHour = table.Column<int>(name: "ExactTime_Hour", type: "integer", nullable: true),
                     ExactTimeMinute = table.Column<int>(name: "ExactTime_Minute", type: "integer", nullable: true),
                     ExactTimeSecond = table.Column<int>(name: "ExactTime_Second", type: "integer", nullable: true),
@@ -274,7 +274,7 @@ namespace Paraglider.Domain.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WeddingPlans",
+                name: "WeddingPlannings",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -284,9 +284,9 @@ namespace Paraglider.Domain.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WeddingPlans", x => x.Id);
+                    table.PrimaryKey("PK_WeddingPlannings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WeddingPlans_AspNetUsers_ApplicationUserId",
+                        name: "FK_WeddingPlannings_AspNetUsers_ApplicationUserId",
                         column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
@@ -299,12 +299,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -322,9 +321,15 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BanquetHalls_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_BanquetHalls_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_BanquetHalls_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -334,15 +339,15 @@ namespace Paraglider.Domain.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Categories_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_Categories_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -353,12 +358,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -376,9 +380,56 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Caterings_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_Caterings_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Caterings_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Confectioners",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Confectioners", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Confectioners_Albums_AlbumId",
+                        column: x => x.AlbumId,
+                        principalTable: "Albums",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Confectioners_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Confectioners_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Confectioners_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -389,12 +440,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -412,9 +462,15 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Decorators_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_Decorators_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Decorators_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -425,12 +481,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -448,9 +503,15 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Djs_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_Djs_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Djs_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -464,12 +525,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Capacity = table.Column<int>(type: "integer", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -487,9 +547,15 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Limousines_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_Limousines_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Limousines_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -500,12 +566,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -523,9 +588,15 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Photographers_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_Photographers_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Photographers_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -536,12 +607,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -559,9 +629,56 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PhotoStudios_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_PhotoStudios_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PhotoStudios_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Registrars",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Registrars", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Registrars_Albums_AlbumId",
+                        column: x => x.AlbumId,
+                        principalTable: "Albums",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Registrars_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Registrars_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Registrars_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -572,12 +689,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -595,9 +711,56 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Stylists_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_Stylists_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Stylists_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Toastmasters",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Toastmasters", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Toastmasters_Albums_AlbumId",
+                        column: x => x.AlbumId,
+                        principalTable: "Albums",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Toastmasters_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Toastmasters_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Toastmasters_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -608,12 +771,11 @@ namespace Paraglider.Domain.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
+                    ExternalInfoId = table.Column<Guid>(type: "uuid", nullable: false),
                     CityId = table.Column<Guid>(type: "uuid", nullable: false),
                     AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
+                    WeddingPlanningId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -631,117 +793,15 @@ namespace Paraglider.Domain.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Videographers_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WeddingCakes",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
-                    CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WeddingCakes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WeddingCakes_Albums_AlbumId",
-                        column: x => x.AlbumId,
-                        principalTable: "Albums",
+                        name: "FK_Videographers_ExternalInfo_ExternalInfoId",
+                        column: x => x.ExternalInfoId,
+                        principalTable: "ExternalInfo",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_WeddingCakes_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WeddingCakes_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WeddingHosts",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
-                    CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WeddingHosts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WeddingHosts_Albums_AlbumId",
-                        column: x => x.AlbumId,
-                        principalTable: "Albums",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WeddingHosts_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WeddingHosts_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WeddingRegistrars",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    Provider = table.Column<int>(type: "integer", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
-                    CityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
-                    WeddingPlanId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WeddingRegistrars", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WeddingRegistrars_Albums_AlbumId",
-                        column: x => x.AlbumId,
-                        principalTable: "Albums",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WeddingRegistrars_Cities_CityId",
-                        column: x => x.CityId,
-                        principalTable: "Cities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WeddingRegistrars_WeddingPlans_WeddingPlanId",
-                        column: x => x.WeddingPlanId,
-                        principalTable: "WeddingPlans",
+                        name: "FK_Videographers_WeddingPlannings_WeddingPlanningId",
+                        column: x => x.WeddingPlanningId,
+                        principalTable: "WeddingPlannings",
                         principalColumn: "Id");
                 });
 
@@ -787,16 +847,16 @@ namespace Paraglider.Domain.Data.Migrations
                     Evaluation = table.Column<double>(type: "double precision", nullable: false),
                     BanquetHallId = table.Column<Guid>(type: "uuid", nullable: true),
                     CateringId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ConfectionerId = table.Column<Guid>(type: "uuid", nullable: true),
                     DecoratorId = table.Column<Guid>(type: "uuid", nullable: true),
                     DjId = table.Column<Guid>(type: "uuid", nullable: true),
                     LimousineId = table.Column<Guid>(type: "uuid", nullable: true),
                     PhotoStudioId = table.Column<Guid>(type: "uuid", nullable: true),
                     PhotographerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    RegistrarId = table.Column<Guid>(type: "uuid", nullable: true),
                     StylistId = table.Column<Guid>(type: "uuid", nullable: true),
-                    VideographerId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WeddingCakeId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WeddingHostId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WeddingRegistrarId = table.Column<Guid>(type: "uuid", nullable: true)
+                    ToastmasterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    VideographerId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -810,6 +870,11 @@ namespace Paraglider.Domain.Data.Migrations
                         name: "FK_Reviews_Caterings_CateringId",
                         column: x => x.CateringId,
                         principalTable: "Caterings",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reviews_Confectioners_ConfectionerId",
+                        column: x => x.ConfectionerId,
+                        principalTable: "Confectioners",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Reviews_Decorators_DecoratorId",
@@ -837,34 +902,29 @@ namespace Paraglider.Domain.Data.Migrations
                         principalTable: "Photographers",
                         principalColumn: "Id");
                     table.ForeignKey(
+                        name: "FK_Reviews_Registrars_RegistrarId",
+                        column: x => x.RegistrarId,
+                        principalTable: "Registrars",
+                        principalColumn: "Id");
+                    table.ForeignKey(
                         name: "FK_Reviews_Stylists_StylistId",
                         column: x => x.StylistId,
                         principalTable: "Stylists",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Reviews_Toastmasters_ToastmasterId",
+                        column: x => x.ToastmasterId,
+                        principalTable: "Toastmasters",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Reviews_Videographers_VideographerId",
                         column: x => x.VideographerId,
                         principalTable: "Videographers",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reviews_WeddingCakes_WeddingCakeId",
-                        column: x => x.WeddingCakeId,
-                        principalTable: "WeddingCakes",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reviews_WeddingHosts_WeddingHostId",
-                        column: x => x.WeddingHostId,
-                        principalTable: "WeddingHosts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reviews_WeddingRegistrars_WeddingRegistrarId",
-                        column: x => x.WeddingRegistrarId,
-                        principalTable: "WeddingRegistrars",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "WeddingServices",
+                name: "Services",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -873,68 +933,68 @@ namespace Paraglider.Domain.Data.Migrations
                     MaxPrice = table.Column<decimal>(type: "numeric", nullable: true),
                     MinPrice = table.Column<decimal>(type: "numeric", nullable: true),
                     CateringId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ConfectionerId = table.Column<Guid>(type: "uuid", nullable: true),
                     DecoratorId = table.Column<Guid>(type: "uuid", nullable: true),
                     DjId = table.Column<Guid>(type: "uuid", nullable: true),
                     PhotoStudioId = table.Column<Guid>(type: "uuid", nullable: true),
                     PhotographerId = table.Column<Guid>(type: "uuid", nullable: true),
+                    RegistrarId = table.Column<Guid>(type: "uuid", nullable: true),
                     StylistId = table.Column<Guid>(type: "uuid", nullable: true),
-                    VideographerId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WeddingCakeId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WeddingHostId = table.Column<Guid>(type: "uuid", nullable: true),
-                    WeddingRegistrarId = table.Column<Guid>(type: "uuid", nullable: true)
+                    ToastmasterId = table.Column<Guid>(type: "uuid", nullable: true),
+                    VideographerId = table.Column<Guid>(type: "uuid", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WeddingServices", x => x.Id);
+                    table.PrimaryKey("PK_Services", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WeddingServices_Caterings_CateringId",
+                        name: "FK_Services_Caterings_CateringId",
                         column: x => x.CateringId,
                         principalTable: "Caterings",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WeddingServices_Decorators_DecoratorId",
+                        name: "FK_Services_Confectioners_ConfectionerId",
+                        column: x => x.ConfectionerId,
+                        principalTable: "Confectioners",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Services_Decorators_DecoratorId",
                         column: x => x.DecoratorId,
                         principalTable: "Decorators",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WeddingServices_Djs_DjId",
+                        name: "FK_Services_Djs_DjId",
                         column: x => x.DjId,
                         principalTable: "Djs",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WeddingServices_PhotoStudios_PhotoStudioId",
+                        name: "FK_Services_PhotoStudios_PhotoStudioId",
                         column: x => x.PhotoStudioId,
                         principalTable: "PhotoStudios",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WeddingServices_Photographers_PhotographerId",
+                        name: "FK_Services_Photographers_PhotographerId",
                         column: x => x.PhotographerId,
                         principalTable: "Photographers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WeddingServices_Stylists_StylistId",
+                        name: "FK_Services_Registrars_RegistrarId",
+                        column: x => x.RegistrarId,
+                        principalTable: "Registrars",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Services_Stylists_StylistId",
                         column: x => x.StylistId,
                         principalTable: "Stylists",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WeddingServices_Videographers_VideographerId",
+                        name: "FK_Services_Toastmasters_ToastmasterId",
+                        column: x => x.ToastmasterId,
+                        principalTable: "Toastmasters",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Services_Videographers_VideographerId",
                         column: x => x.VideographerId,
                         principalTable: "Videographers",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WeddingServices_WeddingCakes_WeddingCakeId",
-                        column: x => x.WeddingCakeId,
-                        principalTable: "WeddingCakes",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WeddingServices_WeddingHosts_WeddingHostId",
-                        column: x => x.WeddingHostId,
-                        principalTable: "WeddingHosts",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WeddingServices_WeddingRegistrars_WeddingRegistrarId",
-                        column: x => x.WeddingRegistrarId,
-                        principalTable: "WeddingRegistrars",
                         principalColumn: "Id");
                 });
 
@@ -991,14 +1051,19 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BanquetHalls_WeddingPlanId",
+                name: "IX_BanquetHalls_ExternalInfoId",
                 table: "BanquetHalls",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_WeddingPlanId",
+                name: "IX_BanquetHalls_WeddingPlanningId",
+                table: "BanquetHalls",
+                column: "WeddingPlanningId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_WeddingPlanningId",
                 table: "Categories",
-                column: "WeddingPlanId");
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Caterings_AlbumId",
@@ -1011,9 +1076,34 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Caterings_WeddingPlanId",
+                name: "IX_Caterings_ExternalInfoId",
                 table: "Caterings",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Caterings_WeddingPlanningId",
+                table: "Caterings",
+                column: "WeddingPlanningId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Confectioners_AlbumId",
+                table: "Confectioners",
+                column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Confectioners_CityId",
+                table: "Confectioners",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Confectioners_ExternalInfoId",
+                table: "Confectioners",
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Confectioners_WeddingPlanningId",
+                table: "Confectioners",
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Decorators_AlbumId",
@@ -1026,9 +1116,14 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Decorators_WeddingPlanId",
+                name: "IX_Decorators_ExternalInfoId",
                 table: "Decorators",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Decorators_WeddingPlanningId",
+                table: "Decorators",
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Djs_AlbumId",
@@ -1041,9 +1136,14 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Djs_WeddingPlanId",
+                name: "IX_Djs_ExternalInfoId",
                 table: "Djs",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Djs_WeddingPlanningId",
+                table: "Djs",
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExternalInfo_ApplicationUserId",
@@ -1061,9 +1161,14 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Limousines_WeddingPlanId",
+                name: "IX_Limousines_ExternalInfoId",
                 table: "Limousines",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Limousines_WeddingPlanningId",
+                table: "Limousines",
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Medias_AlbumId",
@@ -1086,9 +1191,14 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Photographers_WeddingPlanId",
+                name: "IX_Photographers_ExternalInfoId",
                 table: "Photographers",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photographers_WeddingPlanningId",
+                table: "Photographers",
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PhotoStudios_AlbumId",
@@ -1101,9 +1211,14 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PhotoStudios_WeddingPlanId",
+                name: "IX_PhotoStudios_ExternalInfoId",
                 table: "PhotoStudios",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PhotoStudios_WeddingPlanningId",
+                table: "PhotoStudios",
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Premises_AlbumId",
@@ -1116,6 +1231,26 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "BanquetHallId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Registrars_AlbumId",
+                table: "Registrars",
+                column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Registrars_CityId",
+                table: "Registrars",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Registrars_ExternalInfoId",
+                table: "Registrars",
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Registrars_WeddingPlanningId",
+                table: "Registrars",
+                column: "WeddingPlanningId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_BanquetHallId",
                 table: "Reviews",
                 column: "BanquetHallId");
@@ -1124,6 +1259,11 @@ namespace Paraglider.Domain.Data.Migrations
                 name: "IX_Reviews_CateringId",
                 table: "Reviews",
                 column: "CateringId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ConfectionerId",
+                table: "Reviews",
+                column: "ConfectionerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_DecoratorId",
@@ -1151,9 +1291,19 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "PhotoStudioId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reviews_RegistrarId",
+                table: "Reviews",
+                column: "RegistrarId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_StylistId",
                 table: "Reviews",
                 column: "StylistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_ToastmasterId",
+                table: "Reviews",
+                column: "ToastmasterId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_VideographerId",
@@ -1161,19 +1311,54 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "VideographerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_WeddingCakeId",
-                table: "Reviews",
-                column: "WeddingCakeId");
+                name: "IX_Services_CateringId",
+                table: "Services",
+                column: "CateringId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_WeddingHostId",
-                table: "Reviews",
-                column: "WeddingHostId");
+                name: "IX_Services_ConfectionerId",
+                table: "Services",
+                column: "ConfectionerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_WeddingRegistrarId",
-                table: "Reviews",
-                column: "WeddingRegistrarId");
+                name: "IX_Services_DecoratorId",
+                table: "Services",
+                column: "DecoratorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_DjId",
+                table: "Services",
+                column: "DjId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_PhotographerId",
+                table: "Services",
+                column: "PhotographerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_PhotoStudioId",
+                table: "Services",
+                column: "PhotoStudioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_RegistrarId",
+                table: "Services",
+                column: "RegistrarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_StylistId",
+                table: "Services",
+                column: "StylistId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_ToastmasterId",
+                table: "Services",
+                column: "ToastmasterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_VideographerId",
+                table: "Services",
+                column: "VideographerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Stylists_AlbumId",
@@ -1186,9 +1371,34 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stylists_WeddingPlanId",
+                name: "IX_Stylists_ExternalInfoId",
                 table: "Stylists",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stylists_WeddingPlanningId",
+                table: "Stylists",
+                column: "WeddingPlanningId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Toastmasters_AlbumId",
+                table: "Toastmasters",
+                column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Toastmasters_CityId",
+                table: "Toastmasters",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Toastmasters_ExternalInfoId",
+                table: "Toastmasters",
+                column: "ExternalInfoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Toastmasters_WeddingPlanningId",
+                table: "Toastmasters",
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Videographers_AlbumId",
@@ -1201,109 +1411,19 @@ namespace Paraglider.Domain.Data.Migrations
                 column: "CityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Videographers_WeddingPlanId",
+                name: "IX_Videographers_ExternalInfoId",
                 table: "Videographers",
-                column: "WeddingPlanId");
+                column: "ExternalInfoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WeddingCakes_AlbumId",
-                table: "WeddingCakes",
-                column: "AlbumId");
+                name: "IX_Videographers_WeddingPlanningId",
+                table: "Videographers",
+                column: "WeddingPlanningId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WeddingCakes_CityId",
-                table: "WeddingCakes",
-                column: "CityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingCakes_WeddingPlanId",
-                table: "WeddingCakes",
-                column: "WeddingPlanId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingHosts_AlbumId",
-                table: "WeddingHosts",
-                column: "AlbumId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingHosts_CityId",
-                table: "WeddingHosts",
-                column: "CityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingHosts_WeddingPlanId",
-                table: "WeddingHosts",
-                column: "WeddingPlanId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingPlans_ApplicationUserId",
-                table: "WeddingPlans",
+                name: "IX_WeddingPlannings_ApplicationUserId",
+                table: "WeddingPlannings",
                 column: "ApplicationUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingRegistrars_AlbumId",
-                table: "WeddingRegistrars",
-                column: "AlbumId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingRegistrars_CityId",
-                table: "WeddingRegistrars",
-                column: "CityId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingRegistrars_WeddingPlanId",
-                table: "WeddingRegistrars",
-                column: "WeddingPlanId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_CateringId",
-                table: "WeddingServices",
-                column: "CateringId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_DecoratorId",
-                table: "WeddingServices",
-                column: "DecoratorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_DjId",
-                table: "WeddingServices",
-                column: "DjId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_PhotographerId",
-                table: "WeddingServices",
-                column: "PhotographerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_PhotoStudioId",
-                table: "WeddingServices",
-                column: "PhotoStudioId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_StylistId",
-                table: "WeddingServices",
-                column: "StylistId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_VideographerId",
-                table: "WeddingServices",
-                column: "VideographerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_WeddingCakeId",
-                table: "WeddingServices",
-                column: "WeddingCakeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_WeddingHostId",
-                table: "WeddingServices",
-                column: "WeddingHostId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeddingServices_WeddingRegistrarId",
-                table: "WeddingServices",
-                column: "WeddingRegistrarId");
         }
 
         /// <inheritdoc />
@@ -1328,9 +1448,6 @@ namespace Paraglider.Domain.Data.Migrations
                 name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "ExternalInfo");
-
-            migrationBuilder.DropTable(
                 name: "Medias");
 
             migrationBuilder.DropTable(
@@ -1343,7 +1460,7 @@ namespace Paraglider.Domain.Data.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "WeddingServices");
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -1361,6 +1478,9 @@ namespace Paraglider.Domain.Data.Migrations
                 name: "Caterings");
 
             migrationBuilder.DropTable(
+                name: "Confectioners");
+
+            migrationBuilder.DropTable(
                 name: "Decorators");
 
             migrationBuilder.DropTable(
@@ -1373,25 +1493,25 @@ namespace Paraglider.Domain.Data.Migrations
                 name: "Photographers");
 
             migrationBuilder.DropTable(
+                name: "Registrars");
+
+            migrationBuilder.DropTable(
                 name: "Stylists");
+
+            migrationBuilder.DropTable(
+                name: "Toastmasters");
 
             migrationBuilder.DropTable(
                 name: "Videographers");
 
             migrationBuilder.DropTable(
-                name: "WeddingCakes");
-
-            migrationBuilder.DropTable(
-                name: "WeddingHosts");
-
-            migrationBuilder.DropTable(
-                name: "WeddingRegistrars");
-
-            migrationBuilder.DropTable(
                 name: "Albums");
 
             migrationBuilder.DropTable(
-                name: "WeddingPlans");
+                name: "ExternalInfo");
+
+            migrationBuilder.DropTable(
+                name: "WeddingPlannings");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -1,11 +1,9 @@
-﻿using Paraglider.Domain.Abstractions;
-
-namespace Paraglider.Domain.ValueObjects
+﻿namespace Paraglider.Domain.Abstractions
 {
     /// <summary>
     /// Represents 'Audit-able' table from the Property Database
     /// </summary>
-    public abstract class Auditable : IHaveId, IAuditable
+    public abstract class Auditable : IIdentified, IAuditable
     {
         public Guid Id { get; set; }
 

@@ -69,8 +69,8 @@ namespace Paraglider.Domain.Services
             externalId.ValidateForNull(ref operation);
             if (!operation.IsOk) return operation;
 
-            var user = await _userManager.Users.Include(x => x.ExternalInfo)
-                .Where(x => x.ExternalInfo.Any(y => y.ExternalProvider == provider && y.ExternalId == externalId))
+            var user = await _userManager.Users.Include(x => x.ExternalAuthInfo)
+                .Where(x => x.ExternalAuthInfo.Any(y => y.ExternalProvider == provider && y.ExternalId == externalId))
                 .SingleOrDefaultAsync();
 
             if (user == null) return operation.AddError(Messages.UserNotFound);
@@ -83,7 +83,7 @@ namespace Paraglider.Domain.Services
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public async Task<OperationResult<ApplicationUser>> FindByExternalInfo(TempExternalInfo? info)
+        public async Task<OperationResult<ApplicationUser>> FindByExternalInfo(ExternalInfo? info)
         {
             var operation = new OperationResult<ApplicationUser>();
 
@@ -171,7 +171,7 @@ namespace Paraglider.Domain.Services
             var email = info!.Principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var provider = (ExternalAuthProvider)Enum.Parse(typeof(ExternalAuthProvider), info.LoginProvider);
 
-            var externalInfo = new TempExternalInfo() { ExternalId = externalId!, ExternalProvider = provider };
+            var externalInfo = new ExternalInfo() { ExternalId = externalId!, ExternalProvider = provider };
 
             var user = new ApplicationUser()
             {
@@ -180,7 +180,7 @@ namespace Paraglider.Domain.Services
                 EmailConfirmed = true,
                 FirstName = firstName!,
                 Surname = surname!,
-                ExternalInfo = new List<TempExternalInfo>() { externalInfo }
+                ExternalAuthInfo = new List<ExternalInfo>() { externalInfo }
             };
 
             var createResult = await _userManager.CreateAsync(user);

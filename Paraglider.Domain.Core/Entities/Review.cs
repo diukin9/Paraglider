@@ -2,7 +2,7 @@
 
 namespace Paraglider.Domain.Entities
 {
-    public class Review : IHaveId
+    public class Review : IIdentified
     {
         public Guid Id { get; set; }
         public string Author { get; set; } = null!;

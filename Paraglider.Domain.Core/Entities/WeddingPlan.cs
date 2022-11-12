@@ -2,13 +2,13 @@
 
 namespace Paraglider.Domain.Entities
 {
-    public class WeddingPlanning : IHaveId
+    public class WeddingPlanning : IIdentified
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         public Guid CityId { get; set; }
 
-        public virtual List<Category> UsedCategories { get; set; } = new List<Category>();
+        public virtual List<Category> SelectedCategories { get; set; } = new List<Category>();
 
         public virtual List<Photographer> Photographers { get; set; } = new List<Photographer>();
         public virtual List<Videographer> Videographers { get; set; } = new List<Videographer>();

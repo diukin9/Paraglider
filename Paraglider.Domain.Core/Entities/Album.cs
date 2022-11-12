@@ -2,7 +2,7 @@
 
 namespace Paraglider.Domain.Entities
 {
-    public class Album : IHaveId
+    public class Album : IIdentified
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;

@@ -1,6 +1,6 @@
 ﻿namespace Paraglider.Domain.Enums
 {
-    public enum WPItemStatus
+    public enum SelectedComponentStatus
     {
         PreSelection,
         Agreed,

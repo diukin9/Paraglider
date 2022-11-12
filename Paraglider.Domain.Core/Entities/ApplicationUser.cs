@@ -25,8 +25,8 @@ namespace Paraglider.Domain.Entities
         /// <summary>
         /// External login information
         /// </summary>
-        public virtual List<TempExternalInfo> ExternalInfo { get; set; } = new List<TempExternalInfo>();
+        public virtual List<ExternalInfo> ExternalAuthInfo { get; set; } = new List<ExternalInfo>();
 
-        public virtual List<WeddingPlanning> WeddingPlans { get; set; } = new List<WeddingPlanning>();
+        public virtual List<WeddingPlanning> WeddingPlannings { get; set; } = new List<WeddingPlanning>();
     }
 }

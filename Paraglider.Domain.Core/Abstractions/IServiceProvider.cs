@@ -2,7 +2,7 @@
 
 namespace Paraglider.Domain.Abstractions
 {
-    public interface IHaveWeddingServices
+    public interface IServiceProvider
     {
         public List<Service> Services { get; set; }
     }

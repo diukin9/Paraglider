@@ -3,7 +3,7 @@ using Paraglider.Domain.Enums;
 
 namespace Paraglider.Domain.Entities
 {
-    public class Payment : IHaveId
+    public class Payment : IIdentified
     {
         public Guid Id { get; set; }
         public DateTime Date { get; set; }

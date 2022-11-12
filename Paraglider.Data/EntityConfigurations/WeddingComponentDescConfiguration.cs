@@ -4,9 +4,9 @@ using Paraglider.Domain.Entities;
 
 namespace Paraglider.Data.EntityConfigurations
 {
-    public class WPItemDescConfiguration : IEntityTypeConfiguration<WPItemDesc>
+    public class WeddingComponentDescConfiguration : IEntityTypeConfiguration<WeddingComponentDesc>
     {
-        public void Configure(EntityTypeBuilder<WPItemDesc> builder)
+        public void Configure(EntityTypeBuilder<WeddingComponentDesc> builder)
         {
             builder.OwnsOne(o => o.TimeStamp, p =>
             {

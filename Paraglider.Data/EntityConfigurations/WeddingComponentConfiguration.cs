@@ -4,15 +4,10 @@ using Paraglider.Domain.Abstractions;
 
 namespace Paraglider.Data.EntityConfigurations
 {
-    internal class WPItemConfiguration<T> : IEntityTypeConfiguration<T> where T : class, IWPItem
+    internal class WeddingComponentConfiguration<T> : IEntityTypeConfiguration<T> where T : class, IWeddingComponent
     {
         public void Configure(EntityTypeBuilder<T> builder)
         {
-            builder.OwnsOne(o => o.ExternalInfo, p =>
-            {
-                p.Property(x => x.Id).HasColumnName("ExternalId").IsRequired();
-                p.Property(x => x.Provider).HasColumnName("Provider").IsRequired();
-            });
             builder.OwnsOne(o => o.Contacts, p =>
             {
                 p.Property(x => x.PhoneNumber).HasColumnName("PhoneNumber").IsRequired();
