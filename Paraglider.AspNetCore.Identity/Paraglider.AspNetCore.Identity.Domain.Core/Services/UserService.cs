@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Paraglider.AspNetCore.Identity.Domain.Entities;
 using Paraglider.AspNetCore.Identity.Domain.Enums;
 using Paraglider.AspNetCore.Identity.Domain.Services.Interfaces;
+using Paraglider.AspNetCore.Identity.Infrastructure.Extensions;
 using Paraglider.AspNetCore.Identity.Infrastructure.Responses.OperationResult;
 using System.Security.Claims;
 using static Paraglider.AspNetCore.Identity.Infrastructure.AppData;
@@ -16,10 +17,24 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services
     public class UserService : IUserService
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IHttpContextAccessor _accessor;
 
-        public UserService(UserManager<ApplicationUser> userManager)
+        public UserService(UserManager<ApplicationUser> userManager, IHttpContextAccessor accessor)
         {
             _userManager = userManager;
+            _accessor = accessor;
+        }
+
+        #region Find user
+
+        public async Task<OperationResult<ApplicationUser>> GetCurrentUserAsync()
+        {
+            var operation = new OperationResult<ApplicationUser>();
+
+            var user = await _userManager.GetUserAsync(_accessor!.HttpContext!.User);
+            if (user == null) return operation.AddError(Messages.Auth_NoAuthorizedUser);
+
+            return operation.AddResult(user);
         }
 
         /// <summary>
@@ -27,19 +42,18 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<OperationResult<ApplicationUser>> FindByEmailAsync(string email)
+        public async Task<OperationResult<ApplicationUser>> FindByEmailAsync(string? email)
         {
             var operation = new OperationResult<ApplicationUser>();
 
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                operation.AddError(Messages.UserNotFound);
-                return operation;
-            }
+            email.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
 
-            operation.Result = user;
-            return operation;
+            var user = await _userManager.FindByEmailAsync(email);
+            user.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
+
+            return operation.AddResult(user);
         }
 
         /// <summary>
@@ -48,22 +62,20 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services
         /// <param name="provider"></param>
         /// <param name="externalId"></param>
         /// <returns></returns>
-        public async Task<OperationResult<ApplicationUser>> FindByExternalInfo(ExternalAuthProvider provider, string externalId)
+        public async Task<OperationResult<ApplicationUser>> FindByExternalInfo(ExternalAuthProvider provider, string? externalId)
         {
             var operation = new OperationResult<ApplicationUser>();
+
+            externalId.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
 
             var user = await _userManager.Users.Include(x => x.ExternalInfo)
                 .Where(x => x.ExternalInfo.Any(y => y.ExternalProvider == provider && y.ExternalId == externalId))
                 .SingleOrDefaultAsync();
 
-            if (user == null)
-            {
-                operation.AddError(Messages.UserNotFound);
-                return operation;
-            }
+            if (user == null) return operation.AddError(Messages.UserNotFound);
 
-            operation.Result = user;
-            return operation;
+            return operation.AddResult(user);
         }
 
         /// <summary>
@@ -71,9 +83,18 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public async Task<OperationResult<ApplicationUser>> FindByExternalInfo(ExternalInfo info)
+        public async Task<OperationResult<ApplicationUser>> FindByExternalInfo(TempExternalInfo? info)
         {
-            return await FindByExternalInfo(info.ExternalProvider, info.ExternalId);
+            var operation = new OperationResult<ApplicationUser>();
+
+            info.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
+
+            var findResult = await FindByExternalInfo(info!.ExternalProvider, info.ExternalId);
+            findResult.RescheduleResult(ref operation);
+            if (!operation.IsOk) return operation;
+
+            return operation.AddResult(findResult.Result!);
         }
 
         /// <summary>
@@ -81,19 +102,17 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public async Task<OperationResult<ApplicationUser>> FindByUsernameAsync(string username)
+        public async Task<OperationResult<ApplicationUser>> FindByUsernameAsync(string? username)
         {
             var operation = new OperationResult<ApplicationUser>();
 
-            var user = await _userManager.FindByNameAsync(username);
-            if (user == null)
-            {
-                operation.AddError(Messages.UserNotFound);
-                return operation;
-            }
+            username.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
 
-            operation.Result = user;
-            return operation;
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)return operation.AddError(Messages.UserNotFound);
+
+            return operation.AddResult(user);
         }
 
         /// <summary>
@@ -103,24 +122,29 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services
         /// <returns></returns>
         public async Task<OperationResult<ApplicationUser>> FindUserForExternalAuthAsync(ExternalLoginInfo info)
         {
-            var result = new OperationResult<ApplicationUser>();
+            var operation = new OperationResult<ApplicationUser>();
+
+            info.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
+
             var provider = (ExternalAuthProvider)Enum.Parse(typeof(ExternalAuthProvider), info.LoginProvider);
-            var externalId = info!.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+            var externalId = info!.Principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var email = info.Principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var username = ExternalUsernameTemplate(info.LoginProvider, externalId);
 
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey)
-                ?? (await FindByEmailAsync(info.Principal.Claims.Single(c => c.Type == ClaimTypes.Email).Value)).Result
-                ?? (await FindByUsernameAsync(ExternalUsernameTemplate(info.LoginProvider, externalId))).Result
+                ?? (await FindByEmailAsync(email)).Result
+                ?? (await FindByUsernameAsync(username)).Result
                 ?? (await FindByExternalInfo(provider, externalId)).Result;
 
-            if (user == null)
-            {
-                result.AddError(Messages.UserNotFound);
-                return result;
-            }
+            if (user == null) return operation.AddError(Messages.UserNotFound);
 
-            result.Result = user;
-            return result;
+            return operation.AddResult(user);
         }
+
+        #endregion
+
+        #region Create user
 
         /// <summary>
         /// Create a user using an external provider
@@ -129,42 +153,48 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services
         /// <returns></returns>
         public async Task<OperationResult<ApplicationUser>> CreateUserUsingExternalProvider(ExternalLoginInfo info)
         {
-            var result = new OperationResult<ApplicationUser>();
+            var operation = new OperationResult<ApplicationUser>();
 
-            var externalId = info!.Principal.Claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
-            var email = info!.Principal.Claims.Single(c => c.Type == ClaimTypes.Email).Value;
+            var externalId = info!.Principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            externalId.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
+
+            var firstName = info.Principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
+            firstName.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
+
+            var surname = info.Principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Surname)?.Value;
+            surname.ValidateForNull(ref operation);
+            if (!operation.IsOk) return operation;
+
             var username = ExternalUsernameTemplate(info.LoginProvider, externalId);
-            var firstName = info.Principal.Claims.Single(c => c.Type == ClaimTypes.GivenName).Value;
-            var surname = info.Principal.Claims.Single(c => c.Type == ClaimTypes.Surname).Value;
+            var email = info!.Principal.Claims.SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var provider = (ExternalAuthProvider)Enum.Parse(typeof(ExternalAuthProvider), info.LoginProvider);
 
-            var externalInfo = new ExternalInfo()
-            {
-                ExternalId = externalId,
-                ExternalProvider = provider
-            };
+            var externalInfo = new TempExternalInfo() { ExternalId = externalId!, ExternalProvider = provider };
 
             var user = new ApplicationUser()
             {
                 Email = email,
-                UserName = email,
+                UserName = username,
                 EmailConfirmed = true,
-                FirstName = firstName,
-                Surname = surname,
-                ExternalInfo = new List<ExternalInfo>() { externalInfo }
+                FirstName = firstName!,
+                Surname = surname!,
+                ExternalInfo = new List<TempExternalInfo>() { externalInfo }
             };
 
             var createResult = await _userManager.CreateAsync(user);
             if (!createResult.Succeeded)
             {
-                result.AddError(Messages.ExternalAuth_UserNotCreated(user.Email, externalInfo.ExternalId));
-                return result;
+                return operation.AddError(Messages.ExternalAuth_UserNotCreated(user.Email ?? username, externalInfo.ExternalId));
             }
 
-            result.Result = user;
-            result.AddInfo(Messages.ExternalAuth_UserCreated(user.Email, externalInfo.ExternalId));
-            return result;
+            return operation
+                .AddResult(user)
+                .AddSuccess(Messages.ExternalAuth_UserCreated(user.Email ?? username, externalInfo.ExternalId));
         }
+
+        #endregion
 
         /// <summary>
         /// Add external login information 
@@ -176,10 +206,16 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services
         {
             var operation = new OperationResult();
 
+            info.Validate(ref operation);
+            if (!operation.IsOk) return operation;
+
+            user.Validate(ref operation);
+            if (!operation.IsOk) return operation;
+
             var identityResult = await _userManager.AddLoginAsync(user, info);
             if (!identityResult.Succeeded)
             {
-                operation.AddError(Messages.ExternalAuth_FailedAssignExternalLoginInfo(user.Email));
+                operation.AddError(Messages.ExternalAuth_FailedAssignExternalLoginInfo(user.Email ?? user.UserName));
             }
 
             return operation;

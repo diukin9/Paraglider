@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Paraglider.AspNetCore.Identity.Domain.Entities;
+using Paraglider.AspNetCore.Identity.Infrastructure.Exceptions;
 
 namespace Paraglider.AspNetCore.Identity.Domain
 {
@@ -21,6 +22,7 @@ namespace Paraglider.AspNetCore.Identity.Domain
             using var userManager = scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
 
             const string EMAIL = "developer@paraglider.com";
+            const string USERNAME = "developer";
             const string PASSWORD = "qwerty123";
 
             if (userManager!.FindByEmailAsync(EMAIL).Result != null)
@@ -30,18 +32,17 @@ namespace Paraglider.AspNetCore.Identity.Domain
 
             var user = new ApplicationUser
             {
-                UserName = EMAIL,
+                UserName = USERNAME,
                 Email = EMAIL,
                 EmailConfirmed = true,
                 Surname = "Иванов",
-                FirstName = "Иван",
-                SecondName = "Иванович"
+                FirstName = "Иван"
             };
 
             var result = await userManager!.CreateAsync(user, PASSWORD);
             if (!result.Succeeded)
             {
-                //some logics here..
+                throw new DatabaseInitializerException(string.Join(" ;", result.Errors));
             }
         }
     }

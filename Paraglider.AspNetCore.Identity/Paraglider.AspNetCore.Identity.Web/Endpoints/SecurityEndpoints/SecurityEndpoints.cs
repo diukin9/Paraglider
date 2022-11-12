@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Paraglider.AspNetCore.Identity.Infrastructure.Attributes;
 using Paraglider.AspNetCore.Identity.Infrastructure.Responses.OperationResult;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
-using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Commands;
 using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Queries;
 using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.ViewModels;
 
@@ -18,10 +17,10 @@ namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints
             app.MapPost("/api/log-out", LogOut);
         }
 
-        [UnAuthorize]
+        [AllowAnonymous]
         [FeatureGroupName("Security")]
         private async Task<OperationResult> BasicAuth([FromServices] IMediator mediator, [FromBody] BasicAuthViewModel model, HttpContext context)
-            => await mediator.Send(new BasicAuthCommand(model), context.RequestAborted);
+            => await mediator.Send(new PostBasicAuthRequest(model), context.RequestAborted);
 
         [Authorize]
         [ProducesResponseType(200)]

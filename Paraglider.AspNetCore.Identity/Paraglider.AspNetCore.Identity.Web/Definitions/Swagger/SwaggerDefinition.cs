@@ -3,6 +3,8 @@ using Paraglider.AspNetCore.Identity.Infrastructure;
 using Paraglider.AspNetCore.Identity.Infrastructure.Attributes;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Reflection;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.Swagger
 {
@@ -46,6 +48,12 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Swagger
                     }
                     return tags;
                 });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+
+                options.AddEnumsWithValuesFixFilters();
             });
         }
 
@@ -53,7 +61,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.Swagger
         /// Configure application for current application
         /// </summary>
         /// <param name="app"></param>
-        /// <param name="env"></param>
+        /// <param name="environment"></param>
         public override void ConfigureApplication(WebApplication app, IWebHostEnvironment environment)
         {
             if (!app.Environment.IsDevelopment())

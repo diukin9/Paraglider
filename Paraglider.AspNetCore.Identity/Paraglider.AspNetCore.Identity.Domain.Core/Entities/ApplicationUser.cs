@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Paraglider.AspNetCore.Identity.Domain.ValueObjects.Abstractions;
+using Paraglider.AspNetCore.Identity.Domain.Abstractions;
 
 namespace Paraglider.AspNetCore.Identity.Domain.Entities
 {
@@ -10,53 +10,23 @@ namespace Paraglider.AspNetCore.Identity.Domain.Entities
     public class ApplicationUser : IdentityUser<Guid>, IHuman
     {
         /// <summary>
-        /// User surname
-        /// </summary>
-        public string Surname { get; set; } = null!;
-
-        /// <summary>
         /// User first name
         /// </summary>
         public string FirstName { get; set; } = null!;
 
         /// <summary>
-        /// User second name
+        /// User surname
         /// </summary>
-        public string? SecondName { get; set; }
+        public string Surname { get; set; } = null!;
+
+        public Guid CityId { get; set; }
+        public virtual City City { get; set; } = null!;
 
         /// <summary>
         /// External login information
         /// </summary>
-        public virtual List<ExternalInfo> ExternalInfo { get; set; } = new List<ExternalInfo>();
+        public virtual List<TempExternalInfo> ExternalInfo { get; set; } = new List<TempExternalInfo>();
 
-        /// <summary>
-        /// Generator of the full user name depending on the presence of a second name
-        /// </summary>
-        public string FullName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(SecondName))
-                {
-                    return $"{Surname} {FirstName}";
-                }
-                return $"{Surname} {FirstName} {SecondName}";
-            }
-        }
-
-        /// <summary>
-        /// Generator of the short user name depending on the presence of a second name
-        /// </summary>
-        public string ShortName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(SecondName))
-                {
-                    return $"{FirstName}";
-                }
-                return $"{FirstName} {SecondName}";
-            }
-        }
+        public virtual List<WeddingPlan> Plans { get; set; } = new List<WeddingPlan>();
     }
 }

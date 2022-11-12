@@ -14,11 +14,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.10" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Exceptions\" />
-	  <Folder Include="Extensions\" />
+		<PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
 	</ItemGroup>
 
 

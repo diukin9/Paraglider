@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
-using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Validators;
+using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Queries.Validators;
 using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.ViewModels;
 
 namespace Paraglider.AspNetCore.Identity.Web.Definitions.FluentValidating
@@ -17,7 +17,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.FluentValidating
         /// <param name="configuration"></param>
         public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddScoped<IValidator<BasicAuthViewModel>, BasicAuthValidator>();
+            services.AddScoped<IValidator<BasicAuthViewModel>, PostBasicAuthRequestValidator>();
 
             services.AddValidatorsFromAssembly(typeof(Program).Assembly);
         }

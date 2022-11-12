@@ -20,7 +20,7 @@ namespace Paraglider.AspNetCore.Identity.Web.Definitions.DbContext
         {
             services.AddDbContext<ApplicationDbContext>(config =>
             {
-                config.UseInMemoryDatabase("develop");
+                config.UseNpgsql("Host=localhost;Port=5432;Database=paragliderDb;Username=postgres;Password=2Hi7go22;Pooling=true;");
             });
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(config =>

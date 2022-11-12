@@ -16,6 +16,17 @@
         /// <param name="provider"></param>
         /// <param name="externalId"></param>
         /// <returns></returns>
-        public static string ExternalUsernameTemplate(string provider, string externalId) => $"{provider}:{externalId}";
+        public static string ExternalUsernameTemplate(string? provider, string? externalId)
+        {
+            if (string.IsNullOrEmpty(provider))
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+            else if (string.IsNullOrEmpty(externalId))
+            {
+                throw new ArgumentNullException(nameof(externalId));
+            }
+            return $"{provider}-{externalId}";
+        }
     }
 }

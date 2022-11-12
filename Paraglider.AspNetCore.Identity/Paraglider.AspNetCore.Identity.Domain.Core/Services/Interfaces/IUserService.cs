@@ -44,7 +44,7 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services.Interfaces
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public Task<OperationResult<ApplicationUser>> FindByExternalInfo(ExternalInfo info);
+        public Task<OperationResult<ApplicationUser>> FindByExternalInfo(TempExternalInfo info);
 
         /// <summary>
         /// Create a user using an external provider
@@ -60,5 +60,7 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services.Interfaces
         /// <param name="user"></param>
         /// <returns></returns>
         public Task<OperationResult> AddLoginAsync(ExternalLoginInfo info, ApplicationUser user);
+
+        public Task<OperationResult<ApplicationUser>> GetCurrentUserAsync();
     }
 }

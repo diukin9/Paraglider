@@ -1,4 +1,4 @@
-﻿using Paraglider.AspNetCore.Identity.Domain.ValueObjects.Abstractions;
+﻿using Paraglider.AspNetCore.Identity.Domain.Abstractions;
 
 namespace Paraglider.AspNetCore.Identity.Domain.ValueObjects
 {

@@ -1,4 +1,5 @@
-﻿using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
+﻿using Paraglider.AspNetCore.Identity.Infrastructure.Attributes;
+using Paraglider.AspNetCore.Identity.Web.Definitions.Base;
 using Serilog;
 using Serilog.Events;
 

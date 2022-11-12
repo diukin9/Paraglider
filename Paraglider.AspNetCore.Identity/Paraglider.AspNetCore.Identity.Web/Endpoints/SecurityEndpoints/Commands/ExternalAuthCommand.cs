@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Paraglider.AspNetCore.Identity.Domain.Entities;
 using Paraglider.AspNetCore.Identity.Domain.Services.Interfaces;
+using Paraglider.AspNetCore.Identity.Infrastructure.Extensions;
 using Paraglider.AspNetCore.Identity.Infrastructure.Responses.OperationResult;
+using Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Queries;
 using static Paraglider.AspNetCore.Identity.Infrastructure.AppData;
 
 namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Commands
@@ -10,11 +12,11 @@ namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Command
 
     public class ExternalAuthHandler : IRequestHandler<ExternalAuthCommand, OperationResult>
     {
-        private readonly ILogger<BasicAuthHandler> _logger;
+        private readonly ILogger<PostBasicAuthRequestHandler> _logger;
         private readonly IAuthService _authService;
         private readonly IUserService _userService;
 
-        public ExternalAuthHandler(IAuthService authService, IUserService userService, ILogger<BasicAuthHandler> logger)
+        public ExternalAuthHandler(IAuthService authService, IUserService userService, ILogger<PostBasicAuthRequestHandler> logger)
         {
             _logger = logger;
             _authService = authService;
@@ -23,62 +25,53 @@ namespace Paraglider.AspNetCore.Identity.Web.Endpoints.SecurityEndpoints.Command
 
         public async Task<OperationResult> Handle(ExternalAuthCommand request, CancellationToken cancellationToken)
         {
-            var result = new OperationResult();
+            ApplicationUser user;
+            var operation = new OperationResult();
 
             if (!string.IsNullOrEmpty(request.RemoteError))
             {
-                result.AddError(request.RemoteError);
-                _logger.LogError(result.Metadata!.Message);
-                return result;
+                _logger.LogError(request.RemoteError);
+                return operation.AddError(request.RemoteError);
             }
-
-            ApplicationUser user;
 
             var loginInfoResult = await _authService.GetExternalLoginInfoAsync();
             if (!loginInfoResult.IsOk)
             {
-                result.AddError(loginInfoResult.Metadata!.Message);
-                _logger.LogError(result.Metadata!.Message);
-                return result;
+                _logger.LogError(operation.Metadata!.Message);
+                return loginInfoResult.RescheduleResult(ref operation);
             }
             var info = loginInfoResult.Result;
 
             var findUserResult = await _userService.FindUserForExternalAuthAsync(info!);
-            if (findUserResult.IsOk)
-            {
-                user = findUserResult.Result!;
-            }
-            else
+            if (!findUserResult.IsOk)
             {
                 var createUserResult = await _userService.CreateUserUsingExternalProvider(info!);
                 if (!createUserResult.IsOk)
                 {
-                    result.AddError(createUserResult.Metadata!.Message);
-                    _logger.LogError(result.Metadata!.Message);
-                    return result;
+                    _logger.LogError(createUserResult.Metadata!.Message);
+                    return createUserResult.RescheduleResult(ref operation);
                 }
                 _logger.LogInformation(createUserResult.Metadata!.Message);
                 user = createUserResult.Result!;
             }
+            else user = findUserResult.Result!;
 
             var addLoginResult = await _userService.AddLoginAsync(info!, user!);
             if (!addLoginResult.IsOk)
             {
-                result.AddError(addLoginResult.Metadata!.Message);
-                _logger.LogError(result.Metadata!.Message);
-                return result;
+                _logger.LogError(addLoginResult.Metadata!.Message);
+                return addLoginResult.RescheduleResult(ref operation);
             }
 
             var signInResult = await _authService.ExternalLoginSignInAsync(info!);
             if (!signInResult.IsOk)
             {
-                result.AddError(signInResult.Metadata!.Message);
-                _logger.LogError(result.Metadata!.Message);
-                return result;
+                _logger.LogError(signInResult.Metadata!.Message);
+                return signInResult.RescheduleResult(ref operation);
             }
 
-            _logger.LogInformation(Messages.ExternalAuth_SuccessfullAuth(user.Email, info!.LoginProvider));
-            return result;
+            _logger.LogInformation(Messages.ExternalAuth_SuccessfullAuth(user.Email ?? user.UserName, info!.LoginProvider));
+            return operation;
         }
     }
 }

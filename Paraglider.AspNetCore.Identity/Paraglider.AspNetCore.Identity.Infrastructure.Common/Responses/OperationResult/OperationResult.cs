@@ -1,40 +1,25 @@
-﻿using Paraglider.AspNetCore.Identity.Infrastructure.Responses.OperationResult.Abstractions;
-
-namespace Paraglider.AspNetCore.Identity.Infrastructure.Responses.OperationResult;
+﻿namespace Paraglider.AspNetCore.Identity.Infrastructure.Responses.OperationResult;
 
 /// <summary>
 ///     Generic operation result for any requests for Web API service and some MVC actions.
 /// </summary>
 [Serializable]
-public class OperationResult : BaseOperationResult
+public class OperationResult
 {
+    /// <summary>
+    ///     Operation result metadata
+    /// </summary>
+    public Metadata? Metadata { get; set; }
+
+    /// <summary>
+    ///     Exception that occurred during execution
+    /// </summary>
+    public Exception? Exception { get; set; }
+
     /// <summary>
     ///     Returns True when Exception == null and Metadata.Type != MetadataType.Error
     /// </summary>
     public virtual bool IsOk => Exception == null && Metadata?.Type != MetadataType.Error;
-
-    /// <summary>
-    ///     Returns as factory method OperationResult
-    /// </summary>
-    /// <param name="exception"></param>
-    /// <returns></returns>
-    public static OperationResult CreateResult(Exception? exception = null)
-    {
-        var operation = new OperationResult
-        {
-            Exception = exception
-        };
-        return operation;
-    }
-
-    /// <summary>
-    ///     Returns as factory method OperationResult
-    /// </summary>
-    /// <returns></returns>
-    public static OperationResult CreateResult()
-    {
-        return CreateResult(null);
-    }
 }
 
 /// <summary>
@@ -48,36 +33,4 @@ public class OperationResult<T> : OperationResult
     ///     Result for server operation
     /// </summary>
     public T? Result { get; set; }
-
-    /// <summary>
-    ///     Returns True when Exception == null and Metadata.Type != MetadataType.Error and Result != null
-    /// </summary>
-    public override bool IsOk => Exception == null && Metadata?.Type != MetadataType.Error && Result != null;
-
-    /// <summary>
-    ///     Returns as factory method OperationResult with return response
-    /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <param name="result"></param>
-    /// <param name="exception"></param>
-    /// <returns></returns>
-    public static OperationResult<TResult> CreateResult<TResult>(TResult result, Exception? exception = null)
-    {
-        var operation = new OperationResult<TResult>
-        {
-            Result = result,
-            Exception = exception
-        };
-        return operation;
-    }
-
-    /// <summary>
-    ///     Returns as factory method OperationResult
-    /// </summary>
-    /// <typeparam name="TResult"></typeparam>
-    /// <returns></returns>
-    public static OperationResult<TResult> CreateResult<TResult>()
-    {
-        return CreateResult(default(TResult)!);
-    }
 }

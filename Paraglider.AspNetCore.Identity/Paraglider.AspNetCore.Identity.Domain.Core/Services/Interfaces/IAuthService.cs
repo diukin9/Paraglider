@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Paraglider.AspNetCore.Identity.Domain.Entities;
 using Paraglider.AspNetCore.Identity.Infrastructure.Responses.OperationResult;
 
 namespace Paraglider.AspNetCore.Identity.Domain.Services.Interfaces
@@ -29,5 +30,17 @@ namespace Paraglider.AspNetCore.Identity.Domain.Services.Interfaces
         /// <param name="callbackUrl"></param>
         /// <returns></returns>
         public OperationResult<AuthenticationProperties> ConfigureExternalAuthenticationProperties(string provider, string callbackUrl);
+
+        /// <summary>
+        /// Sign out of the account
+        /// </summary>
+        /// <returns></returns>
+        public Task<OperationResult> SignOutAsync();
+
+        /// <summary>
+        /// Sign out of the account
+        /// </summary>
+        /// <returns></returns>
+        public Task<OperationResult> PasswordSignInAsync(ApplicationUser user, string password, bool isPersistent, bool lockoutOnFailure);
     }
 }
