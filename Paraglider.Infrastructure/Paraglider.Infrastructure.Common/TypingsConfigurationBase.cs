@@ -21,7 +21,7 @@ public static class TypingsConfiguration
 
     private static bool IsViewModel(string? currentNamespace, string typingsNamespace)
     {
-        return currentNamespace != null
+        return currentNamespace is not null
             && currentNamespace.StartsWith(typingsNamespace)
             && currentNamespace.Contains("ViewModels");
     }

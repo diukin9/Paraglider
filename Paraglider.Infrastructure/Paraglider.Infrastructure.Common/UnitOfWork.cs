@@ -43,7 +43,7 @@ public class UnitOfWork<TContext> : IRepositoryFactory, IUnitOfWork<TContext> wh
     public Task<IDbContextTransaction> BeginTransactionAsync(bool useIfExists = false)
     {
         var transaction = DbContext.Database.CurrentTransaction;
-        if (transaction == null)
+        if (transaction is null)
         {
             return DbContext.Database.BeginTransactionAsync();
         }
@@ -58,7 +58,7 @@ public class UnitOfWork<TContext> : IRepositoryFactory, IUnitOfWork<TContext> wh
     public IDbContextTransaction BeginTransaction(bool useIfExists = false)
     {
         var transaction = DbContext.Database.CurrentTransaction;
-        if (transaction == null)
+        if (transaction is null)
         {
             return DbContext.Database.BeginTransaction();
         }

@@ -6,10 +6,12 @@ using Paraglider.Domain.Entities;
 using Paraglider.Infrastructure;
 using Paraglider.Infrastructure.Exceptions;
 using Paraglider.Infrastructure.Extensions;
+using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.AppData;
 
 namespace Paraglider.API.Commands;
 
+[TsClass]
 public class BasicAuthRequest : IRequest<OperationResult>
 {
     public string Login { get; set; } = null!;
