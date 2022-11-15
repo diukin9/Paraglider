@@ -17,7 +17,7 @@ public class OperationResult
     public Exception? Exception { get; set; }
 
     /// <summary>
-    ///     Returns True when Exception == null and Metadata.Type != MetadataType.Error
+    ///     Returns True when Exception is null and Metadata.Type != MetadataType.Error
     /// </summary>
-    public virtual bool IsOk => Exception == null && Metadata?.Type != MetadataType.Error;
+    public virtual bool IsOk => Exception is null && Metadata?.Type != MetadataType.Error;
 }

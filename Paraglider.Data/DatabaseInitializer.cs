@@ -17,7 +17,7 @@ public static class DatabaseInitializer
         const string USERNAME = "developer";
         const string PASSWORD = "qwerty123";
 
-        if (userManager!.FindByEmailAsync(EMAIL).Result != null)
+        if (userManager!.FindByEmailAsync(EMAIL).Result is not null)
         {
             return;
         }

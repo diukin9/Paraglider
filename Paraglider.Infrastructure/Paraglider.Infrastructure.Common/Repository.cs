@@ -176,7 +176,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, I
             query = query.IgnoreQueryFilters();
         }
 
-        return orderBy != null
+        return orderBy is not null
             ? orderBy(query).Select(selector)
             : query.Select(selector);
     }
@@ -465,12 +465,12 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, I
             query = query.AsNoTracking();
         }
 
-        if (include != null)
+        if (include is not null)
         {
             query = include(query);
         }
 
-        if (predicate != null)
+        if (predicate is not null)
         {
             query = query.Where(predicate);
         }
@@ -480,7 +480,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, I
             query = query.IgnoreQueryFilters();
         }
 
-        if (orderBy != null)
+        if (orderBy is not null)
         {
             return orderBy(query).Select(selector).ToPagedListAsync(pageIndex, pageSize, 0, cancellationToken);
         }
@@ -960,7 +960,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, I
         }
 
         var property = typeInfo.GetProperty(key.Name);
-        if (property != null)
+        if (property is not null)
         {
             var entity = Activator.CreateInstance<TEntity>();
             property.SetValue(entity, id);
@@ -969,7 +969,7 @@ public class Repository<TEntity> : IRepository<TEntity> where TEntity : class, I
         else
         {
             var entity = _dbSet.Find(id);
-            if (entity != null)
+            if (entity is not null)
             {
                 Delete(entity);
             }
