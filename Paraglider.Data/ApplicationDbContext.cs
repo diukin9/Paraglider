@@ -31,7 +31,7 @@ public class ApplicationDbContext : DbContextBase
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<ExternalInfo>().HasAlternateKey(x => new { x.ExternalProvider, x.ExternalId });
+        builder.ApplyConfiguration(new ExternalInfoConfiguration());
 
         builder.ApplyConfiguration(new HallConfiguration());
         builder.ApplyConfiguration(new ServiceConfiguration());
