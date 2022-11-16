@@ -2,51 +2,34 @@
 
 namespace Paraglider.Domain.ValueObjects;
 
-public class TimeStamp
+public class TimeInterval
 {
-    public readonly TimeOfDay? IntervalStart;
-    public readonly TimeOfDay? IntervalEnd;
-    public readonly TimeOfDay? ExactTime;
-    public readonly TimeStampType Type;
+    public readonly TimeOnly? IntervalStart;
+    public readonly TimeOnly? IntervalEnd;
 
-    public TimeStamp() { }
+    //for entity framework
+    private TimeInterval() { }
 
-    public TimeStamp(TimeOfDay intervalStart, TimeOfDay intervalEnd)
+    public TimeInterval(TimeOnly intervalStart, TimeOnly intervalEnd)
     {
-        if (intervalStart > TimeOfDay.MaxValue || intervalEnd > TimeOfDay.MaxValue)
-        {
-            throw new ArgumentException("The time cannot be more than 24 hours");
-        }
-
-        Type = TimeStampType.Interval;
         IntervalStart = intervalStart;
         IntervalEnd = intervalEnd;
     }
 
-    public TimeStamp(TimeStampType type, TimeOfDay time)
+    public TimeInterval(TimeOnly value, IntervalType type)
     {
-        if (time > TimeOfDay.MaxValue)
+        switch (type)
         {
-            throw new ArgumentException("The time cannot be more than 24 hours");
+            case IntervalType.From:
+                IntervalStart = value;
+                break;
+            case IntervalType.To:
+                IntervalEnd = value;
+                break;
+            default:
+                IntervalStart = value;
+                IntervalEnd = value;
+                break;
         }
-
-        if (type == TimeStampType.ExactTime)
-        {
-            ExactTime = time;
-        }
-        else if (type == TimeStampType.AfterThatTime)
-        {
-            IntervalStart = time;
-        }
-        else if (type == TimeStampType.BeforeThatTime)
-        {
-            IntervalEnd = time;
-        }
-        else
-        {
-            throw new ArgumentException();
-        }
-
-        Type = type;
     }
 }

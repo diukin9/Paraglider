@@ -4,9 +4,9 @@ using Paraglider.Domain.Entities;
 
 namespace Paraglider.Data.EntityConfigurations;
 
-public class PremiseConfiguration : IEntityTypeConfiguration<Premise>
+public class HallConfiguration : IEntityTypeConfiguration<Hall>
 {
-    public void Configure(EntityTypeBuilder<Premise> builder)
+    public void Configure(EntityTypeBuilder<Hall> builder)
     {
         builder.OwnsOne(o => o.Capacity, p =>
         {

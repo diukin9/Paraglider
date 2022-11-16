@@ -9,6 +9,6 @@ public class WeddingComponentDesc : IIdentified
     public Guid Id { get; set; }
     public Guid ConfigurationItemId { get; set; }
     public SelectedComponentStatus Status { get; set; }
-    public TimeStamp TimeStamp { get; set; } = null!;
+    public TimeInterval TimeStamp { get; set; } = null!;
     public virtual List<Payment> Payments { get; set; } = new List<Payment>();
 }

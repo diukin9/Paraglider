@@ -317,10 +317,6 @@ namespace Paraglider.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -353,6 +349,37 @@ namespace Paraglider.Data.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.ToTable("ExternalInfo");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.Entities.Hall", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AlbumId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("BanquetHallId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("MinimalPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("BanquetHallId");
+
+                    b.ToTable("Halls");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Limousine", b =>
@@ -456,37 +483,6 @@ namespace Paraglider.Data.Migrations
                     b.HasIndex("WeddingComponentDescId");
 
                     b.ToTable("Payments");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.Premise", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("AlbumId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("BanquetHallId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
-
-                    b.Property<decimal?>("MinimalPrice")
-                        .HasColumnType("numeric");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AlbumId");
-
-                    b.HasIndex("BanquetHallId");
-
-                    b.ToTable("Premises");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Review", b =>
@@ -773,6 +769,69 @@ namespace Paraglider.Data.Migrations
                         .HasForeignKey("ApplicationUserId");
                 });
 
+            modelBuilder.Entity("Paraglider.Domain.Entities.Hall", b =>
+                {
+                    b.HasOne("Paraglider.Domain.Entities.Album", "Album")
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.Entities.BanquetHall", null)
+                        .WithMany("Premises")
+                        .HasForeignKey("BanquetHallId");
+
+                    b.OwnsOne("Paraglider.Domain.ValueObjects.Capacity", "Capacity", b1 =>
+                        {
+                            b1.Property<Guid>("HallId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int?>("Max")
+                                .HasColumnType("integer")
+                                .HasColumnName("MaxCapacity");
+
+                            b1.Property<int?>("Min")
+                                .HasColumnType("integer")
+                                .HasColumnName("MinCapacity");
+
+                            b1.HasKey("HallId");
+
+                            b1.ToTable("Halls");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HallId");
+                        });
+
+                    b.OwnsOne("Paraglider.Domain.ValueObjects.HallRentalPrice", "RentalPrice", b1 =>
+                        {
+                            b1.Property<Guid>("HallId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal?>("PricePerPerson")
+                                .HasColumnType("numeric")
+                                .HasColumnName("RentalPricePerPerson");
+
+                            b1.Property<decimal?>("RentalPrice")
+                                .HasColumnType("numeric")
+                                .HasColumnName("RentalPrice");
+
+                            b1.HasKey("HallId");
+
+                            b1.ToTable("Halls");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HallId");
+                        });
+
+                    b.Navigation("Album");
+
+                    b.Navigation("Capacity")
+                        .IsRequired();
+
+                    b.Navigation("RentalPrice")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Paraglider.Domain.Entities.Limousine", b =>
                 {
                     b.HasOne("Paraglider.Domain.Entities.Album", "Album")
@@ -845,69 +904,6 @@ namespace Paraglider.Data.Migrations
                     b.HasOne("Paraglider.Domain.Entities.WeddingComponentDesc", null)
                         .WithMany("Payments")
                         .HasForeignKey("WeddingComponentDescId");
-                });
-
-            modelBuilder.Entity("Paraglider.Domain.Entities.Premise", b =>
-                {
-                    b.HasOne("Paraglider.Domain.Entities.Album", "Album")
-                        .WithMany()
-                        .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Paraglider.Domain.Entities.BanquetHall", null)
-                        .WithMany("Premises")
-                        .HasForeignKey("BanquetHallId");
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.Capacity", "Capacity", b1 =>
-                        {
-                            b1.Property<Guid>("PremiseId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int?>("Max")
-                                .HasColumnType("integer")
-                                .HasColumnName("MaxCapacity");
-
-                            b1.Property<int?>("Min")
-                                .HasColumnType("integer")
-                                .HasColumnName("MinCapacity");
-
-                            b1.HasKey("PremiseId");
-
-                            b1.ToTable("Premises");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PremiseId");
-                        });
-
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.PremiseRentalPrice", "RentalPrice", b1 =>
-                        {
-                            b1.Property<Guid>("PremiseId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<decimal?>("PricePerPerson")
-                                .HasColumnType("numeric")
-                                .HasColumnName("RentalPricePerPerson");
-
-                            b1.Property<decimal?>("RentalPrice")
-                                .HasColumnType("numeric")
-                                .HasColumnName("RentalPrice");
-
-                            b1.HasKey("PremiseId");
-
-                            b1.ToTable("Premises");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PremiseId");
-                        });
-
-                    b.Navigation("Album");
-
-                    b.Navigation("Capacity")
-                        .IsRequired();
-
-                    b.Navigation("RentalPrice")
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Review", b =>
@@ -1018,13 +1014,18 @@ namespace Paraglider.Data.Migrations
 
             modelBuilder.Entity("Paraglider.Domain.Entities.WeddingComponentDesc", b =>
                 {
-                    b.OwnsOne("Paraglider.Domain.ValueObjects.TimeStamp", "TimeStamp", b1 =>
+                    b.OwnsOne("Paraglider.Domain.ValueObjects.TimeInterval", "TimeStamp", b1 =>
                         {
                             b1.Property<Guid>("WeddingComponentDescId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<int>("Type")
-                                .HasColumnType("integer");
+                            b1.Property<TimeOnly?>("IntervalEnd")
+                                .HasColumnType("time without time zone")
+                                .HasColumnName("IntervalEnd");
+
+                            b1.Property<TimeOnly?>("IntervalStart")
+                                .HasColumnType("time without time zone")
+                                .HasColumnName("IntervalStart");
 
                             b1.HasKey("WeddingComponentDescId");
 
@@ -1032,87 +1033,6 @@ namespace Paraglider.Data.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("WeddingComponentDescId");
-
-                            b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "ExactTime", b2 =>
-                                {
-                                    b2.Property<Guid>("TimeStampWeddingComponentDescId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<int>("Hour")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("ExactTime_Hour");
-
-                                    b2.Property<int>("Minute")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("ExactTime_Minute");
-
-                                    b2.Property<int>("Second")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("ExactTime_Second");
-
-                                    b2.HasKey("TimeStampWeddingComponentDescId");
-
-                                    b2.ToTable("WeddingComponentsDesc");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("TimeStampWeddingComponentDescId");
-                                });
-
-                            b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "IntervalEnd", b2 =>
-                                {
-                                    b2.Property<Guid>("TimeStampWeddingComponentDescId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<int>("Hour")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("IntervalEnd_Hour");
-
-                                    b2.Property<int>("Minute")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("IntervalEnd_Minute");
-
-                                    b2.Property<int>("Second")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("IntervalEnd_Second");
-
-                                    b2.HasKey("TimeStampWeddingComponentDescId");
-
-                                    b2.ToTable("WeddingComponentsDesc");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("TimeStampWeddingComponentDescId");
-                                });
-
-                            b1.OwnsOne("Paraglider.Domain.ValueObjects.TimeOfDay", "IntervalStart", b2 =>
-                                {
-                                    b2.Property<Guid>("TimeStampWeddingComponentDescId")
-                                        .HasColumnType("uuid");
-
-                                    b2.Property<int>("Hour")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("IntervalStart_Hour");
-
-                                    b2.Property<int>("Minute")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("IntervalStart_Minute");
-
-                                    b2.Property<int>("Second")
-                                        .HasColumnType("integer")
-                                        .HasColumnName("IntervalStart_Second");
-
-                                    b2.HasKey("TimeStampWeddingComponentDescId");
-
-                                    b2.ToTable("WeddingComponentsDesc");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("TimeStampWeddingComponentDescId");
-                                });
-
-                            b1.Navigation("ExactTime");
-
-                            b1.Navigation("IntervalEnd");
-
-                            b1.Navigation("IntervalStart");
                         });
 
                     b.Navigation("TimeStamp")

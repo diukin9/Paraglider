@@ -20,7 +20,7 @@ public class ApplicationDbContext : DbContextBase
 
     public DbSet<Media> Medias { get; set; } = null!;
     public DbSet<Payment> Payments { get; set; } = null!;
-    public DbSet<Premise> Premises { get; set; } = null!;
+    public DbSet<Hall> Halls { get; set; } = null!;
     public DbSet<Review> Reviews { get; set; } = null!;
     public DbSet<Service> Services { get; set; } = null!;
     public DbSet<Category> Categories { get; set; } = null!;
@@ -33,7 +33,7 @@ public class ApplicationDbContext : DbContextBase
     {
         builder.Entity<ExternalInfo>().HasAlternateKey(x => new { x.ExternalProvider, x.ExternalId });
 
-        builder.ApplyConfiguration(new PremiseConfiguration());
+        builder.ApplyConfiguration(new HallConfiguration());
         builder.ApplyConfiguration(new ServiceConfiguration());
         builder.ApplyConfiguration(new WeddingComponentDescConfiguration());
 

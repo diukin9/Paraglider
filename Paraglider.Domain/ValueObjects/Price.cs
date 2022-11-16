@@ -1,27 +1,47 @@
-﻿namespace Paraglider.Domain.ValueObjects;
+﻿using Paraglider.Domain.Enums;
+
+namespace Paraglider.Domain.ValueObjects;
 
 public class Price
 {
     public readonly decimal? Min;
     public readonly decimal? Max;
 
-    public Price() { }
+    //for entity framework
+    private Price() { }
 
-    public Price(decimal? min = null, decimal? max = null)
+    public Price(decimal value, IntervalType intervalType)
     {
-        if (!min.HasValue && !max.HasValue)
-        {
-            throw new ArgumentException("Empty parameters were passed");
-        }
-
-        if (min.HasValue && max.HasValue && min > max)
-        {
-            throw new ArgumentException("'Min' cannot be higher than 'Max'");
-        }
-
-        if (min.HasValue && min.Value < 0 || max.HasValue && max < 0)
+        if (value < 0)
         {
             throw new ArgumentException("Price cannot be negative");
+        }
+
+        switch (intervalType)
+        {
+            case IntervalType.From:
+                Min = value;
+                break;
+            case IntervalType.To:
+                Max = value;
+                break;
+            default:
+                Min = value;
+                Max = value;
+                break;
+        }
+    }
+
+    public Price(int min, int max)
+    {
+        if (min <= 0 || max <= 0)
+        {
+            throw new ArgumentException("Price cannot be negative");
+        }
+
+        if (min > max)
+        {
+            throw new ArgumentException("'Min' cannot be higher than 'Max'");
         }
 
         Min = min;

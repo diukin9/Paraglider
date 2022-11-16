@@ -1,22 +1,37 @@
-﻿using System.Text;
+﻿using Paraglider.Domain.Enums;
+using System.Text;
 
 namespace Paraglider.Domain.ValueObjects;
 
-public class PremiseRentalPrice
+public class HallRentalPrice
 {
     public readonly decimal? PricePerPerson;
     public readonly decimal? RentalPrice;
 
-    public PremiseRentalPrice() { }
+    //for entity framework
+    private HallRentalPrice() { }
 
-    public PremiseRentalPrice(decimal? pricePerPerson, decimal? rentalPrice)
+    public HallRentalPrice(decimal value, HallRentalPriceType type)
     {
-        if (!pricePerPerson.HasValue && !rentalPrice.HasValue)
+        if (value < 0)
         {
-            throw new ArgumentException("Empty parameters were passed");
+            throw new ArgumentException("Price cannot be negative");
         }
 
-        if (pricePerPerson.HasValue && pricePerPerson.Value <= 0 || rentalPrice.HasValue && rentalPrice.Value <= 0)
+        switch (type)
+        {
+            case HallRentalPriceType.PricePerPerson:
+                PricePerPerson = value;
+                break;
+            case HallRentalPriceType.RentalPrice:
+                RentalPrice = value;
+                break;
+        }
+    }
+
+    public HallRentalPrice(decimal pricePerPerson, decimal rentalPrice)
+    {
+        if (pricePerPerson <= 0 || rentalPrice <= 0)
         {
             throw new ArgumentException("Price cannot be negative");
         }

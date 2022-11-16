@@ -18,10 +18,6 @@ public class Limousine : WeddingComponent, IAggregateRoot
             {
                 throw new ArgumentException("Capacity cannot be negative");
             }
-            if (value.HasValue && value.Value > 50)
-            {
-                throw new ArgumentException("Such large limousines do not exist");
-            }
 
             capacity = value;
         }

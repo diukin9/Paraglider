@@ -3,12 +3,12 @@ using Paraglider.Domain.ValueObjects;
 
 namespace Paraglider.Domain.Entities;
 
-public class Premise : IIdentified
+public class Hall : IIdentified
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
     public string? Description { get; set; }
-    public PremiseRentalPrice RentalPrice { get; set; } = null!;
+    public HallRentalPrice RentalPrice { get; set; } = null!;
     public Capacity Capacity { get; set; } = null!;
 
     public Guid AlbumId { get; set; }

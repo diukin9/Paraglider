@@ -2,7 +2,7 @@
 
 namespace Paraglider.Domain.Abstractions;
 
-public interface IOfferingServices
+public interface IOfferServices
 {
     public List<Service> Services { get; set; }
 }

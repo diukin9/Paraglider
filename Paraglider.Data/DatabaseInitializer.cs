@@ -17,7 +17,7 @@ public static class DatabaseInitializer
         const string USERNAME = "developer";
         const string PASSWORD = "qwerty123";
 
-        if (userManager!.FindByEmailAsync(EMAIL).Result is not null)
+        if (await userManager!.FindByEmailAsync(EMAIL) is not null)
         {
             return;
         }
@@ -32,8 +32,7 @@ public static class DatabaseInitializer
             FirstName = "Иван",
             City = new City()
             {
-                Name = "Екатеринбург",
-                Key = "ekb",
+                Name = "Екатеринбург"
             }
         };
 

@@ -4,12 +4,18 @@ namespace Paraglider.Domain.ValueObjects;
 
 public class Contacts
 {
-    public Contacts() 
-    {
-        throw new NotImplementedException();
-    }
+    public readonly string PhoneNumber = null!;
+    public readonly string? Email;
+    public readonly string? Telegram;
+    public readonly string? WhatsApp;
+    public readonly string? Viber;
+    public readonly string? Vkontakte;
+    public readonly string? Instagram;
 
-    public Contacts(string phoneNumber)
+    //for entity framework
+    private Contacts() { }
+
+    public Contacts(string phoneNumber, string? email, string? telegram, string? whatsApp, string? viber)
     {
         if (string.IsNullOrEmpty(phoneNumber))
         {
@@ -17,7 +23,9 @@ public class Contacts
         }
 
         PhoneNumber = phoneNumber.ToPhoneNumberPattern();
+        Email = email;
+        Telegram = telegram;
+        WhatsApp = whatsApp;
+        Viber = viber;
     }
-
-    public readonly string PhoneNumber;
 }

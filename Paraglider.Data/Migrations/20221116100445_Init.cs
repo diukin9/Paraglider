@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Paraglider.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -41,8 +41,7 @@ namespace Paraglider.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Key = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,16 +55,8 @@ namespace Paraglider.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ConfigurationItemId = table.Column<Guid>(type: "uuid", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    TimeStamp_Type = table.Column<int>(type: "integer", nullable: false),
-                    ExactTime_Hour = table.Column<int>(type: "integer", nullable: true),
-                    ExactTime_Minute = table.Column<int>(type: "integer", nullable: true),
-                    ExactTime_Second = table.Column<int>(type: "integer", nullable: true),
-                    IntervalEnd_Hour = table.Column<int>(type: "integer", nullable: true),
-                    IntervalEnd_Minute = table.Column<int>(type: "integer", nullable: true),
-                    IntervalEnd_Second = table.Column<int>(type: "integer", nullable: true),
-                    IntervalStart_Hour = table.Column<int>(type: "integer", nullable: true),
-                    IntervalStart_Minute = table.Column<int>(type: "integer", nullable: true),
-                    IntervalStart_Second = table.Column<int>(type: "integer", nullable: true)
+                    IntervalEnd = table.Column<TimeOnly>(type: "time without time zone", nullable: true),
+                    IntervalStart = table.Column<TimeOnly>(type: "time without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -459,7 +450,7 @@ namespace Paraglider.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Premises",
+                name: "Halls",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -475,15 +466,15 @@ namespace Paraglider.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Premises", x => x.Id);
+                    table.PrimaryKey("PK_Halls", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Premises_Albums_AlbumId",
+                        name: "FK_Halls_Albums_AlbumId",
                         column: x => x.AlbumId,
                         principalTable: "Albums",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Premises_BanquetHalls_BanquetHallId",
+                        name: "FK_Halls_BanquetHalls_BanquetHallId",
                         column: x => x.BanquetHallId,
                         principalTable: "BanquetHalls",
                         principalColumn: "Id");
@@ -621,6 +612,16 @@ namespace Paraglider.Data.Migrations
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Halls_AlbumId",
+                table: "Halls",
+                column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Halls_BanquetHallId",
+                table: "Halls",
+                column: "BanquetHallId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Limousines_AlbumId",
                 table: "Limousines",
                 column: "AlbumId");
@@ -654,16 +655,6 @@ namespace Paraglider.Data.Migrations
                 name: "IX_Payments_WeddingComponentDescId",
                 table: "Payments",
                 column: "WeddingComponentDescId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Premises_AlbumId",
-                table: "Premises",
-                column: "AlbumId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Premises_BanquetHallId",
-                table: "Premises",
-                column: "BanquetHallId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_BanquetHallId",
@@ -734,13 +725,13 @@ namespace Paraglider.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Halls");
+
+            migrationBuilder.DropTable(
                 name: "Medias");
 
             migrationBuilder.DropTable(
                 name: "Payments");
-
-            migrationBuilder.DropTable(
-                name: "Premises");
 
             migrationBuilder.DropTable(
                 name: "Reviews");

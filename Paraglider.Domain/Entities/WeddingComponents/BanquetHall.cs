@@ -5,5 +5,5 @@ namespace Paraglider.Domain.Entities;
 
 public class BanquetHall : WeddingComponent, IAggregateRoot
 {
-    public virtual List<Premise> Premises { get; set; } = new List<Premise>();
+    public virtual List<Hall> Premises { get; set; } = new List<Hall>();
 }
