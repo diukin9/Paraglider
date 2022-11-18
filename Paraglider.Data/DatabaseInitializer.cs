@@ -29,7 +29,7 @@ public static class DatabaseInitializer
             .Where(x => x.Key == AppData.DefaultCityKey)
             .SingleOrDefault();
 
-        var user = UserFactory.Create(new UserFactory.UserData(
+        var user = UserFactory.Create(new UserData(
             firstName: "Иван",
             surname: "Иванов",
             username: USERNAME,

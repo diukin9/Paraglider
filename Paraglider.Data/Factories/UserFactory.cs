@@ -47,51 +47,51 @@ namespace Paraglider.Data.Factories
             }
 
             return user;
-        }
+        } 
+    }
 
-        public class UserData
+    public class UserData
+    {
+        public readonly string FirstName = null!;
+        public readonly string Surname = null!;
+        public readonly string Username = null!;
+        public readonly City City = null!;
+        public readonly string? Email;
+        public readonly bool EmailConfirmed;
+        public readonly ExternalAuthProvider? Provider;
+        public readonly string? ExternalId;
+        public readonly string? PhoneNumber;
+
+        public UserData(
+            string firstName,
+            string surname,
+            string username,
+            City city,
+            string? email = null,
+            bool emailConfirmed = false,
+            ExternalAuthProvider? provider = null,
+            string? externalId = null,
+            string? phoneNumber = null)
         {
-            public readonly string FirstName = null!;
-            public readonly string Surname = null!;
-            public readonly string Username = null!;
-            public readonly City City = null!;
-            public readonly string? Email;
-            public readonly bool EmailConfirmed;
-            public readonly ExternalAuthProvider? Provider;
-            public readonly string? ExternalId;
-            public readonly string? PhoneNumber;
+            if (city is null) throw new ArgumentException(Exceptions.ObjectIsNull(typeof(City)));
 
-            public UserData(
-                string firstName,
-                string surname,
-                string username,
-                City city,
-                string? email = null,
-                bool emailConfirmed = false,
-                ExternalAuthProvider? provider = null,
-                string? externalId = null,
-                string? phoneNumber = null)
+            foreach (var field in new List<string>() { firstName, surname, username, city!.Name })
             {
-                if (city is null) throw new ArgumentException(Exceptions.ObjectIsNull(typeof(City)));
-
-                foreach (var field in new List<string>() { firstName, surname, username, city!.Name })
+                if (string.IsNullOrEmpty(field))
                 {
-                    if (string.IsNullOrEmpty(field))
-                    {
-                        throw new ArgumentException(Exceptions.NullOrEmptyField(nameof(field)));
-                    }
+                    throw new ArgumentException(Exceptions.NullOrEmptyField(nameof(field)));
                 }
-
-                FirstName = firstName;
-                Surname = surname;
-                Username = username;
-                City = city;
-                Email = email;
-                EmailConfirmed = emailConfirmed;
-                PhoneNumber = phoneNumber;
-                Provider = provider;
-                ExternalId = externalId;
             }
+
+            FirstName = firstName;
+            Surname = surname;
+            Username = username;
+            City = city;
+            Email = email;
+            EmailConfirmed = emailConfirmed;
+            PhoneNumber = phoneNumber;
+            Provider = provider;
+            ExternalId = externalId;
         }
     }
 }
