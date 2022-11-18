@@ -2,5 +2,5 @@
 
 public class WrongPasswordException : Exception
 {
-    public WrongPasswordException() : base("The entered password does not match the actual password") { }
+    public WrongPasswordException(string message = "The entered password does not match the actual password") : base(message) { }
 }

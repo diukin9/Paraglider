@@ -7,6 +7,7 @@ public class WeddingPlanning : IIdentified
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
     public Guid CityId { get; set; }
+    public virtual City City { get; set; } = null!;  
 
     public virtual List<Category> SelectedCategories { get; set; } = new List<Category>();
 

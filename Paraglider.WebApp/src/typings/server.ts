@@ -2,7 +2,7 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 
-module Paraglider.API.Commands {
+module Paraglider.API.Features.Authorization.Commands {
 	export class BasicAuthRequest
 	{
 		public Login: string;

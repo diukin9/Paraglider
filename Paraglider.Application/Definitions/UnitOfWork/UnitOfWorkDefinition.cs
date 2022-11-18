@@ -14,6 +14,7 @@ public class UnitOfWorkDefinition : AppDefinition
         services.AddScoped<IUnitOfWork, UnitOfWork<ApplicationDbContext>>();
         services.AddScoped<IUnitOfWork<ApplicationDbContext>, UnitOfWork<ApplicationDbContext>>();
 
+        services.AddScoped<IRepository<City>, CityRepository>();
         services.AddScoped<IRepository<ApplicationUser>, UserRepository>();
     }
 }

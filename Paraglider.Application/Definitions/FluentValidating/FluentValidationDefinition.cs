@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Paraglider.API.Commands;
+using Paraglider.API.Features.Authorization.Commands;
 using Paraglider.Web.Definitions.Base;
 
 namespace Paraglider.Web.Definitions.FluentValidating;

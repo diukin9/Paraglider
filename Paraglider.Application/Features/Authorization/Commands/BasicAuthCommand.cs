@@ -9,7 +9,7 @@ using Paraglider.Infrastructure.Extensions;
 using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.AppData;
 
-namespace Paraglider.API.Commands;
+namespace Paraglider.API.Features.Authorization.Commands;
 
 [TsClass]
 public class BasicAuthRequest : IRequest<OperationResult>
@@ -23,8 +23,8 @@ public class BasicAuthRequestValidator : AbstractValidator<BasicAuthRequest>
 {
     public BasicAuthRequestValidator() => RuleSet(DefaultRuleSetName, () =>
     {
-        RuleFor(x => x.Login).MinimumLength(3).MaximumLength(64);
-        RuleFor(x => x.Password).MinimumLength(8).MaximumLength(64);
+        RuleFor(x => x.Login).NotNull().NotEmpty();
+        RuleFor(x => x.Password).NotNull().NotEmpty();
     });
 }
 
@@ -60,7 +60,7 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
         if (user is null)
         {
             operation.AddError(
-                Messages.BasicAuth_UserNotFound(request.Login),
+                Exceptions.ObjectIsNull(typeof(ApplicationUser)),
                 new NotFoundException(typeof(ApplicationUser))
             );
             return operation;
@@ -69,11 +69,11 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
         var signInResult = await _signInManager.PasswordSignInAsync(user, request.Password, true, false);
         if (!signInResult.Succeeded)
         {
-            operation.AddError(Messages.BasicAuth_WrongPassword(request.Login), new WrongPasswordException());
+            operation.AddError(Exceptions.WrongPasswordEntered, new WrongPasswordException());
             return operation;
         }
 
-        operation.AddSuccess(Messages.BasicAuth_SuccessfulAuth(request.Login));
+        operation.AddSuccess(Messages.SuccessfulAuth);
         return operation;
     }
 }

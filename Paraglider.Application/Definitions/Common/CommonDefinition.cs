@@ -1,4 +1,5 @@
-﻿using Paraglider.Web.Definitions.Base;
+﻿using Microsoft.AspNetCore.HttpOverrides;
+using Paraglider.Web.Definitions.Base;
 
 namespace Paraglider.Web.Definitions.Common;
 
@@ -16,6 +17,11 @@ public class CommonDefinition : AppDefinition
 
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
     {
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        });
+
         app.UseHttpsRedirection();
         app.MapDefaultControllerRoute();
     }
