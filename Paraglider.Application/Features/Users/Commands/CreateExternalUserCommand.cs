@@ -105,7 +105,7 @@ namespace Paraglider.API.Features.Users.Commands
             }
 
             var user = UserFactory.Create(
-                new UserFactory.UserData(
+                new UserData(
                     firstName: firstName!,
                     surname: surname!,
                     username: username,
