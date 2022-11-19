@@ -1,5 +1,5 @@
-﻿using Paraglider.Domain.Entities;
-using Paraglider.Domain.Enums;
+﻿using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Data.EntityFrameworkCore.Factories

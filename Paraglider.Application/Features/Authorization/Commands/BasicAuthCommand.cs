@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Data.EntityFrameworkCore.Repositories;
-using Paraglider.Domain.Entities;
+using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Abstractions;
 using Paraglider.Infrastructure.Common.Extensions;

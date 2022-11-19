@@ -1,4 +1,4 @@
-﻿using Paraglider.Domain.Entities;
+﻿using Paraglider.Domain.RDB.Entities;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Data.EntityFrameworkCore.Factories

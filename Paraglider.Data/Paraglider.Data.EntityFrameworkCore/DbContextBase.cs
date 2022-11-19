@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Paraglider.Domain.Abstractions;
-using Paraglider.Domain.Entities;
+using Paraglider.Domain.RDB.Abstractions;
+using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.Data;
 

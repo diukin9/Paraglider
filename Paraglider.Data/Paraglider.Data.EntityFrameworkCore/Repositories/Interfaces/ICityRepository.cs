@@ -1,4 +1,4 @@
-﻿using Paraglider.Domain.Entities;
+﻿using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces
 {

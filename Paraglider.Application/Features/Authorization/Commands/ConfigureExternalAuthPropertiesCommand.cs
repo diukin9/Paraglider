@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Paraglider.Domain.Entities;
-using Paraglider.Domain.Enums;
+using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
 using System.Net;

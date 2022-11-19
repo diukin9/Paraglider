@@ -54,7 +54,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Paraglider.Data\Paraglider.Data.EntityFrameworkCore\Paraglider.Data.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\Paraglider.Domain\Paraglider.Domain.csproj" />
     <ProjectReference Include="..\Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj" />
   </ItemGroup>
 

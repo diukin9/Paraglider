@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Paraglider.Domain.Entities;
+using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
 
@@ -8,7 +8,7 @@ public class WeddingComponentDescConfiguration : IEntityTypeConfiguration<Weddin
 {
     public void Configure(EntityTypeBuilder<WeddingComponentDesc> builder)
     {
-        builder.OwnsOne(o => o.TimeStamp, p =>
+        builder.OwnsOne(o => o.TimeInterval, p =>
         {
             p.Property(x => x.IntervalStart).HasColumnName("IntervalStart");
             p.Property(x => x.IntervalEnd).HasColumnName("IntervalEnd");
