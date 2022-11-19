@@ -36,7 +36,7 @@ public class Price
 
     public Price(int min, int max)
     {
-        if (min <= 0 || max <= 0)
+        if (min < 0 || max < 0)
         {
             throw new ArgumentException("Price cannot be negative");
         }

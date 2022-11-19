@@ -2,7 +2,6 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Paraglider.Domain.NoSQL.Enums;
 using Paraglider.Domain.NoSQL.ValueObjects;
-using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.NoSQL.Entities;
@@ -33,7 +32,7 @@ public class WeddingComponent : IAggregateRoot, IIdentified
     public DateTime? ManufactureYear { get; set; }
 
     [BsonElement("minRentLength")]
-    public TimeInterval? MinRentLength { get; set; }
+    public TimeSpan? MinRentLength { get; set; }
 
     [BsonElement("capacity")]
     public int? Capacity { get; set; }
@@ -54,6 +53,6 @@ public class WeddingComponent : IAggregateRoot, IIdentified
     public List<Service> Services { get; set; } = new List<Service>();
 
     [BsonElement("premises")]
-    public List<Hall> Premises { get; set; } = new List<Hall>();
+    public List<Hall> Halls { get; set; } = new List<Hall>();
 }
 

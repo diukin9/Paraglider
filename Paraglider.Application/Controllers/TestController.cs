@@ -1,23 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Paraglider.Data.MongoDB;
+﻿using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
+using Paraglider.API.DataTransferObjects;
 using Paraglider.Domain.NoSQL.Entities;
+using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.API.Controllers
 {
     public class TestController : Controller
     {
-        public IDataAccess<WeddingComponent> _wedCompDataAccess { get; }
+        private readonly IDataAccess<WeddingComponent> _components;
+        private readonly IMapper _mapper;
 
-        public TestController(IDataAccess<WeddingComponent> access) 
+        public TestController(IDataAccess<WeddingComponent> components, IMapper mapper)
         {
-            _wedCompDataAccess = access;
+            _components = components;
+            _mapper = mapper;
         }
 
         [Route("test")]
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return Ok();
+            var components = await _components.GetAllAsync();
+            var component = components.FirstOrDefault();
+            return Ok(_mapper.Map<PhotographerDTO>(component!));
         }
     }
 }

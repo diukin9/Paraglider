@@ -29,7 +29,15 @@ public class Contacts
     [BsonElement("instagram")]
     public readonly string? Instagram;
 
-    public Contacts(string phoneNumber, string? email, string? telegram, string? whatsApp, string? viber)
+    //for mapster
+    public Contacts() { }
+
+    public Contacts(
+        string phoneNumber,
+        string? email = null,
+        string? telegram = null,
+        string? whatsApp = null,
+        string? viber = null)
     {
         if (string.IsNullOrEmpty(phoneNumber))
         {

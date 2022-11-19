@@ -13,6 +13,6 @@ public static class StringExtensions
     public static string ToPhoneNumberPattern(this string value)
     {
         //TODO
-        throw new NotImplementedException();
+        return value;
     }
 }

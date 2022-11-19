@@ -26,7 +26,7 @@ namespace Paraglider.API.Features.Users.Queries
 
     public class GetUserByExternalLoginInfoRequestValidator : AbstractValidator<GetUserByExternalLoginInfoRequest>
     {
-        public GetUserByExternalLoginInfoRequestValidator() => RuleSet(AppData.DefaultRuleSetName, () =>
+        public GetUserByExternalLoginInfoRequestValidator() => RuleSet(DefaultRuleSetName, () =>
         {
             RuleFor(x => x.Info).NotNull();
             RuleFor(x => x.Info.LoginProvider).IsEnumName(typeof(ExternalAuthProvider), false);
