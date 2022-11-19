@@ -1,7 +1,7 @@
 ﻿using Paraglider.Domain.Entities;
 using Paraglider.Infrastructure.Common.Abstractions;
 
-namespace Paraglider.Data.Repositories.Interfaces;
+namespace Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 
 public interface IUserRepository : IRepository<ApplicationUser>
 {

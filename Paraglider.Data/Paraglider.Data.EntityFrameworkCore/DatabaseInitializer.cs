@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Paraglider.Data.Factories;
+using Paraglider.Data.EntityFrameworkCore.Factories;
 using Paraglider.Domain.Entities;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Exceptions;

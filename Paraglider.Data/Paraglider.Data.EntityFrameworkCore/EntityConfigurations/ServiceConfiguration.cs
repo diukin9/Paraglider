@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Paraglider.Domain.Entities;
 
-namespace Paraglider.Data.EntityConfigurations;
+namespace Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
 
 public class ServiceConfiguration : IEntityTypeConfiguration<Service>
 {

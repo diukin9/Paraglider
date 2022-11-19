@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Paraglider.Data.Migrations
+namespace Paraglider.Data.EntityFrameworkCore.Migrations
 {
     public partial class Init : Migration
     {

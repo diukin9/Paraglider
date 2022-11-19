@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Paraglider.Domain.Abstractions;
 
-namespace Paraglider.Data.EntityConfigurations;
+namespace Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
 
 internal class WeddingComponentConfiguration<T> : IEntityTypeConfiguration<T> where T : class, IWeddingComponent
 {

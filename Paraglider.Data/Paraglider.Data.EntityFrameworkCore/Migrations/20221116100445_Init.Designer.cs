@@ -9,7 +9,7 @@ using Paraglider.Data;
 
 #nullable disable
 
-namespace Paraglider.Data.Migrations
+namespace Paraglider.Data.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20221116100445_Init")]

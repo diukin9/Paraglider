@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Paraglider.Data.Migrations
+namespace Paraglider.Data.EntityFrameworkCore.Migrations
 {
     public partial class Added_city_key : Migration
     {

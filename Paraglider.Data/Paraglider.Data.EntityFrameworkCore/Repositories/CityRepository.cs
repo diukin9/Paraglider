@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Paraglider.Data.Repositories.Interfaces;
+using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.Entities;
 using Paraglider.Infrastructure.Common;
 
-namespace Paraglider.Data.Repositories
+namespace Paraglider.Data.EntityFrameworkCore.Repositories
 {
     public class CityRepository : Repository<City>, ICityRepository
     {

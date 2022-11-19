@@ -1,6 +1,6 @@
 ﻿using Paraglider.Domain.Entities;
 
-namespace Paraglider.Data.Repositories.Interfaces
+namespace Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces
 {
     public interface ICityRepository
     {

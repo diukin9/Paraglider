@@ -5,8 +5,6 @@ VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.API", "Paraglider.Application\Paraglider.API.csproj", "{BE68F287-AC03-44D0-A277-F91DC5AB9D72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Data", "Paraglider.Data\Paraglider.Data.csproj", "{E8742138-91F1-455A-AE40-5F4FA9782B13}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{325F9549-2FBC-4574-9999-9CC84452AC6B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{F003D42D-2584-4DF3-A823-2C16F90A1D2D}"
@@ -16,6 +14,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Infrastructure.Common", "Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj", "{46BBE932-E92E-45C4-B44E-52C1C41F4EB0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Domain", "Paraglider.Domain\Paraglider.Domain.csproj", "{F9B666C3-56E4-43DA-A7DE-50FFBECB7261}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Data.EntityFrameworkCore", "Paraglider.Data\Paraglider.Data.EntityFrameworkCore\Paraglider.Data.EntityFrameworkCore.csproj", "{ECA2C330-5452-4B70-B6FC-F48D1EAA9E4F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Data.MongoDB", "Paraglider.Data\Paraglider.Data.MongoDB\Paraglider.Data.MongoDB.csproj", "{3649EE49-03EC-45D6-BC40-61F96593239D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +29,6 @@ Global
 		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8742138-91F1-455A-AE40-5F4FA9782B13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8742138-91F1-455A-AE40-5F4FA9782B13}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8742138-91F1-455A-AE40-5F4FA9782B13}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8742138-91F1-455A-AE40-5F4FA9782B13}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46BBE932-E92E-45C4-B44E-52C1C41F4EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46BBE932-E92E-45C4-B44E-52C1C41F4EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46BBE932-E92E-45C4-B44E-52C1C41F4EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -39,14 +37,23 @@ Global
 		{F9B666C3-56E4-43DA-A7DE-50FFBECB7261}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9B666C3-56E4-43DA-A7DE-50FFBECB7261}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9B666C3-56E4-43DA-A7DE-50FFBECB7261}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECA2C330-5452-4B70-B6FC-F48D1EAA9E4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECA2C330-5452-4B70-B6FC-F48D1EAA9E4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECA2C330-5452-4B70-B6FC-F48D1EAA9E4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECA2C330-5452-4B70-B6FC-F48D1EAA9E4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3649EE49-03EC-45D6-BC40-61F96593239D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3649EE49-03EC-45D6-BC40-61F96593239D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3649EE49-03EC-45D6-BC40-61F96593239D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3649EE49-03EC-45D6-BC40-61F96593239D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{E8742138-91F1-455A-AE40-5F4FA9782B13} = {F003D42D-2584-4DF3-A823-2C16F90A1D2D}
 		{46BBE932-E92E-45C4-B44E-52C1C41F4EB0} = {C44F003B-047B-42FE-A1BC-AD909372308A}
 		{F9B666C3-56E4-43DA-A7DE-50FFBECB7261} = {325F9549-2FBC-4574-9999-9CC84452AC6B}
+		{ECA2C330-5452-4B70-B6FC-F48D1EAA9E4F} = {F003D42D-2584-4DF3-A823-2C16F90A1D2D}
+		{3649EE49-03EC-45D6-BC40-61F96593239D} = {F003D42D-2584-4DF3-A823-2C16F90A1D2D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F4D5E558-541B-4569-BAF2-341EEDD5C1EE}

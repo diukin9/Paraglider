@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Paraglider.Data.EntityConfigurations;
+using Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
 using Paraglider.Domain.Entities;
 
 namespace Paraglider.Data;

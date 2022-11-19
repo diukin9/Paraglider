@@ -2,7 +2,7 @@
 using Paraglider.Domain.Enums;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.Data.Factories
+namespace Paraglider.Data.EntityFrameworkCore.Factories
 {
     public class UserFactory
     {

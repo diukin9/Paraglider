@@ -1,5 +1,5 @@
 ﻿using Paraglider.Data;
-using Paraglider.Data.Repositories;
+using Paraglider.Data.EntityFrameworkCore.Repositories;
 using Paraglider.Domain.Entities;
 using Paraglider.Infrastructure.Common;
 using Paraglider.API.Definitions.Base;
