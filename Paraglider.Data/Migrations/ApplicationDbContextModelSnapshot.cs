@@ -317,6 +317,10 @@ namespace Paraglider.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -629,6 +633,8 @@ namespace Paraglider.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("CityId");
 
                     b.ToTable("WeddingPlannings");
                 });
@@ -1044,6 +1050,14 @@ namespace Paraglider.Data.Migrations
                     b.HasOne("Paraglider.Domain.Entities.ApplicationUser", null)
                         .WithMany("WeddingPlannings")
                         .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Paraglider.Domain.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.Entities.Album", b =>

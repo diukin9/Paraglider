@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Infrastructure.Enums
+﻿namespace Paraglider.Infrastructure.Common.Enums
 {
     public enum IntervalType
     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Paraglider.Infrastructure.Common.Abstractions;
 
-namespace Paraglider.Infrastructure.Extensions;
+namespace Paraglider.Infrastructure.Common.Extensions;
 
 public static class PagedListExtensions
 {

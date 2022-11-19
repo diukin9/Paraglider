@@ -1,3 +1,3 @@
-﻿namespace Paraglider.Infrastructure.Abstractions;
+﻿namespace Paraglider.Infrastructure.Common.Abstractions;
 
 public interface IViewModel { }

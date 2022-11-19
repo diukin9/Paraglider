@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
-using Paraglider.Infrastructure.Abstractions;
+using Paraglider.Infrastructure.Common.Abstractions;
 
-namespace Paraglider.Infrastructure;
+namespace Paraglider.Infrastructure.Common;
 
 public class UnitOfWork<TContext> : IRepositoryFactory, IUnitOfWork<TContext> where TContext : DbContext
 {

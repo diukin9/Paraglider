@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Abstractions;
 using System.Linq.Expressions;
 
-namespace Paraglider.Infrastructure;
+namespace Paraglider.Infrastructure.Common.Abstractions;
 
 public interface IRepository<TEntity> where TEntity : class, IAggregateRoot
 {

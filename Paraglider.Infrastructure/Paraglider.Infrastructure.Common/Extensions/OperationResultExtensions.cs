@@ -1,4 +1,5 @@
-﻿namespace Paraglider.Infrastructure.Extensions;
+﻿
+namespace Paraglider.Infrastructure.Common.Extensions;
 
 public static class OperationResultExtensions
 {
@@ -20,7 +21,7 @@ public static class OperationResultExtensions
         return source;
     }
 
-    public static OperationResult AddError(this OperationResult source, string message, Exception exception, object? data = null)
+    public static OperationResult AddError(this OperationResult source, string message, Exception? exception = null, object? data = null)
     {
         source.Exception = exception;
         source.Metadata = new Metadata(source, message, data, MetadataType.Error);

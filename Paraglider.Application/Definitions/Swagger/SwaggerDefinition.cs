@@ -1,11 +1,11 @@
 ﻿using Microsoft.OpenApi.Models;
-using Paraglider.Infrastructure;
-using Paraglider.Web.Definitions.Base;
+using Paraglider.Infrastructure.Common;
+using Paraglider.API.Definitions.Base;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
-namespace Paraglider.Web.Definitions.Swagger;
+namespace Paraglider.API.Definitions.Swagger;
 
 public class SwaggerDefinition : AppDefinition
 {

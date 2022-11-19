@@ -1,6 +1,6 @@
-﻿using Paraglider.Web.Definitions.Base;
+﻿using Paraglider.API.Definitions.Base;
 
-namespace Paraglider.Web.Definitions.Cors;
+namespace Paraglider.API.Definitions.Cors;
 
 public class CorsDefinition : AppDefinition
 {

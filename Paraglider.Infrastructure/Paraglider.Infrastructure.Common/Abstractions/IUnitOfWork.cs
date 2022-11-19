@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
-using Paraglider.Infrastructure.Abstractions;
 
-namespace Paraglider.Infrastructure;
+namespace Paraglider.Infrastructure.Common.Abstractions;
 
 public interface IUnitOfWork<out TContext> : IUnitOfWork where TContext : DbContext
 {

@@ -1,5 +1,5 @@
 ﻿using Paraglider.Domain.Abstractions;
-using Paraglider.Infrastructure.Abstractions;
+using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.Entities;
 

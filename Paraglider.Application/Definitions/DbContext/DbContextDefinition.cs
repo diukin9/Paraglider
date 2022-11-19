@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Paraglider.Data;
 using Paraglider.Domain.Entities;
-using Paraglider.Web.Definitions.Base;
+using Paraglider.API.Definitions.Base;
 
-namespace Paraglider.Web.Definitions.DbContext;
+namespace Paraglider.API.Definitions.DbContext;
 
 public class DbContextDefinition : AppDefinition
 {

@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Infrastructure;
+﻿namespace Paraglider.Infrastructure.Common;
 
 /// <summary>
 ///     Generic operation result for any requests for Web API service and some MVC actions.

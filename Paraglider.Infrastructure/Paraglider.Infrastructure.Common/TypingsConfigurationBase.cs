@@ -1,7 +1,7 @@
 ﻿using Reinforced.Typings.Fluent;
 using System.Reflection;
 
-namespace Paraglider.Infrastructure;
+namespace Paraglider.Infrastructure.Common;
 
 public static class TypingsConfiguration
 {

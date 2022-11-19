@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Web.Definitions.Base;
+﻿namespace Paraglider.API.Definitions.Base;
 
 public static class AppDefinitionExtensions
 {

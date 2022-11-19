@@ -8,11 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;1591;CA2208;RT0009</NoWarn>
+    <NoWarn>1701;1702;1591;CA2208;RT0009;CA2016</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn>1701;1702;1591;CA2208;RT0009</NoWarn>
+    <NoWarn>1701;1702;1591;CA2208;RT0009;CA2016</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,10 +23,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="7.0.0" />
-    <PackageReference Include="AspNet.Security.OAuth.Yandex" Version="7.0.0" />
-    <PackageReference Include="Automapper" Version="12.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+      <PackageReference Include="FluentValidation" Version="11.2.2" />
+      <PackageReference Include="Mapster" Version="7.3.0" />
+      <PackageReference Include="Mapster.Async" Version="2.0.0" />
+      <PackageReference Include="Mapster.Core" Version="1.2.0" />
+      <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+      <PackageReference Include="Mapster.EFCore" Version="5.1.0" />
+      <PackageReference Include="AspNet.Security.OAuth.Vkontakte" Version="7.0.0" />
+      <PackageReference Include="AspNet.Security.OAuth.Yandex" Version="7.0.0" />
       <PackageReference Include="FluentValidation" Version="11.3.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.3.0" />
       <PackageReference Include="MediatR" Version="11.0.0" />
@@ -40,6 +44,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+      <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
       <PackageReference Include="Reinforced.Typings" Version="1.6.1" />
       <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />

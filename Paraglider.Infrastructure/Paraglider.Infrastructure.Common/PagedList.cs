@@ -1,4 +1,6 @@
-﻿namespace Paraglider.Infrastructure;
+﻿using Paraglider.Infrastructure.Common.Abstractions;
+
+namespace Paraglider.Infrastructure.Common;
 
 public class PagedList<TSource, TResult> : IPagedList<TResult>
 {

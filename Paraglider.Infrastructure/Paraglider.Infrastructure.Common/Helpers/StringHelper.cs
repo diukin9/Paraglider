@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Infrastructure.Helpers;
+﻿namespace Paraglider.Infrastructure.Common.Helpers;
 
 public static class StringHelper
 {

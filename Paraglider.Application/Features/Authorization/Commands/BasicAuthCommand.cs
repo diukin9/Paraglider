@@ -3,13 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Data.Repositories;
 using Paraglider.Domain.Entities;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Exceptions;
-using Paraglider.Infrastructure.Extensions;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Extensions;
 using Reinforced.Typings.Attributes;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.API.Commands;
+namespace Paraglider.API.Features.Authorization.Commands;
 
 [TsClass]
 public class BasicAuthRequest : IRequest<OperationResult>
@@ -23,8 +23,8 @@ public class BasicAuthRequestValidator : AbstractValidator<BasicAuthRequest>
 {
     public BasicAuthRequestValidator() => RuleSet(DefaultRuleSetName, () =>
     {
-        RuleFor(x => x.Login).MinimumLength(3).MaximumLength(64);
-        RuleFor(x => x.Password).MinimumLength(8).MaximumLength(64);
+        RuleFor(x => x.Login).NotNull().NotEmpty();
+        RuleFor(x => x.Password).NotNull().NotEmpty();
     });
 }
 
@@ -51,7 +51,7 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
         {
-            return operation.AddError(string.Join("; ", validateResult.Errors), new ArgumentException());
+            return operation.AddError(string.Join("; ", validateResult.Errors));
         }
 
         var user = await _userRepository.FindByEmailAsync(request.Login)
@@ -59,21 +59,15 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
 
         if (user is null)
         {
-            operation.AddError(
-                Messages.BasicAuth_UserNotFound(request.Login),
-                new NotFoundException(typeof(ApplicationUser))
-            );
-            return operation;
+            return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ApplicationUser)));
         }
 
         var signInResult = await _signInManager.PasswordSignInAsync(user, request.Password, true, false);
         if (!signInResult.Succeeded)
         {
-            operation.AddError(Messages.BasicAuth_WrongPassword(request.Login), new WrongPasswordException());
-            return operation;
+            return operation.AddError(ExceptionMessages.WrongPasswordEntered);
         }
 
-        operation.AddSuccess(Messages.BasicAuth_SuccessfulAuth(request.Login));
-        return operation;
+        return operation.AddSuccess(Messages.SuccessfulAuth);
     }
 }

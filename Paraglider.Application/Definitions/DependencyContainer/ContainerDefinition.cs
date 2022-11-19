@@ -1,6 +1,6 @@
-﻿using Paraglider.Web.Definitions.Base;
+﻿using Paraglider.API.Definitions.Base;
 
-namespace Paraglider.Web.Definitions.DependencyContainer;
+namespace Paraglider.API.Definitions.DependencyContainer;
 
 public class ContainerDefinition : AppDefinition
 {

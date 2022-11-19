@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Paraglider.Web.Definitions.Base;
+using Paraglider.API.Definitions.Base;
 using System.Reflection;
 
-namespace Paraglider.Web.Definitions.Mediator;
+namespace Paraglider.API.Definitions.Mediator;
 
 public class MediatorDefinition : AppDefinition
 {
