@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.Entities;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Extensions;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Extensions;
 using Reinforced.Typings.Attributes;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
@@ -27,7 +27,6 @@ public class LogoutCommandHandler : IRequestHandler<LogoutRequest, OperationResu
     {
         var operation = new OperationResult();
         await _signInManager.SignOutAsync();
-        operation.AddSuccess(Messages.SuccessfulLogout);
-        return operation;
+        return operation.AddSuccess(Messages.SuccessfulLogout);
     }
 }

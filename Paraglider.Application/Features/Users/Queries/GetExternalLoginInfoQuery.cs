@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.Entities;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Exceptions;
-using Paraglider.Infrastructure.Extensions;
-using static Paraglider.Infrastructure.AppData;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Extensions;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Queries
 {
@@ -32,13 +31,10 @@ namespace Paraglider.API.Features.Users.Queries
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info is null)
             {
-                operation.AddError(
-                    Exceptions.ObjectIsNull(typeof(ExternalLoginInfo)),
-                    new NotFoundException(typeof(ExternalLoginInfo)));
+                return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ExternalLoginInfo)));
             }
 
-            operation.AddSuccess(Messages.ObjectFound(info!.GetType()), info);
-            return operation;
+            return operation.AddSuccess(Messages.ObjectFound(info!.GetType()), info);
         }
     }
 }

@@ -12,7 +12,7 @@ public class CommonDefinition : AppDefinition
         services.AddResponseCaching();
         services.AddMemoryCache();
 
-        services.AddMvc();
+        services.AddControllers();
     }
 
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)

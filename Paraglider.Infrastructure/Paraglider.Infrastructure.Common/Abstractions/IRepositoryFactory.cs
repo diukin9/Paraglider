@@ -1,6 +1,4 @@
-﻿using Paraglider.Infrastructure.Abstractions;
-
-namespace Paraglider.Infrastructure;
+﻿namespace Paraglider.Infrastructure.Common.Abstractions;
 
 public interface IRepositoryFactory
 {

@@ -1,8 +1,8 @@
-﻿namespace Paraglider.Infrastructure
+﻿namespace Paraglider.Infrastructure.Common
 {
     public static partial class AppData
     {
-        public static class Exceptions
+        public static class ExceptionMessages
         {
             public const string NotEnoughUserInfoFromExternalProvider = "Couldn't get basic user information from an external provider.";
             public const string WrongPasswordEntered = "Wrong password entered.";

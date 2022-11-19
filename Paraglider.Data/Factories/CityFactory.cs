@@ -1,5 +1,5 @@
 ﻿using Paraglider.Domain.Entities;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Data.Factories
 {
@@ -27,12 +27,12 @@ namespace Paraglider.Data.Factories
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentException(Exceptions.NullOrEmptyField(nameof(name)));
+                throw new ArgumentException(ExceptionMessages.NullOrEmptyField(nameof(name)));
             }
 
             if (string.IsNullOrEmpty(key))
             {
-                throw new ArgumentException(Exceptions.NullOrEmptyField(nameof(key)));
+                throw new ArgumentException(ExceptionMessages.NullOrEmptyField(nameof(key)));
             }
 
             Name = name;

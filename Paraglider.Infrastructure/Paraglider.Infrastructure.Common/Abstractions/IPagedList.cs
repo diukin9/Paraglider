@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Infrastructure;
+﻿namespace Paraglider.Infrastructure.Common.Abstractions;
 
 public interface IPagedList<T>
 {

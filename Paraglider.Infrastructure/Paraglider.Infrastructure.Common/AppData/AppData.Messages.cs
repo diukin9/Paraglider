@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Infrastructure;
+﻿namespace Paraglider.Infrastructure.Common;
 
 public static partial class AppData
 {

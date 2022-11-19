@@ -3,11 +3,11 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Data.Repositories;
 using Paraglider.Domain.Entities;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Exceptions;
-using Paraglider.Infrastructure.Extensions;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Extensions;
 using Reinforced.Typings.Attributes;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
@@ -51,7 +51,7 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
         {
-            return operation.AddError(string.Join("; ", validateResult.Errors), new ArgumentException());
+            return operation.AddError(string.Join("; ", validateResult.Errors));
         }
 
         var user = await _userRepository.FindByEmailAsync(request.Login)
@@ -59,21 +59,15 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
 
         if (user is null)
         {
-            operation.AddError(
-                Exceptions.ObjectIsNull(typeof(ApplicationUser)),
-                new NotFoundException(typeof(ApplicationUser))
-            );
-            return operation;
+            return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ApplicationUser)));
         }
 
         var signInResult = await _signInManager.PasswordSignInAsync(user, request.Password, true, false);
         if (!signInResult.Succeeded)
         {
-            operation.AddError(Exceptions.WrongPasswordEntered, new WrongPasswordException());
-            return operation;
+            return operation.AddError(ExceptionMessages.WrongPasswordEntered);
         }
 
-        operation.AddSuccess(Messages.SuccessfulAuth);
-        return operation;
+        return operation.AddSuccess(Messages.SuccessfulAuth);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Paraglider.Domain.Entities;
 using Paraglider.Domain.Enums;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Data.Factories
 {
@@ -10,7 +10,7 @@ namespace Paraglider.Data.Factories
         {
             var id = Guid.NewGuid();
 
-            var user = new Domain.Entities.ApplicationUser()
+            var user = new ApplicationUser()
             {
                 Id = id,
                 FirstName = data.FirstName,
@@ -73,13 +73,13 @@ namespace Paraglider.Data.Factories
             string? externalId = null,
             string? phoneNumber = null)
         {
-            if (city is null) throw new ArgumentException(Exceptions.ObjectIsNull(typeof(City)));
+            if (city is null) throw new ArgumentException(ExceptionMessages.ObjectIsNull(typeof(City)));
 
             foreach (var field in new List<string>() { firstName, surname, username, city!.Name })
             {
                 if (string.IsNullOrEmpty(field))
                 {
-                    throw new ArgumentException(Exceptions.NullOrEmptyField(nameof(field)));
+                    throw new ArgumentException(ExceptionMessages.NullOrEmptyField(nameof(field)));
                 }
             }
 

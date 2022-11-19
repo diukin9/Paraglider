@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Paraglider.Data.Repositories.Interfaces;
 using Paraglider.Domain.Entities;
-using Paraglider.Infrastructure;
+using Paraglider.Infrastructure.Common;
 
 namespace Paraglider.Data.Repositories
 {

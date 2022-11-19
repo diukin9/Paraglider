@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Paraglider.Data.Factories;
 using Paraglider.Domain.Entities;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Exceptions;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Exceptions;
 
 namespace Paraglider.Data;
 

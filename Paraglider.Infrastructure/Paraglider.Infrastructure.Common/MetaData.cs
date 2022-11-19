@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Infrastructure;
+﻿namespace Paraglider.Infrastructure.Common;
 
 /// <summary>
 ///     Metadata object base for all type  <see cref="IMetadataMessage" />

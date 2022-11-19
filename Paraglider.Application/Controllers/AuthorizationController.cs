@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Paraglider.API.Features.Authorization.Commands;
 using Paraglider.API.Features.Users.Commands;
 using Paraglider.API.Features.Users.Queries;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Exceptions;
-using Paraglider.Infrastructure.Extensions;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Extensions;
 
 namespace Paraglider.API.Controllers;
 
@@ -64,8 +63,7 @@ public class AuthorizationController : Controller
     {
         if (!string.IsNullOrEmpty(remoteError))
         {
-            var operation = new OperationResult()
-                .AddError(remoteError, new ExternalProviderException());
+            var operation = new OperationResult().AddError(remoteError);
             return BadRequest(operation);
         }
       

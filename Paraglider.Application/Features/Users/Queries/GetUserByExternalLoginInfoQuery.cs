@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Paraglider.API.DataTransferObjects;
 using Paraglider.Domain.Entities;
 using Paraglider.Domain.Enums;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Exceptions;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Extensions;
 using System.Security.Claims;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Queries
 {
@@ -29,7 +29,7 @@ namespace Paraglider.API.Features.Users.Queries
         public GetUserByExternalLoginInfoRequestValidator() => RuleSet(AppData.DefaultRuleSetName, () =>
         {
             RuleFor(x => x.Info).NotNull();
-            RuleFor(x => x.Info.LoginProvider).IsEnumName(typeof(ExternalAuthProvider));
+            RuleFor(x => x.Info.LoginProvider).IsEnumName(typeof(ExternalAuthProvider), false);
         });
     }
 
@@ -58,19 +58,13 @@ namespace Paraglider.API.Features.Users.Queries
             var validateResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validateResult.IsValid)
             {
-                return operation.AddError(string.Join("; ", validateResult.Errors), new ArgumentException());
+                return operation.AddError(string.Join("; ", validateResult.Errors));
             }
 
-            var externalId = request.Info.Principal.Claims
-                .Where(c => c.Type == ClaimTypes.NameIdentifier)
-                .SingleOrDefault()
-                ?.Value;
-
+            var externalId = request.Info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier);
             if (string.IsNullOrEmpty(externalId))
             {
-                return operation.AddError(
-                    Exceptions.NotEnoughUserInfoFromExternalProvider,
-                    new ExternalAuthException());
+                return operation.AddError(ExceptionMessages.NotEnoughUserInfoFromExternalProvider);
             }
 
             var provider = Enum.Parse<ExternalAuthProvider>(request.Info.LoginProvider);
@@ -86,13 +80,10 @@ namespace Paraglider.API.Features.Users.Queries
 
             if (dto is null)
             {
-                return operation.AddError(
-                    Exceptions.ObjectIsNull(typeof(ApplicationUser)),
-                    new NotFoundException(typeof(ApplicationUser)));
+                return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ApplicationUser)));
             }
 
-            operation.AddSuccess(Messages.ObjectFound(typeof(ApplicationUser)), dto);
-            return operation;
+            return operation.AddSuccess(Messages.ObjectFound(typeof(ApplicationUser)), dto);
         }
     }
 }

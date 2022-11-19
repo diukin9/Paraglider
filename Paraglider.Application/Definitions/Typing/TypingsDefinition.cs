@@ -1,7 +1,7 @@
-﻿using Paraglider.Infrastructure;
+﻿using Paraglider.Infrastructure.Common;
 using System.Reflection;
 using ConfigurationBuilder = Reinforced.Typings.Fluent.ConfigurationBuilder;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API;
 

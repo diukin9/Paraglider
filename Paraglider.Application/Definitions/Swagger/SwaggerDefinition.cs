@@ -1,5 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
-using Paraglider.Infrastructure;
+using Paraglider.Infrastructure.Common;
 using Paraglider.API.Definitions.Base;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;

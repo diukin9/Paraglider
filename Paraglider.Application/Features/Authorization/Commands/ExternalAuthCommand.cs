@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Paraglider.Domain.Entities;
 using Paraglider.Domain.Enums;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Exceptions;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Extensions;
 using System.Security.Claims;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands
 {
@@ -27,7 +27,7 @@ namespace Paraglider.API.Features.Authorization.Commands
         public ExternalAuthRequestValidator() => RuleSet(DefaultRuleSetName, () =>
         {
             RuleFor(x => x.Info).NotNull();
-            RuleFor(x => x.Info.LoginProvider).IsEnumName(typeof(ExternalAuthProvider));
+            RuleFor(x => x.Info.LoginProvider).IsEnumName(typeof(ExternalAuthProvider), false);
         });
     }
 
@@ -54,15 +54,12 @@ namespace Paraglider.API.Features.Authorization.Commands
             var validateResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validateResult.IsValid)
             {
-                return operation.AddError(string.Join("; ", validateResult.Errors), new ArgumentException());
+                return operation.AddError(string.Join("; ", validateResult.Errors));
             }
 
             var provider = Enum.Parse<ExternalAuthProvider>(request.Info.LoginProvider);
 
-            var externalId = request.Info.Principal.Claims
-                .Where(c => c.Type == ClaimTypes.NameIdentifier)
-                .SingleOrDefault()
-                ?.Value;
+            var externalId = request.Info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier);
 
             var user = await _userManager.Users.Include(x => x.ExternalAuthInfo)
                 .Where(x => x.ExternalAuthInfo
@@ -71,9 +68,7 @@ namespace Paraglider.API.Features.Authorization.Commands
 
             if (user is null)
             {
-                return operation.AddError(
-                    Exceptions.ObjectIsNull(typeof(ApplicationUser)), 
-                    new ExternalAuthException());
+                return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ApplicationUser)));
             }
 
             var logins = await _userManager.GetLoginsAsync(user);
@@ -82,9 +77,7 @@ namespace Paraglider.API.Features.Authorization.Commands
                 var identityResult = await _userManager.AddLoginAsync(user, request.Info);
                 if (!identityResult.Succeeded)
                 {
-                    return operation.AddError(
-                        string.Join("; ", identityResult.Errors),
-                        new ExternalAuthException());
+                    return operation.AddError(string.Join("; ", identityResult.Errors));
                 }
             }
 
@@ -95,7 +88,7 @@ namespace Paraglider.API.Features.Authorization.Commands
 
             if (!signInResult.Succeeded)
             {
-                return operation.AddError(Exceptions.FailedExternalAuth, new ExternalAuthException());
+                return operation.AddError(ExceptionMessages.FailedExternalAuth);
             }
 
             return operation.AddSuccess(Messages.SuccessfullExternalAuth);

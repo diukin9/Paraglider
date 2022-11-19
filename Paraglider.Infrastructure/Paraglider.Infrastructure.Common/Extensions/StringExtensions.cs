@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Paraglider.Infrastructure.Extensions;
+namespace Paraglider.Infrastructure.Common.Extensions;
 
 public static class StringExtensions
 {

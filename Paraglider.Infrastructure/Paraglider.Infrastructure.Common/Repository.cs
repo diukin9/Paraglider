@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query;
-using Paraglider.Infrastructure.Abstractions;
-using Paraglider.Infrastructure.Extensions;
+using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Extensions;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Paraglider.Infrastructure;
+namespace Paraglider.Infrastructure.Common;
 
 /// <summary>
 /// Represents a default generic repository implements the <see cref="IRepository{TEntity}"/> interface.

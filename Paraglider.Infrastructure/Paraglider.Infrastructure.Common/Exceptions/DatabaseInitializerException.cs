@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Infrastructure.Exceptions;
+﻿namespace Paraglider.Infrastructure.Common.Exceptions;
 
 public class DatabaseInitializerException : Exception 
 {

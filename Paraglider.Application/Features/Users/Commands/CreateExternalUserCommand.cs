@@ -9,12 +9,13 @@ using Paraglider.Data.Factories;
 using Paraglider.Data.Repositories;
 using Paraglider.Domain.Entities;
 using Paraglider.Domain.Enums;
-using Paraglider.Infrastructure;
-using Paraglider.Infrastructure.Exceptions;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Extensions;
+using Paraglider.Infrastructure.Common.Helpers;
 using Paraglider.Infrastructure.Extensions;
-using Paraglider.Infrastructure.Helpers;
 using System.Security.Claims;
-using static Paraglider.Infrastructure.AppData;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Commands
 {
@@ -28,7 +29,7 @@ namespace Paraglider.API.Features.Users.Commands
         public CreateExternalUserRequestValidator() => RuleSet(DefaultRuleSetName, () =>
         {
             RuleFor(x => x.Info).NotNull();
-            RuleFor(x => x.Info.LoginProvider).IsEnumName(typeof(ExternalAuthProvider));
+            RuleFor(x => x.Info.LoginProvider).IsEnumName(typeof(ExternalAuthProvider), false);
         });
     }
 
@@ -63,27 +64,21 @@ namespace Paraglider.API.Features.Users.Commands
             var validateResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validateResult.IsValid)
             {
-                return operation.AddError(string.Join("; ", validateResult.Errors), new ArgumentException());
+                return operation.AddError(string.Join("; ", validateResult.Errors));
             }
 
             var provider = Enum.Parse<ExternalAuthProvider>(request.Info.LoginProvider);
-            var externalId = request.Info.Principal.Claims
-                .SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            var firstName = request.Info.Principal.Claims
-                .SingleOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value;
-            var surname = request.Info.Principal.Claims
-                .SingleOrDefault(c => c.Type == ClaimTypes.Surname)?.Value;
+            var externalId = request.Info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier);
+            var firstName = request.Info.Principal.Claims.GetByClaimType(ClaimTypes.GivenName);
+            var surname = request.Info.Principal.Claims.GetByClaimType(ClaimTypes.Surname);
 
             if (new[] { externalId, firstName, surname }.Any(x => string.IsNullOrEmpty(x)))
             {
-                return operation.AddError(
-                    Exceptions.NotEnoughUserInfoFromExternalProvider,
-                    new ExternalAuthException());
+                return operation.AddError(ExceptionMessages.NotEnoughUserInfoFromExternalProvider);
             }
 
             var username = StringHelper.GetExternalUsername(request.Info.LoginProvider, externalId);
-            var email = request.Info.Principal.Claims
-                .SingleOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var email = request.Info.Principal.Claims.GetByClaimType(ClaimTypes.Email);
 
             var city = default(City);
             //получаем ip пользователя (на локальном сервере всегда будет ::1)
@@ -118,9 +113,7 @@ namespace Paraglider.API.Features.Users.Commands
             var identityResult = await _userManager.CreateAsync(user);
             if (!identityResult.Succeeded)
             {
-                return operation.AddError(
-                    string.Join("; ", identityResult.Errors),
-                    new CreateUserException());
+                return operation.AddError(string.Join("; ", identityResult.Errors));
             }
 
             var result = _mapper.Map<UserDTO>(user);

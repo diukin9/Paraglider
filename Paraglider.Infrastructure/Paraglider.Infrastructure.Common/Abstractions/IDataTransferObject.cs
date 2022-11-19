@@ -1,9 +1,8 @@
 ﻿using Mapster;
 
-namespace Paraglider.Infrastructure
-{
-    public interface IDataTransferObject : IRegister
-    {
+namespace Paraglider.Infrastructure.Common.Abstractions;
 
-    }
+public interface IDataTransferObject : IRegister
+{
+
 }

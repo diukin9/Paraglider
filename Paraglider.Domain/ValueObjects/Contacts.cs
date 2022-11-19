@@ -1,4 +1,4 @@
-﻿using Paraglider.Infrastructure.Extensions;
+﻿using Paraglider.Infrastructure.Common.Extensions;
 
 namespace Paraglider.Domain.ValueObjects;
 
