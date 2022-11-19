@@ -72,7 +72,7 @@ namespace Paraglider.API.Features.Users.Commands
             var firstName = request.Info.Principal.Claims.GetByClaimType(ClaimTypes.GivenName);
             var surname = request.Info.Principal.Claims.GetByClaimType(ClaimTypes.Surname);
 
-            if (new[] { externalId, firstName, surname }.Any(x => string.IsNullOrEmpty(x)))
+            if (new[] { externalId, firstName, surname }.Any(string.IsNullOrEmpty))
             {
                 return operation.AddError(ExceptionMessages.NotEnoughUserInfoFromExternalProvider);
             }
