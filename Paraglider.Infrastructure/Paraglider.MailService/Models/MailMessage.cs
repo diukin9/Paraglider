@@ -11,7 +11,7 @@ public class MailMessage
 
     public MailMessage(string recipientMail, string subject, string body, TextFormat textFormat = TextFormat.Text)
     {
-        if (StringHelper.CheckForNull(recipientMail, subject, body))
+        if (StringHelper.CheckForNullOrEmpty(recipientMail, subject, body))
         {
             throw new ArgumentException(Exceptions.PassedEmptyParameter);
         }

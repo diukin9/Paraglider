@@ -2,16 +2,8 @@
 
 public static class StringHelper
 {
-    public static bool CheckForNull(params string[] values)
+    public static bool CheckForNullOrEmpty(params string[] values)
     {
-        foreach (var value in values)
-        {
-            if (string.IsNullOrEmpty(value) || string.IsNullOrWhiteSpace(value))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return values.Any(string.IsNullOrEmpty);
     }
 }

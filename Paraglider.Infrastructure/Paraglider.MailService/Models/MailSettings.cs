@@ -16,7 +16,7 @@ public class MailSettings
         string password,
         SecureSocketOptions secureSocketOptions = SecureSocketOptions.StartTls)
     {
-        if (StringHelper.CheckForNull(host, senderMail, password))
+        if (StringHelper.CheckForNullOrEmpty(host, senderMail, password))
         {
             throw new ArgumentException(Exceptions.PassedEmptyParameter);
         }
