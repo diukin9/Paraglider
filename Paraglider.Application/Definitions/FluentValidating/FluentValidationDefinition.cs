@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using Paraglider.API.Features.Authorization.Commands;
-using Paraglider.Web.Definitions.Base;
+using Paraglider.API.Definitions.Base;
 using System.Globalization;
 
-namespace Paraglider.Web.Definitions.FluentValidating;
+namespace Paraglider.API.Definitions.FluentValidating;
 
 public class FluentValidationDefinition : AppDefinition
 {

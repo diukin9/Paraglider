@@ -1,9 +1,9 @@
 ﻿using Mapster;
 using MapsterMapper;
-using Paraglider.Web.Definitions.Base;
+using Paraglider.API.Definitions.Base;
 using System.Reflection;
 
-namespace Paraglider.Web.Definitions.Mapping;
+namespace Paraglider.API.Definitions.Mapping;
 
 public class MapsterDefinition : AppDefinition
 {

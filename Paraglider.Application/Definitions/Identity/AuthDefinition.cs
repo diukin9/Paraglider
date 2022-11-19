@@ -1,6 +1,6 @@
-﻿using Paraglider.Web.Definitions.Base;
+﻿using Paraglider.API.Definitions.Base;
 
-namespace Paraglider.Web.Definitions.Identity;
+namespace Paraglider.API.Definitions.Identity;
 
 public class AuthDefinition : AppDefinition
 {

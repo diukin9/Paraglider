@@ -1,7 +1,7 @@
 ﻿using Paraglider.Data;
-using Paraglider.Web.Definitions.Base;
+using Paraglider.API.Definitions.Base;
 
-namespace Paraglider.Web.Definitions.DataSeeding;
+namespace Paraglider.API.Definitions.DataSeeding;
 
 public class DataSeedingDefinition : AppDefinition
 {

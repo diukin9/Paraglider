@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
-using Paraglider.Web.Definitions.Base;
+using Paraglider.API.Definitions.Base;
 using Serilog;
 using System.Text.Json;
 
-namespace Paraglider.Web.Definitions.ErrorHandling;
+namespace Paraglider.API.Definitions.ErrorHandling;
 
 public class ErrorHandlingDefinition : AppDefinition
 {

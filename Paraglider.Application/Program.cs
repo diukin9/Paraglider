@@ -1,4 +1,4 @@
-﻿using Paraglider.Web.Definitions.Base;
+﻿using Paraglider.API.Definitions.Base;
 using Serilog;
 using Serilog.Events;
 

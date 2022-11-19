@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.HttpOverrides;
-using Paraglider.Web.Definitions.Base;
+using Paraglider.API.Definitions.Base;
 
-namespace Paraglider.Web.Definitions.Common;
+namespace Paraglider.API.Definitions.Common;
 
 public class CommonDefinition : AppDefinition
 {
