@@ -12,9 +12,9 @@ namespace Paraglider.Data.Repositories
 
         }
 
-        public async Task<City?> GetByKeyAsync(string? key)
+        public async Task<City?> GetByKeyAsync(string key, bool disableTracking = false)
         {
-            var city = await this.GetAll(disableTracking: false)
+            var city = await this.GetAll(disableTracking)
                 .Where(u => u.Key == key)
                 .SingleOrDefaultAsync();
             return city;

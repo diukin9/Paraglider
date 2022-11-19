@@ -94,7 +94,7 @@ namespace Paraglider.API.Features.Users.Commands
                     var content = await response!.Content!.ReadAsStringAsync();
                     ipInfo = JsonConvert.DeserializeObject<IpInfo>(content);
                     //получаем application city
-                    city = await _cityRepository.GetByKeyAsync(ipInfo.City);
+                    if (ipInfo?.City is not null) city = await _cityRepository.GetByKeyAsync(ipInfo.City);
                 }
                 catch (Exception) { }
             }
