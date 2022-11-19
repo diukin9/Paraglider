@@ -9,13 +9,13 @@ public class AuthDefinition : AppDefinition
         services.AddAuthentication()
             .AddYandex(config =>
             {
-                config.ClientId = configuration["Authentication:Yandex:ClientId"];
-                config.ClientSecret = configuration["Authentication:Yandex:ClientSecret"];
+                config.ClientId = configuration["Authentication:Yandex:ClientId"]!;
+                config.ClientSecret = configuration["Authentication:Yandex:ClientSecret"]!;
             })
             .AddVkontakte(config =>
             {
-                config.ClientId = configuration["Authentication:Vkontakte:ClientId"];
-                config.ClientSecret = configuration["Authentication:Vkontakte:ClientSecret"];
+                config.ClientId = configuration["Authentication:Vkontakte:ClientId"]!;
+                config.ClientSecret = configuration["Authentication:Vkontakte:ClientSecret"]!;
             });
         services.AddAuthorization();
     }
