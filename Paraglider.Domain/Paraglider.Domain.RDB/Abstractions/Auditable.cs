@@ -1,4 +1,6 @@
-﻿namespace Paraglider.Domain.RDB.Abstractions;
+﻿using Paraglider.Infrastructure.Common.Abstractions;
+
+namespace Paraglider.Domain.RDB.Abstractions;
 
 /// <summary>
 /// Represents 'Audit-able' table from the Property Database

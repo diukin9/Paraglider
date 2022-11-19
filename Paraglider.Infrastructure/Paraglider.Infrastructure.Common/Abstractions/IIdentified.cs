@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Domain.RDB.Abstractions;
+﻿namespace Paraglider.Infrastructure.Common.Abstractions;
 
 /// <summary>
 /// Identifier common interface

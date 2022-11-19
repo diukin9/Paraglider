@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Paraglider.API.Definitions.Base;
 using Paraglider.Data;
 using Paraglider.Data.MongoDB;
+using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.API.Definitions.DbContext;
@@ -28,10 +31,11 @@ public class DatabasesDefinition : AppDefinition
 
         services.AddTransient<IdentityErrorDescriber>();
 
-        var database = new MongoClient(configuration["ConnectionStrings:MongoDB"])
-            .GetDatabase(configuration["MongoDbSettings:DatabaseName"]);
+        var settings = new MongoDbSettings();
+        configuration.Bind(nameof(MongoDbSettings), settings);
+        services.AddSingleton<IMongoDbSettings>(settings);
 
-        services.AddSingleton(database);
-        services.AddSingleton<WeddingComponentDataAccess>();
+        services.AddSingleton<IMongoClient>(new MongoClient(configuration["ConnectionStrings:MongoDB"]));
+        services.AddScoped<IDataAccess<WeddingComponent>, WeddingComponentDataAccess>();
     }
 }

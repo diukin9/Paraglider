@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Paraglider.Domain\Paraglider.Domain.NoSQL\Paraglider.Domain.NoSQL.csproj" />
+    <ProjectReference Include="..\..\Paraglider.Domain\Paraglider.Domain.RDB\Paraglider.Domain.RDB.csproj" />
+    <ProjectReference Include="..\..\Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj" />
   </ItemGroup>
 
 </Project>

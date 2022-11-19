@@ -1,3 +1,6 @@
 ﻿namespace Paraglider.Infrastructure.Common.Abstractions;
 
-public interface IAggregateRoot { }
+public interface IAggregateRoot : IIdentified 
+{
+
+}

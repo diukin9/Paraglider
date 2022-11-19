@@ -1,14 +1,15 @@
-﻿using Paraglider.Domain.NoSQL.Enums;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Paraglider.Infrastructure.Common.Enums;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class Capacity
 {
+    [BsonElement("min")]
     public readonly int? Min;
-    public readonly int? Max;
 
-    //for entity framework
-    private Capacity() { }
+    [BsonElement("max")]
+    public readonly int? Max;
 
     public Capacity(int value, IntervalType intervalType)
     {

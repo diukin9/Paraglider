@@ -1,14 +1,18 @@
-﻿using Paraglider.Domain.NoSQL.Enums;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Paraglider.Infrastructure.Common.Enums;
 
-namespace Paraglider.Domain.NoSQL.ValueObjects;
+namespace Paraglider.Infrastructure.Common;
 
 public class TimeInterval
 {
+    [BsonElement("start")]
     public readonly TimeOnly? IntervalStart;
+
+    [BsonElement("end")]
     public readonly TimeOnly? IntervalEnd;
 
     //for entity framework
-    private TimeInterval() { }
+    public TimeInterval() { }
 
     public TimeInterval(TimeOnly intervalStart, TimeOnly intervalEnd)
     {

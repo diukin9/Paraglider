@@ -1,29 +1,17 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 using Paraglider.Domain.NoSQL.Entities;
 
 namespace Paraglider.Data.MongoDB
 {
-    public class WeddingComponentDataAccess
+    public class WeddingComponentDataAccess : DataAccess<WeddingComponent>
     {
         private const string COLLECTION_NAME = "wedding-components";
-        private readonly IMongoCollection<WeddingComponent> _collection;
 
-        public WeddingComponentDataAccess(IMongoDatabase mongoDB) 
+        public WeddingComponentDataAccess(IMongoClient client, IMongoDbSettings settings) 
+            : base(client, settings, COLLECTION_NAME)
         {
-            _collection = mongoDB.GetCollection<WeddingComponent>(COLLECTION_NAME);
+
         }
-
-        //add
-
-        //add range
-
-        //get all
-        
-        //get by id
-
-        //update
-
-        //delete
-
     }
 }

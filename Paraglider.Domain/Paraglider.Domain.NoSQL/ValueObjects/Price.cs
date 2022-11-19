@@ -1,14 +1,16 @@
-﻿using Paraglider.Domain.NoSQL.Enums;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Paraglider.Domain.NoSQL.Enums;
+using Paraglider.Infrastructure.Common.Enums;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class Price
 {
+    [BsonElement("min")]
     public readonly decimal? Min;
-    public readonly decimal? Max;
 
-    //for entity framework
-    private Price() { }
+    [BsonElement("max")]
+    public readonly decimal? Max;
 
     public Price(decimal value, IntervalType intervalType)
     {

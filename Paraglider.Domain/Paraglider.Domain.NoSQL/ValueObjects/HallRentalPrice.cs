@@ -1,15 +1,16 @@
-﻿using Paraglider.Domain.NoSQL.Enums;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Paraglider.Domain.NoSQL.Enums;
 using System.Text;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class HallRentalPrice
 {
+    [BsonElement("pricePerPerson")]
     public readonly decimal? PricePerPerson;
-    public readonly decimal? RentalPrice;
 
-    //for entity framework
-    private HallRentalPrice() { }
+    [BsonElement("rentalPrice")]
+    public readonly decimal? RentalPrice;
 
     public HallRentalPrice(decimal value, HallRentalPriceType type)
     {

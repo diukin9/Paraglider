@@ -1,10 +1,16 @@
-﻿using Paraglider.Domain.NoSQL.Enums;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using Paraglider.Domain.NoSQL.Enums;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class Media
 {
+    [BsonElement("id")]
     public string Id { get; set; } = null!;
+
+    [BsonElement("type")]
     public MediaType Type { get; set; }
+
+    [BsonElement("url")]
     public string Url { get; set; } = null!;
 }

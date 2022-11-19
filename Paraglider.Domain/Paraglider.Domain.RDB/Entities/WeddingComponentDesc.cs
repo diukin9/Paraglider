@@ -1,6 +1,6 @@
-﻿using Paraglider.Domain.NoSQL.ValueObjects;
-using Paraglider.Domain.RDB.Abstractions;
-using Paraglider.Domain.RDB.Enums;
+﻿using Paraglider.Domain.RDB.Enums;
+using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.RDB.Entities;
 
