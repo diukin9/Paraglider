@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Infrastructure.Common.Response;
+namespace Paraglider.Infrastructure.Common;
 
 /// <summary>
 ///     Generic operation result for any requests for Web API service and some MVC actions.
@@ -6,6 +6,16 @@
 [Serializable]
 public class OperationResult
 {
+    public static OperationResult Success(string message)
+    {
+        return new OperationResult().AddSuccess(message);
+    }
+
+    public static OperationResult Error(string message)
+    {
+        return new OperationResult().AddError(message);
+    }
+
     /// <summary>
     ///     Operation result metadata
     /// </summary>
