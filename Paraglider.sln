@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Infrastructure.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Domain", "Paraglider.Domain\Paraglider.Domain.csproj", "{F9B666C3-56E4-43DA-A7DE-50FFBECB7261}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.MailService", "Paraglider.Infrastructure\Paraglider.MailService\Paraglider.MailService.csproj", "{6720E0BA-D9B3-42F6-9B45-DA0914F21253}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F9B666C3-56E4-43DA-A7DE-50FFBECB7261}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9B666C3-56E4-43DA-A7DE-50FFBECB7261}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9B666C3-56E4-43DA-A7DE-50FFBECB7261}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6720E0BA-D9B3-42F6-9B45-DA0914F21253}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6720E0BA-D9B3-42F6-9B45-DA0914F21253}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6720E0BA-D9B3-42F6-9B45-DA0914F21253}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6720E0BA-D9B3-42F6-9B45-DA0914F21253}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +53,7 @@ Global
 		{E8742138-91F1-455A-AE40-5F4FA9782B13} = {F003D42D-2584-4DF3-A823-2C16F90A1D2D}
 		{46BBE932-E92E-45C4-B44E-52C1C41F4EB0} = {C44F003B-047B-42FE-A1BC-AD909372308A}
 		{F9B666C3-56E4-43DA-A7DE-50FFBECB7261} = {325F9549-2FBC-4574-9999-9CC84452AC6B}
+		{6720E0BA-D9B3-42F6-9B45-DA0914F21253} = {C44F003B-047B-42FE-A1BC-AD909372308A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F4D5E558-541B-4569-BAF2-341EEDD5C1EE}
