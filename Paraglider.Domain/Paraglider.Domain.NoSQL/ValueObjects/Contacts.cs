@@ -1,12 +1,13 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using Paraglider.Infrastructure.Common.Extensions;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class Contacts
 {
     [BsonElement("id")]
-    public string Id { get; set; } = null!;
+    public readonly string Id;
 
     [BsonElement("phoneNumber")]
     public readonly string PhoneNumber = null!;
@@ -29,22 +30,21 @@ public class Contacts
     [BsonElement("instagram")]
     public readonly string? Instagram;
 
-    //for mapster
-    public Contacts() { }
-
     public Contacts(
+        string id,
         string phoneNumber,
         string? email = null,
         string? telegram = null,
         string? whatsApp = null,
         string? viber = null)
     {
-        if (string.IsNullOrEmpty(phoneNumber))
-        {
-            throw new ArgumentNullException("The phone number cannot be empty");
-        }
+        Id = id ?? throw new ArgumentNullException(
+            ExceptionMessages.NullOrEmpty(nameof(id)));
 
-        PhoneNumber = phoneNumber.ToPhoneNumberPattern();
+        PhoneNumber = phoneNumber?.ToPhoneNumberPattern() 
+            ?? throw new ArgumentNullException(
+                ExceptionMessages.NullOrEmpty(nameof(phoneNumber)));
+
         Email = email;
         Telegram = telegram;
         WhatsApp = whatsApp;

@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using Paraglider.Domain.NoSQL.Enums;
 using Paraglider.Infrastructure.Common.Enums;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
@@ -16,7 +16,7 @@ public class Price
     {
         if (value < 0)
         {
-            throw new ArgumentException("Price cannot be negative");
+            throw new ArgumentException(ExceptionMessages.CannotBeNegative(nameof(Price)));
         }
 
         switch (intervalType)
@@ -38,12 +38,12 @@ public class Price
     {
         if (min < 0 || max < 0)
         {
-            throw new ArgumentException("Price cannot be negative");
+            throw new ArgumentException(ExceptionMessages.CannotBeNegative(nameof(Price)));
         }
 
         if (min > max)
         {
-            throw new ArgumentException("'Min' cannot be higher than 'Max'");
+            throw new ArgumentException(ExceptionMessages.CannotBeHigherThan(nameof(Min), nameof(Max)));
         }
 
         Min = min;

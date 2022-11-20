@@ -27,12 +27,12 @@ namespace Paraglider.Data.EntityFrameworkCore.Factories
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentException(ExceptionMessages.NullOrEmptyField(nameof(name)));
+                throw new ArgumentException(ExceptionMessages.NullOrEmpty(nameof(name)));
             }
 
             if (string.IsNullOrEmpty(key))
             {
-                throw new ArgumentException(ExceptionMessages.NullOrEmptyField(nameof(key)));
+                throw new ArgumentException(ExceptionMessages.NullOrEmpty(nameof(key)));
             }
 
             Name = name;

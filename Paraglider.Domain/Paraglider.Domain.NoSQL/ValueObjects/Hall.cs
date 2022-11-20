@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
@@ -32,7 +33,7 @@ public class Hall
         {
             if (value.HasValue && value.Value < 0)
             {
-                throw new ArgumentException("Price cannot be negative");
+                throw new ArgumentException(ExceptionMessages.CannotBeNegative(nameof(Price)));
             }
             minimalPrice = value;
         }

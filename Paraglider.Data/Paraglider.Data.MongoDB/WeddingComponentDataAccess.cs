@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Abstractions;

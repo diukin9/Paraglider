@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using Paraglider.Domain.NoSQL.Enums;
 using System.Text;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
@@ -16,7 +17,7 @@ public class HallRentalPrice
     {
         if (value < 0)
         {
-            throw new ArgumentException("Price cannot be negative");
+            throw new ArgumentException(ExceptionMessages.CannotBeNegative(nameof(Price)));
         }
 
         switch (type)
@@ -32,9 +33,9 @@ public class HallRentalPrice
 
     public HallRentalPrice(decimal pricePerPerson, decimal rentalPrice)
     {
-        if (pricePerPerson <= 0 || rentalPrice <= 0)
+        if (pricePerPerson < 0 || rentalPrice < 0)
         {
-            throw new ArgumentException("Price cannot be negative");
+            throw new ArgumentException(ExceptionMessages.CannotBeNegative(nameof(Price)));
         }
 
         PricePerPerson = pricePerPerson;

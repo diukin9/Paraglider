@@ -12,7 +12,7 @@ public class UserDTO : IDataTransferObject
     public string Username { get; set; } = null!;
     public string? Email { get; set; }
     public CityDTO City { get; set; } = null!;
-    public List<WeddingPlanDTO> WeddingPlans { get; set; } = null!;
+    public WeddingPlanningDTO WeddingPlanning { get; set; } = null!;
 
     public void Register(TypeAdapterConfig config)
     {
@@ -23,7 +23,7 @@ public class UserDTO : IDataTransferObject
             .Map(dest => dest.Surname, src => src.Surname)
             .Map(dest => dest.Email, src => src.Email)
             .Map(dest => dest.City, src => src.City)
-            .Map(dest => dest.WeddingPlans, src => src.WeddingPlannings)
+            .Ignore(dest => dest.WeddingPlanning)
             .RequireDestinationMemberSource(true);
     }
 }

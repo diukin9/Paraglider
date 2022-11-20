@@ -48,12 +48,14 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
     {
         var operation = new OperationResult();
 
+        //валидируем полученные данные
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
         {
             return operation.AddError(string.Join("; ", validateResult.Errors));
         }
 
+        //получаем пользователя
         var user = await _userRepository.FindByEmailAsync(request.Login)
                 ?? await _userRepository.FindByUsernameAsync(request.Login);
 
@@ -62,6 +64,7 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
             return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ApplicationUser)));
         }
 
+        //пытаемся авторизовать
         var signInResult = await _signInManager.PasswordSignInAsync(user, request.Password, true, false);
         if (!signInResult.Succeeded)
         {

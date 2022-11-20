@@ -3,7 +3,7 @@ using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class WeddingPlanning : IIdentified
+public class WeddingPlanning : IIdentified, IAggregateRoot
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }

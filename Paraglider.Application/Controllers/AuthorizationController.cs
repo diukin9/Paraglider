@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.API.Features.Authorization.Commands;
 using Paraglider.API.Features.Users.Commands;
@@ -20,27 +19,24 @@ public class AuthorizationController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost]
     [AllowAnonymous]
-    [Route("/api/basic-auth")]
+    [HttpPost("/api/basic-auth")]
     public async Task<IActionResult> BasicAuthorization([FromBody] BasicAuthRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);
     }
 
-    [HttpPost]
     [Authorize]
-    [Route("/api/logout")]
+    [HttpPost("/api/logout")]
     public async Task<IActionResult> Logout()
     {
         var response = await _mediator.Send(new LogoutRequest(), HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);
     }
 
-    [HttpGet]
     [AllowAnonymous]
-    [Route("/external-auth")]
+    [HttpGet("/external-auth")]
     public async Task<IActionResult> VerifyUserAuthentication(
         [FromQuery] string provider, 
         [FromQuery] string returnUrl)
@@ -50,7 +46,7 @@ public class AuthorizationController : Controller
             HttpContext.RequestAborted);
 
         if (!response.IsOk) return BadRequest(response);
-        var properties = (AuthenticationProperties)response.Metadata!.DataObject!;
+        var properties = (AuthenticationProperties)response.GetDataObject()!;
         return Challenge(properties, provider);
     }
 
@@ -66,29 +62,25 @@ public class AuthorizationController : Controller
             var operation = new OperationResult().AddError(remoteError);
             return BadRequest(operation);
         }
-      
-        var infoResponse = await _mediator.Send(
-            new GetExternalLoginInfoRequest(),
+
+        //ищем пользователя по ExternalLoginInfo
+        var response = await _mediator.Send(
+            new GetUserByExternalLoginInfoRequest(),
             HttpContext.RequestAborted);
 
-        if (!infoResponse.IsOk) return BadRequest(infoResponse);
-        var info = (ExternalLoginInfo)infoResponse.GetDataObject()!;
-
-        var userResponse = await _mediator.Send(
-            new GetUserByExternalLoginInfoRequest(info),
-            HttpContext.RequestAborted);
-
-        if (!userResponse.IsOk)
+        //если не существует - создаем
+        if (!response.IsOk)
         {
-            var createResponse = await _mediator.Send(
-                new CreateExternalUserRequest() { Info = info },
+            response = await _mediator.Send(
+                new CreateExternalUserRequest(),
                 HttpContext.RequestAborted);
 
-            if (!createResponse.IsOk) return BadRequest(createResponse);
+            if (!response.IsOk) return BadRequest(response);
         }
 
-        var response = await _mediator.Send(
-            new ExternalAuthRequest(info),
+        //авторизуем пользователя
+        response = await _mediator.Send(
+            new ExternalAuthRequest(),
             HttpContext.RequestAborted);
 
         if (!response.IsOk) return BadRequest(response);

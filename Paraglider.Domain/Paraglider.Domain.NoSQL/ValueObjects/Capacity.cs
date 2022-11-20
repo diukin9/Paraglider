@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using Paraglider.Infrastructure.Common.Enums;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
@@ -15,7 +16,7 @@ public class Capacity
     {
         if (value < 0)
         {
-            throw new ArgumentException("Capacity cannot be negative");
+            throw new ArgumentException(ExceptionMessages.CannotBeNegative(nameof(Capacity)));
         }
 
         switch (intervalType)
@@ -37,12 +38,12 @@ public class Capacity
     {
         if (min <= 0 || max <= 0)
         {
-            throw new ArgumentException("Capacity cannot be negative");
+            throw new ArgumentException(ExceptionMessages.CannotBeNegative(nameof(Capacity)));
         }
 
         if (min > max)
         {
-            throw new ArgumentException("'Min' cannot be higher than 'Max'");
+            throw new ArgumentException(ExceptionMessages.CannotBeHigherThan(nameof(Min), nameof(Max)));
         }
 
         Min = min;

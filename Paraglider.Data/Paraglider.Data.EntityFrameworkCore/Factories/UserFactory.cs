@@ -79,7 +79,7 @@ namespace Paraglider.Data.EntityFrameworkCore.Factories
             {
                 if (string.IsNullOrEmpty(field))
                 {
-                    throw new ArgumentException(ExceptionMessages.NullOrEmptyField(nameof(field)));
+                    throw new ArgumentException(ExceptionMessages.NullOrEmpty(nameof(field)));
                 }
             }
 

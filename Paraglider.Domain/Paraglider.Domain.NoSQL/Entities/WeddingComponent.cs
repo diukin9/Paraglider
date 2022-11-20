@@ -1,4 +1,5 @@
-﻿using MongoDB.Bson;
+﻿using MapsterMapper;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Paraglider.Domain.NoSQL.Enums;
 using Paraglider.Domain.NoSQL.ValueObjects;
@@ -52,7 +53,6 @@ public class WeddingComponent : IAggregateRoot, IIdentified
     [BsonElement("services")]
     public List<Service> Services { get; set; } = new List<Service>();
 
-    [BsonElement("premises")]
+    [BsonElement("halls")]
     public List<Hall> Halls { get; set; } = new List<Hall>();
 }
-
