@@ -4,15 +4,15 @@ using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.API.DataTransferObjects
 {
-    public class UserDTO : IDataTransferObject
+    public record UserDTO : IDataTransferObject
     {
-        public Guid Id { get; set; }
-        public string Firstname { get; set; } = null!;
-        public string Surname { get; set; } = null!;
-        public string Username { get; set; } = null!;
-        public string? Email { get; set; }
-        public CityDTO City { get; set; } = null!;
-        public List<WeddingPlanDTO> WeddingPlans { get; set; } = null!;
+        public Guid Id { get; init; }
+        public string Firstname { get; init; } = null!;
+        public string Surname { get; init; } = null!;
+        public string Username { get; init; } = null!;
+        public string? Email { get; init; }
+        public CityDTO City { get; init; } = null!;
+        public List<WeddingPlanDTO> WeddingPlans { get; init; } = null!;
 
         public void Register(TypeAdapterConfig config)
         {
