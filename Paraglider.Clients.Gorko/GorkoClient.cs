@@ -7,14 +7,21 @@ using Paraglider.Clients.Gorko.Resources;
 
 namespace Paraglider.Clients.Gorko;
 
-public static class GorkoClient
+public class GorkoClient
 {
-    public static IGorkoClientConfiguration BuildRequestFor()
+    private readonly HttpClient httpClient;
+
+    public GorkoClient(HttpClient httpClient)
     {
-        return new GorkoClientConfiguration();
+        this.httpClient = httpClient;
     }
 
-    public static IAsyncEnumerable<User> GetUsersAsync(UserRole userRole,
+    public IGorkoClientConfiguration BuildRequestFor()
+    {
+        return new GorkoClientConfiguration(httpClient);
+    }
+
+    public IAsyncEnumerable<User> GetUsersAsync(UserRole userRole,
         int perPage = 10,
         int page = 1,
         int? cityId = null)
@@ -26,7 +33,7 @@ public static class GorkoClient
         return FillWithReviews(usersResource, perPage, page, cityId);
     }
 
-    public static IAsyncEnumerable<Restaurant> GetRestaurantsAsync(int perPage = 10,
+    public IAsyncEnumerable<Restaurant> GetRestaurantsAsync(int perPage = 10,
         int page = 1,
         int? cityId = null)
     {
@@ -36,7 +43,7 @@ public static class GorkoClient
         return FillWithReviews(restaurantResource, perPage, page, cityId);
     }
 
-    private static async IAsyncEnumerable<T> FillWithReviews<T>(IGorkoResource<T> resource,
+    private async IAsyncEnumerable<T> FillWithReviews<T>(IGorkoResource<T> resource,
         int perPage,
         int page,
         int? cityId) where T : IHaveId, IHaveReviews, IHaveCityId
@@ -58,12 +65,11 @@ public static class GorkoClient
         }
     }
 
-    private static async Task<List<Review>> GetReviews(long? id)
+    private async Task<List<Review>> GetReviews(long? id)
     {
         if (id == null)
             return new List<Review>();
         
-        using var httpClient = new HttpClient();
         var response = await httpClient.GetAsync(Endpoints.RestaurantReviews(id.Value));
 
         var json = await response.Content.ReadAsStringAsync();

@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Paraglider.Clients.Gorko.Extensions;
 using Paraglider.Clients.Gorko.Models;
@@ -19,7 +18,8 @@ internal class GorkoClientConfiguration<T> :
 {
     private readonly Uri uri;
 
-    internal GorkoClientConfiguration(Uri uri)
+
+    internal GorkoClientConfiguration(HttpClient httpClient, Uri uri) : base(httpClient)
     {
         this.uri = uri;
     }
@@ -27,7 +27,7 @@ internal class GorkoClientConfiguration<T> :
     public IGorkoResource<Car> WithType(CarType carType)
     {
         var typeId = ((int) carType).ToString();
-        return new GorkoClientConfiguration<Car>(uri.AddQueryParameter("type_id", typeId));
+        return new GorkoClientConfiguration<Car>(HttpClient, uri.AddQueryParameter("type_id", typeId));
     }
 
     /// <summary>
@@ -48,20 +48,19 @@ internal class GorkoClientConfiguration<T> :
         var attributeInfo = property.GetCustomAttribute<JsonPropertyAttribute>();
         var propertyName = attributeInfo?.PropertyName;
         var parameterName = propertyName ?? new SnakeCaseNamingStrategy().GetPropertyName(property.Name, false);
-        return new GorkoClientConfiguration<T>(uri.AddQueryParameter(parameterName, value.ToString()));
+        return new GorkoClientConfiguration<T>(HttpClient, uri.AddQueryParameter(parameterName, value.ToString()));
     }
 
     public IGorkoResource<T> WithPaging(PagingParameters pagingParameters)
     {
-        return new GorkoClientConfiguration<T>(uri
+        return new GorkoClientConfiguration<T>(HttpClient, uri
             .AddQueryParameter("per_page", pagingParameters.PerPage.ToString())
             .AddQueryParameter("page", pagingParameters.PageNumber.ToString()));
     }
 
     public async Task<Result<PagedResult<T>?>> GetResult()
     {
-        using var httpClient = new HttpClient();
-        var result = await httpClient.GetAsync<PagedResult<T>>(uri);
+        var result = await HttpClient.GetAsync<PagedResult<T>>(uri);
 
         return result;
     }
@@ -69,27 +68,19 @@ internal class GorkoClientConfiguration<T> :
     public IGorkoResource<User> WithRole(UserRole userRole)
     {
         var roleId = ((int) userRole).ToString();
-        return new GorkoClientConfiguration<User>(uri.AddQueryParameter("role_id", roleId));
-    }
-
-    private static async Task<List<Review>> GetReviews(Uri uri)
-    {
-        using var httpClient = new HttpClient();
-        var response = await httpClient.GetAsync(uri);
-
-        var json = await response.Content.ReadAsStringAsync();
-        var jsonObject = JObject.Parse(json);
-
-        var reviews = jsonObject["reviews"]
-            ?.Select(x => x.ToObject<Review>())
-            .ToList() ?? new List<Review?>();
-
-        return reviews!;
+        return new GorkoClientConfiguration<User>(HttpClient, uri.AddQueryParameter("role_id", roleId));
     }
 }
 
-public class GorkoClientConfiguration : IGorkoClientConfiguration
+internal class GorkoClientConfiguration : IGorkoClientConfiguration
 {
+    protected readonly HttpClient HttpClient;
+
+    public GorkoClientConfiguration(HttpClient httpClient)
+    {
+        HttpClient = httpClient;
+    }
+    
     public IUsersResource Users => CreateConfiguration<User>(Endpoints.Users);
 
     public IGorkoResource<Role> Roles => CreateConfiguration<Role>(Endpoints.Roles);
@@ -101,6 +92,6 @@ public class GorkoClientConfiguration : IGorkoClientConfiguration
 
     private GorkoClientConfiguration<T> CreateConfiguration<T>(string resourceName)
     {
-        return new(new Uri(Endpoints.BaseUrl, resourceName));
+        return new(HttpClient, new Uri(Endpoints.BaseUrl, resourceName));
     }
 }

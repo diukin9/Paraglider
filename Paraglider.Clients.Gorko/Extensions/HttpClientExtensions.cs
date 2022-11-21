@@ -6,11 +6,12 @@ namespace Paraglider.Clients.Gorko.Extensions;
 
 internal static class HttpClientExtensions
 {
-    internal static async Task<Result<TResponse?>> GetAsync<TResponse>(this HttpClient httpClient, Uri uri)
+    internal static async Task<Result<TResponse?>> GetAsync<TResponse>(this HttpClient httpClientImplementation,
+        Uri uri)
     {
         try
         {
-            var response = await httpClient.GetAsync(uri);
+            var response = await httpClientImplementation.GetAsync(uri);
 
             if (!response.IsSuccessStatusCode)
                 return Result<TResponse?>.Error(response.StatusCode);
