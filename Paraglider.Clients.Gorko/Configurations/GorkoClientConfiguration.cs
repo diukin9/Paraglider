@@ -3,13 +3,13 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using Paraglider.GorkoClient.Extensions;
-using Paraglider.GorkoClient.Models;
-using Paraglider.GorkoClient.Models.Enums;
-using Paraglider.GorkoClient.Resources;
-using Paraglider.GorkoClient.Result;
+using Paraglider.Clients.Gorko.Extensions;
+using Paraglider.Clients.Gorko.Models;
+using Paraglider.Clients.Gorko.Models.Enums;
+using Paraglider.Clients.Gorko.Resources;
+using Paraglider.Clients.Gorko.Result;
 
-namespace Paraglider.GorkoClient.Configurations;
+namespace Paraglider.Clients.Gorko.Configurations;
 
 internal class GorkoClientConfiguration<T> :
     GorkoClientConfiguration,

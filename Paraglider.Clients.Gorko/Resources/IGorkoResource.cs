@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
-using Paraglider.GorkoClient.Models;
-using Paraglider.GorkoClient.Result;
+using Paraglider.Clients.Gorko.Models;
+using Paraglider.Clients.Gorko.Result;
 
-namespace Paraglider.GorkoClient.Resources;
+namespace Paraglider.Clients.Gorko.Resources;
 
 public interface IGorkoResource<T>
 {

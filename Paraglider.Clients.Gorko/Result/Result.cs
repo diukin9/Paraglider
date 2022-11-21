@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Paraglider.GorkoClient.Result;
+namespace Paraglider.Clients.Gorko.Result;
 
 public class Result : IResult
 {

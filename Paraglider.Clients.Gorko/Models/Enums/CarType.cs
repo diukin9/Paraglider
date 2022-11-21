@@ -1,4 +1,4 @@
-﻿namespace Paraglider.GorkoClient.Models.Enums;
+﻿namespace Paraglider.Clients.Gorko.Models.Enums;
 
 public enum CarType
 {

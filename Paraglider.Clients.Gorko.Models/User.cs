@@ -1,6 +1,6 @@
-﻿using Paraglider.GorkoClient.Models.Abstractions;
+﻿using Paraglider.Clients.Gorko.Models.Abstractions;
 
-namespace Paraglider.GorkoClient.Models;
+namespace Paraglider.Clients.Gorko.Models;
 
 public partial class User : IHaveId, IHaveReviews
 {

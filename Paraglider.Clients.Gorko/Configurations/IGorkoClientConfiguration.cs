@@ -1,7 +1,7 @@
-﻿using Paraglider.GorkoClient.Models;
-using Paraglider.GorkoClient.Resources;
+﻿using Paraglider.Clients.Gorko.Models;
+using Paraglider.Clients.Gorko.Resources;
 
-namespace Paraglider.GorkoClient.Configurations;
+namespace Paraglider.Clients.Gorko.Configurations;
 
 public interface IGorkoClientConfiguration
 {

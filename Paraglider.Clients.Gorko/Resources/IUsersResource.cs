@@ -1,7 +1,7 @@
-﻿using Paraglider.GorkoClient.Models;
-using Paraglider.GorkoClient.Models.Enums;
+﻿using Paraglider.Clients.Gorko.Models;
+using Paraglider.Clients.Gorko.Models.Enums;
 
-namespace Paraglider.GorkoClient.Resources;
+namespace Paraglider.Clients.Gorko.Resources;
 
 public interface IUsersResource
 {

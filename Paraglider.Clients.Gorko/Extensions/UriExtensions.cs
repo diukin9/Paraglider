@@ -1,4 +1,4 @@
-﻿namespace Paraglider.GorkoClient.Extensions;
+﻿namespace Paraglider.Clients.Gorko.Extensions;
 
 public static class UriExtensions
 {

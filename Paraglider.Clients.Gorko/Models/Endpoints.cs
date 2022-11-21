@@ -1,4 +1,4 @@
-﻿namespace Paraglider.GorkoClient.Models;
+﻿namespace Paraglider.Clients.Gorko.Models;
 
 internal static class Endpoints
 {

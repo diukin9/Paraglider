@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json.Linq;
-using Paraglider.GorkoClient.Configurations;
-using Paraglider.GorkoClient.Models;
-using Paraglider.GorkoClient.Models.Abstractions;
-using Paraglider.GorkoClient.Models.Enums;
-using Paraglider.GorkoClient.Resources;
+using Paraglider.Clients.Gorko.Configurations;
+using Paraglider.Clients.Gorko.Models;
+using Paraglider.Clients.Gorko.Models.Abstractions;
+using Paraglider.Clients.Gorko.Models.Enums;
+using Paraglider.Clients.Gorko.Resources;
 
-namespace Paraglider.GorkoClient;
+namespace Paraglider.Clients.Gorko;
 
 public static class GorkoClient
 {

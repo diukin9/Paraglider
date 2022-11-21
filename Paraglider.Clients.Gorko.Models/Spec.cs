@@ -1,4 +1,4 @@
-﻿namespace Paraglider.GorkoClient.Models;
+﻿namespace Paraglider.Clients.Gorko.Models;
 
 public class Spec
 {

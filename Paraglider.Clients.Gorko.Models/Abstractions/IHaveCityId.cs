@@ -1,4 +1,4 @@
-﻿namespace Paraglider.GorkoClient.Models.Abstractions;
+﻿namespace Paraglider.Clients.Gorko.Models.Abstractions;
 
 public interface IHaveCityId
 {

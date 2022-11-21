@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace Paraglider.GorkoClient.Models;
+namespace Paraglider.Clients.Gorko.Models;
 
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
 public class PagedResult<T>

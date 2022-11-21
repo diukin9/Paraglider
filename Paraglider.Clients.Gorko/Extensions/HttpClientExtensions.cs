@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Paraglider.GorkoClient.Result;
+using Paraglider.Clients.Gorko.Result;
 
-namespace Paraglider.GorkoClient.Extensions;
+namespace Paraglider.Clients.Gorko.Extensions;
 
 internal static class HttpClientExtensions
 {
