@@ -1,10 +1,6 @@
-﻿using System.Runtime.CompilerServices;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Paraglider.GorkoClient.Result;
-
-//TODO: убрать
-[assembly: InternalsVisibleTo("Sandbox")]
 
 namespace Paraglider.GorkoClient.Extensions;
 
