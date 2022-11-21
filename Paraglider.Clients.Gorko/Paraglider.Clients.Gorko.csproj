@@ -10,7 +10,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Paraglider.Clients.Gorko.Models\Paraglider.Clients.Gorko.Models.csproj" />
-        <ProjectReference Include="..\Paraglider.GorkoClient.Models\Paraglider.GorkoClient.Models.csproj" />
     </ItemGroup>
 
 </Project>
