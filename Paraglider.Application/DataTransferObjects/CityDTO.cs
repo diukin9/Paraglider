@@ -4,11 +4,11 @@ using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.API.DataTransferObjects
 {
-    public class CityDTO : IDataTransferObject
+    public record CityDTO : IDataTransferObject
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string Key { get; set; } = null!;
+        public Guid Id { get; init; }
+        public string Name { get; init; } = null!;
+        public string Key { get; init; } = null!;
 
         public void Register(TypeAdapterConfig config)
         {
