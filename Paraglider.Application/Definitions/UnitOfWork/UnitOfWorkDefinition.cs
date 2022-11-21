@@ -1,9 +1,9 @@
 ﻿using Paraglider.Data;
-using Paraglider.Data.Repositories;
-using Paraglider.Domain.Entities;
+using Paraglider.Data.EntityFrameworkCore.Repositories;
 using Paraglider.Infrastructure.Common;
 using Paraglider.API.Definitions.Base;
 using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.API.Definitions.UnitOfWork;
 

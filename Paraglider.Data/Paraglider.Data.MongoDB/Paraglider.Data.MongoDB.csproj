@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Paraglider.Domain\Paraglider.Domain.NoSQL\Paraglider.Domain.NoSQL.csproj" />
+    <ProjectReference Include="..\..\Paraglider.Domain\Paraglider.Domain.RDB\Paraglider.Domain.RDB.csproj" />
+    <ProjectReference Include="..\..\Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj" />
+  </ItemGroup>
+
+</Project>

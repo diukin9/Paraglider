@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Paraglider.Domain.Entities;
-using Paraglider.Domain.Enums;
+using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
 using System.Net;
@@ -52,12 +52,14 @@ namespace Paraglider.API.Features.Authorization.Commands
         {
             var operation = new OperationResult();
 
+            //валидируем полученные данные
             var validateResult = await _validator.ValidateAsync(request, cancellationToken);
             if (!validateResult.IsValid)
             {
                 return operation.AddError(string.Join("; ", validateResult.Errors));
             }
 
+            //конфигурируем authentication propertiess
             request.ReturnUrl = WebUtility.UrlEncode(request.ReturnUrl);
             var callbackUrl = $"{ExternalAuthHandlerRelativePath}?returnUrl={request.ReturnUrl}";
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, callbackUrl);

@@ -11,4 +11,7 @@ public static partial class AppData
 
     public const string DefaultCityName = "Москва";
     public const string DefaultCityKey = "Moscow";
+
+    //TODO найти базовый аватар
+    public const string DefaultAvatarUrl = "url";
 }
