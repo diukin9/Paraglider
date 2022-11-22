@@ -1,11 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.API.Extensions;
-using Paraglider.Data.EntityFrameworkCore.Repositories;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Abstractions;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Extensions;
 using System.Security.Claims;
@@ -13,25 +11,19 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands
 {
-    public class ExternalAuthRequest : IRequest<OperationResult>
-    {
-
-    }
+    public record ExternalAuthRequest() : IRequest<OperationResult>;
 
     public class ExternalAuthCommandHandler : IRequestHandler<ExternalAuthRequest, OperationResult>
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly UserRepository _userRepository; 
 
         public ExternalAuthCommandHandler(
             SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager,
-            IUnitOfWork unitOfWork)
+            UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _userRepository = (UserRepository)unitOfWork.GetRepository<ApplicationUser>();
         }
 
         public async Task<OperationResult> Handle(ExternalAuthRequest request, CancellationToken cancellationToken)

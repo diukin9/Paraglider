@@ -8,63 +8,56 @@ using Paraglider.Infrastructure.Common.Extensions;
 using System.Net;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.API.Features.Authorization.Commands
+namespace Paraglider.API.Features.Authorization.Commands;
+
+public record ConfigureExternalAuthPropertiesRequest(string provider, string returnUrl) : IRequest<OperationResult>
 {
-    public class ConfigureExternalAuthPropertiesRequest : IRequest<OperationResult>
+    public string Provider { get; set; } = provider;
+    public string ReturnUrl { get; set; } = returnUrl;
+}
+
+public class ConfigureExternalAuthPropertiesRequestValidator 
+    : AbstractValidator<ConfigureExternalAuthPropertiesRequest>
+{
+    public ConfigureExternalAuthPropertiesRequestValidator() => RuleSet(DefaultRuleSetName, () =>
     {
-        public string Provider { get; set; } = null!;
-        public string? ReturnUrl { get; set; }
+        RuleFor(x => x.Provider).IsEnumName(typeof(ExternalAuthProvider), false);
+        RuleFor(x => x.ReturnUrl).NotEmpty().NotNull();
+    });
+}
 
-        public ConfigureExternalAuthPropertiesRequest(string provider, string? returnUrl = null)
-        {
-            Provider = provider;
-            ReturnUrl = returnUrl;
-        }
+public class ConfigureExternalAuthPropertiesCommandHandler 
+    : IRequestHandler<ConfigureExternalAuthPropertiesRequest, OperationResult>
+{
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IValidator<ConfigureExternalAuthPropertiesRequest> _validator;
 
-        public class ConfigureExternalAuthPropertiesRequestValidator 
-            : AbstractValidator<ConfigureExternalAuthPropertiesRequest>
-        {
-            public ConfigureExternalAuthPropertiesRequestValidator() => RuleSet(DefaultRuleSetName, () =>
-            {
-                RuleFor(x => x.Provider).IsEnumName(typeof(ExternalAuthProvider), false);
-                RuleFor(x => x.ReturnUrl).NotEmpty().NotNull();
-            });
-        }
+    public ConfigureExternalAuthPropertiesCommandHandler(
+        SignInManager<ApplicationUser> signInManager,
+        IValidator<ConfigureExternalAuthPropertiesRequest> validator)
+    {
+        _signInManager = signInManager;
+        _validator = validator;
     }
 
-    public class ConfigureExternalAuthPropertiesCommandHandler 
-        : IRequestHandler<ConfigureExternalAuthPropertiesRequest, OperationResult>
+    public async Task<OperationResult> Handle(
+        ConfigureExternalAuthPropertiesRequest request,
+        CancellationToken cancellationToken)
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IValidator<ConfigureExternalAuthPropertiesRequest> _validator;
+        var operation = new OperationResult();
 
-        public ConfigureExternalAuthPropertiesCommandHandler(
-            SignInManager<ApplicationUser> signInManager,
-            IValidator<ConfigureExternalAuthPropertiesRequest> validator)
+        //валидируем полученные данные
+        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
+        if (!validateResult.IsValid)
         {
-            _signInManager = signInManager;
-            _validator = validator;
+            return operation.AddError(string.Join("; ", validateResult.Errors));
         }
 
-        public async Task<OperationResult> Handle(
-            ConfigureExternalAuthPropertiesRequest request,
-            CancellationToken cancellationToken)
-        {
-            var operation = new OperationResult();
+        //конфигурируем authentication propertiess
+        request.ReturnUrl = WebUtility.UrlEncode(request.ReturnUrl);
+        var callbackUrl = $"{ExternalAuthHandlerRelativePath}?returnUrl={request.ReturnUrl}";
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, callbackUrl);
 
-            //валидируем полученные данные
-            var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-            if (!validateResult.IsValid)
-            {
-                return operation.AddError(string.Join("; ", validateResult.Errors));
-            }
-
-            //конфигурируем authentication propertiess
-            request.ReturnUrl = WebUtility.UrlEncode(request.ReturnUrl);
-            var callbackUrl = $"{ExternalAuthHandlerRelativePath}?returnUrl={request.ReturnUrl}";
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, callbackUrl);
-
-            return operation.AddSuccess(string.Empty, properties);
-        }
+        return operation.AddSuccess(string.Empty, properties);
     }
 }

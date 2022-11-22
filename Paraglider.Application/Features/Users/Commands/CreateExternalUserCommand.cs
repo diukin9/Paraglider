@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Paraglider.API.DataTransferObjects;
 using Paraglider.Data.EntityFrameworkCore.Factories;
-using Paraglider.Data.EntityFrameworkCore.Repositories;
+using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Abstractions;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Helpers;
 using Paraglider.Infrastructure.Extensions;
@@ -18,29 +17,26 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Commands
 {
-    public class CreateExternalUserRequest : IRequest<OperationResult>
-    {
-
-    }
+    public record CreateExternalUserRequest() : IRequest<OperationResult>;
 
     public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUserRequest, OperationResult>
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _accessor;
-        private readonly CityRepository _cityRepository;
+        private readonly ICityRepository _cityRepository;
         private readonly IMapper _mapper;
 
         public CreateExternalUserCommandHandler(
+            ICityRepository cityRepository,
             UserManager<ApplicationUser> userManager,
-            IUnitOfWork unitOfWork,
             IHttpContextAccessor accessor,
             SignInManager<ApplicationUser> signInManager,
             IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _cityRepository = (CityRepository)unitOfWork.GetRepository<City>();
+            _cityRepository = cityRepository;
             _accessor = accessor;
             _mapper = mapper;
         }

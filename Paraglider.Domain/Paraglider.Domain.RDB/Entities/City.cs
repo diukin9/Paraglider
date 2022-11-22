@@ -1,5 +1,4 @@
-﻿using Paraglider.Domain.RDB.Abstractions;
-using Paraglider.Infrastructure.Common.Abstractions;
+﻿using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.RDB.Entities;
 

@@ -2,11 +2,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.API.DataTransferObjects;
-using Paraglider.Data.EntityFrameworkCore.Repositories;
+using Paraglider.API.Extensions;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Abstractions;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Extensions;
 using System.Security.Claims;
@@ -14,23 +13,20 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Queries
 {
-    public class GetUserByExternalLoginInfoRequest : IRequest<OperationResult>
-    {
-
-    }
+    public record GetUserByExternalLoginInfoRequest : IRequest<OperationResult>;
 
     public class GetUserByExternalLoginInfoQueryHandler : IRequestHandler<GetUserByExternalLoginInfoRequest, OperationResult>
     {
-        private readonly UserRepository _userRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IMapper _mapper;
 
         public GetUserByExternalLoginInfoQueryHandler(
-            IUnitOfWork unitOfWork, 
+            UserManager<ApplicationUser> userManager,
             IMapper mapper,
             SignInManager<ApplicationUser> signInManager)
         {
-            _userRepository = (UserRepository)unitOfWork.GetRepository<ApplicationUser>();
+            _userManager = userManager;
             _mapper = mapper;
             _signInManager = signInManager;
         }
@@ -57,7 +53,7 @@ namespace Paraglider.API.Features.Users.Queries
             }
 
             //получаем пользователя
-            var entity = await _userRepository.FindByExternalAuthInfoAsync(provider, externalId);
+            var entity = await _userManager.FindByExternalLoginInfoAsync(provider, externalId);
             if (entity is null)
             {
                 return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ApplicationUser)));

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
-using Paraglider.Domain.NoSQL.ValueObjects;
 using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.Data;

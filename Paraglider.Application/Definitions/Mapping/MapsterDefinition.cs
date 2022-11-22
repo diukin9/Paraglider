@@ -13,6 +13,7 @@ public class MapsterDefinition : AppDefinition
     {
         var typeAdapterConfig = TypeAdapterConfig.GlobalSettings;
 
+        typeAdapterConfig.Scan(Assembly.GetExecutingAssembly()!);
         typeAdapterConfig.Scan(Assembly.GetAssembly(typeof(ApplicationDbContext))!);
         typeAdapterConfig.Scan(Assembly.GetAssembly(typeof(WeddingComponentDataAccess))!);
 

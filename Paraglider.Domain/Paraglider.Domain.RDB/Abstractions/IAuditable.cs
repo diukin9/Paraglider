@@ -24,5 +24,4 @@ public interface IAuditable
     /// Author of last value update. Should be updated when entity data updated
     /// </summary>
     string UpdatedBy { get; set; }
-
 }

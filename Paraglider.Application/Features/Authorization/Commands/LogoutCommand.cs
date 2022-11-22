@@ -9,10 +9,7 @@ using static Paraglider.Infrastructure.Common.AppData;
 namespace Paraglider.API.Features.Authorization.Commands;
 
 [TsClass]
-public class LogoutRequest : IRequest<OperationResult>
-{
-
-}
+public record LogoutRequest() : IRequest<OperationResult>;
 
 public class LogoutCommandHandler : IRequestHandler<LogoutRequest, OperationResult>
 {

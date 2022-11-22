@@ -1,23 +1,16 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Paraglider.Data.EntityFrameworkCore.Repositories;
+using Paraglider.Data.MongoDB.Repositories;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Abstractions;
 using Paraglider.Infrastructure.Common.Extensions;
 using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
-[TsClass]
-public class BasicAuthRequest : IRequest<OperationResult>
-{
-    public string Login { get; set; } = null!;
-    public string Password { get; set; } = null!;
-
-}
+[TsClass] public record BasicAuthRequest(string Login, string Password) : IRequest<OperationResult>;
 
 public class BasicAuthRequestValidator : AbstractValidator<BasicAuthRequest>
 {
@@ -30,22 +23,26 @@ public class BasicAuthRequestValidator : AbstractValidator<BasicAuthRequest>
 
 public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, OperationResult>
 {
-    private readonly UserRepository _userRepository;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IValidator<BasicAuthRequest> _validator;
+    private readonly IBanquetHallRepository _repository;
 
     public BasicAuthCommandHandler(
         SignInManager<ApplicationUser> signInManager,
-        IUnitOfWork unitOfWork,
-        IValidator<BasicAuthRequest> validator)
+        UserManager<ApplicationUser> userManager,
+        IValidator<BasicAuthRequest> validator
+        , IBanquetHallRepository repository)
     {
         _signInManager = signInManager;
-        _userRepository = (UserRepository)unitOfWork.GetRepository<ApplicationUser>();
+        _userManager = userManager;
         _validator = validator;
+        _repository = repository;
     }
 
     public async Task<OperationResult> Handle(BasicAuthRequest request, CancellationToken cancellationToken)
     {
+        var check = await _repository.FindAsync(_ => true);
         var operation = new OperationResult();
 
         //валидируем полученные данные
@@ -56,12 +53,12 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
         }
 
         //получаем пользователя
-        var user = await _userRepository.FindByEmailAsync(request.Login)
-                ?? await _userRepository.FindByUsernameAsync(request.Login);
+        var user = await _userManager.FindByEmailAsync(request.Login)
+                ?? await _userManager.FindByNameAsync(request.Login);
 
         if (user is null)
         {
-            return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ApplicationUser)));
+            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));
         }
 
         //пытаемся авторизовать

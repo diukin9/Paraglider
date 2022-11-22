@@ -1,34 +1,28 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Paraglider.API.DataTransferObjects;
-using Paraglider.Data.EntityFrameworkCore.Repositories;
-using Paraglider.Domain.RDB.Entities;
+using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Abstractions;
 using Paraglider.Infrastructure.Common.Extensions;
 using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Queries
 {
-    [TsClass]
-    public class GetCurrentUserRequest : IRequest<OperationResult>
-    {
-
-    }
+    [TsClass] public record GetCurrentUserRequest() : IRequest<OperationResult>;
 
     public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserRequest, OperationResult>
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IHttpContextAccessor _accessor;
         private readonly IMapper _mapper;
 
         public GetCurrentUserQueryHandler(
-            IUnitOfWork unitOfWork,
+            IUserRepository userRepository,
             IHttpContextAccessor accessor,
             IMapper mapper)
         {
-            _userRepository = (UserRepository)unitOfWork.GetRepository<ApplicationUser>();
+            _userRepository = userRepository;
             _accessor = accessor;
             _mapper = mapper;
         }

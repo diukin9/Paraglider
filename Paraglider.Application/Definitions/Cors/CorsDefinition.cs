@@ -13,10 +13,7 @@ public class CorsDefinition : AppDefinition
             {
                 builder.AllowAnyHeader();
                 builder.AllowAnyMethod();
-                if (origins is not { Length: > 0 })
-                {
-                    return;
-                }
+                if (origins is not { Length: > 0 }) return;
 
                 if (origins.Contains("*"))
                 {

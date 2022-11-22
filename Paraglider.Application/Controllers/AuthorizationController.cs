@@ -38,16 +38,14 @@ public class AuthorizationController : Controller
     [AllowAnonymous]
     [HttpGet("/external-auth")]
     public async Task<IActionResult> VerifyUserAuthentication(
-        [FromQuery] string provider, 
+        [FromQuery] string provider,
         [FromQuery] string returnUrl)
     {
-        var response = await _mediator.Send(
-            new ConfigureExternalAuthPropertiesRequest(provider, returnUrl),
-            HttpContext.RequestAborted);
-
+        var request = new ConfigureExternalAuthPropertiesRequest(provider, returnUrl);
+        var response = await _mediator.Send(request, HttpContext.RequestAborted);
         if (!response.IsOk) return BadRequest(response);
         var properties = (AuthenticationProperties)response.GetDataObject()!;
-        return Challenge(properties, provider);
+        return Challenge(properties, request.Provider);
     }
 
     [AllowAnonymous]

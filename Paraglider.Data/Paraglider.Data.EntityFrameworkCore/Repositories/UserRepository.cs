@@ -1,47 +1,37 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
-using Paraglider.Domain.RDB.Enums;
-using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Abstractions;
+using System.Linq.Expressions;
 
 namespace Paraglider.Data.EntityFrameworkCore.Repositories;
 
-public class UserRepository : Repository<ApplicationUser>, IUserRepository
+public class UserRepository : RDbRepository<ApplicationUser>, IUserRepository
 {
+    private readonly ApplicationDbContext _context;
+
     public UserRepository(ApplicationDbContext context) : base(context)
     {
-
+        _context = context;
     }
 
-    public async Task<ApplicationUser?> FindByExternalAuthInfoAsync(ExternalAuthProvider provider, string externalId)
+    public override async Task<IEnumerable<ApplicationUser>> FindAsync(Expression<Func<ApplicationUser, bool>> selector)
     {
-        var user = await this.GetAll(disableTracking: true)
-            .Include(x => x.City)
-            .Include(x => x.WeddingPlannings)
-            .Include(x => x.ExternalAuthInfo)
-            .Where(x => x.ExternalAuthInfo.Any(y => y.ExternalId == externalId && y.ExternalProvider == provider))
-            .SingleOrDefaultAsync();
-        return user;
+        return await _context.Users.IncludeAll().Where(selector).ToListAsync();
     }
 
-    public async Task<ApplicationUser?> FindByEmailAsync(string email)
+    public override async Task<ApplicationUser?> FindByIdAsync(Guid id)
     {
-        var user = await this.GetAll(disableTracking: true)
-            .Where(u => u.Email == email)
-            .Include(x => x.City)
-            .Include(x => x.WeddingPlannings)
-            .Include(x => x.ExternalAuthInfo)
+        var user = await _context.Users.IncludeAll()
+            .Where(x => x.Id == id)
             .SingleOrDefaultAsync();
         return user;
     }
 
     public async Task<ApplicationUser?> FindByUsernameAsync(string username)
     {
-        var user = await this.GetAll(disableTracking: true)
+        var user = await _context.Users.IncludeAll()
             .Where(u => u.UserName == username)
-            .Include(x => x.City)
-            .Include(x => x.WeddingPlannings)
-            .Include(x => x.ExternalAuthInfo)
             .SingleOrDefaultAsync();
         return user;
     }

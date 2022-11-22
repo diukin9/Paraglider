@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.Common.ValueObjects;
 
 namespace Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
 

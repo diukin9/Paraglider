@@ -1,11 +1,8 @@
-﻿using MapsterMapper;
-using Paraglider.Domain.NoSQL.Entities;
-using Paraglider.Domain.NoSQL.Enums;
-using Paraglider.Domain.NoSQL.ValueObjects;
+﻿using Paraglider.Domain.NoSQL.ValueObjects;
 
 namespace Paraglider.API.DataTransferObjects.Abstractions;
 
-public class WeddingComponentDTO : IWeddingComponentDTO
+public record BaseWeddingComponentDTO : IWeddingComponentDTO
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;

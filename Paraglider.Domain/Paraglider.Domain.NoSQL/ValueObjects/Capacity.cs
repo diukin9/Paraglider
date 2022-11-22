@@ -1,5 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using Paraglider.Infrastructure.Common.Enums;
+using Paraglider.Domain.Common.Enums;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;

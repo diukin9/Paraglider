@@ -12,6 +12,7 @@ public static class StringHelper
         {
             throw new ArgumentNullException(nameof(externalId));
         }
+
         return $"{provider}-{externalId}";
     }
 }

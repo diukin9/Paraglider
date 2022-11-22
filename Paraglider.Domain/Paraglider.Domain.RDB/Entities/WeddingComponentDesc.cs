@@ -1,5 +1,5 @@
-﻿using Paraglider.Domain.RDB.Enums;
-using Paraglider.Infrastructure.Common;
+﻿using Paraglider.Domain.Common.ValueObjects;
+using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.RDB.Entities;

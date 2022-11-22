@@ -7,13 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="3.4.2" />
-    <PackageReference Include="MimeKit" Version="3.4.2" />
-    <PackageReference Include="RestSharp" Version="108.0.2" />
+    <Compile Remove="Files\**" />
+    <EmbeddedResource Remove="Files\**" />
+    <None Remove="Files\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Files\" />
+    <PackageReference Include="MailKit" Version="3.4.2" />
+    <PackageReference Include="MimeKit" Version="3.4.2" />
+    <PackageReference Include="RestSharp" Version="108.0.2" />
   </ItemGroup>
 
 </Project>

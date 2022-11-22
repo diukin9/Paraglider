@@ -1,5 +1,4 @@
-﻿
-namespace Paraglider.Infrastructure.Common.Extensions;
+﻿namespace Paraglider.Infrastructure.Common.Extensions;
 
 public static class OperationResultExtensions
 {
@@ -28,7 +27,7 @@ public static class OperationResultExtensions
         return source;
     }
 
-    public static string? GetMessages(this OperationResult source) => source?.Metadata?.Message;
+    public static string? GetMessage(this OperationResult source) => source?.Metadata?.Message;
 
     public static object? GetDataObject(this OperationResult source) => source?.Metadata?.DataObject;
 }

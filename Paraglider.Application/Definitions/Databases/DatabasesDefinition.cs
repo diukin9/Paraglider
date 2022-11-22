@@ -20,9 +20,7 @@ public class DatabasesDefinition : AppDefinition
         services.AddDbContext<ApplicationDbContext>(config =>
         {
             config.UseNpgsql(configuration["ConnectionStrings:PostgreSQL"]);
-        });
-
-        services.AddIdentity<ApplicationUser, ApplicationRole>(config =>
+        }).AddIdentity<ApplicationUser, ApplicationRole>(config =>
         {
             config.Password.RequireDigit = false;
             config.Password.RequireLowercase = false;
@@ -33,11 +31,11 @@ public class DatabasesDefinition : AppDefinition
 
         services.AddTransient<IdentityErrorDescriber>();
 
-        var settings = new MongoDbSettings();
-        configuration.Bind(nameof(MongoDbSettings), settings);
-        services.AddSingleton<IMongoDbSettings>(settings);
+        var mongoSettings = new MongoDbSettings();
+        configuration.Bind(nameof(MongoDbSettings), mongoSettings);
+        services.AddSingleton<IMongoDbSettings>(mongoSettings);
 
-        services.AddSingleton<IMongoClient>(new MongoClient(configuration["ConnectionStrings:MongoDB"]));
-        services.AddScoped<IDataAccess<WeddingComponent>, WeddingComponentDataAccess>();
+        var mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDB"]);
+        services.AddSingleton<IMongoClient>(mongoClient);
     }
 }
