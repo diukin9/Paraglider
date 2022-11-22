@@ -26,7 +26,6 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IValidator<BasicAuthRequest> _validator;
-    private readonly IBanquetHallRepository _repository;
 
     public BasicAuthCommandHandler(
         SignInManager<ApplicationUser> signInManager,
@@ -37,12 +36,10 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
         _signInManager = signInManager;
         _userManager = userManager;
         _validator = validator;
-        _repository = repository;
     }
 
     public async Task<OperationResult> Handle(BasicAuthRequest request, CancellationToken cancellationToken)
     {
-        var check = await _repository.FindAsync(_ => true);
         var operation = new OperationResult();
 
         //валидируем полученные данные
