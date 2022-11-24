@@ -7,9 +7,11 @@ namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class HallRentalPrice
 {
+    [BsonIgnoreIfNull]
     [BsonElement("pricePerPerson")]
     public readonly decimal? PricePerPerson;
 
+    [BsonIgnoreIfNull]
     [BsonElement("rentalPrice")]
     public readonly decimal? RentalPrice;
 

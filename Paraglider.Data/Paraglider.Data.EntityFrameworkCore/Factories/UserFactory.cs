@@ -21,23 +21,17 @@ namespace Paraglider.Data.EntityFrameworkCore.Factories
                 Email = data.Email,
                 EmailConfirmed = data.EmailConfirmed,
                 PhoneNumber = data.PhoneNumber,
-                WeddingPlannings = new List<WeddingPlanning>()
+                Planning = new Planning()
                 {
-                    new WeddingPlanning()
-                    {
-                        Id = Guid.NewGuid(),
-                        CityId = data.City.Id,
-                        City = data.City,
-                        UserId = id
-                    }
+                    Id = Guid.NewGuid()
                 }
             };
 
             if (data.Provider.HasValue && !string.IsNullOrEmpty(data.ExternalId))
             {
-                user.ExternalAuthInfo = new List<ExternalInfo>()
+                user.ExternalAuthInfo = new List<ExternalAuthInfo>()
                 {
-                    new ExternalInfo()
+                    new ExternalAuthInfo()
                     {
                         Id = Guid.NewGuid(),
                         ExternalProvider = data.Provider.Value,
@@ -58,7 +52,7 @@ namespace Paraglider.Data.EntityFrameworkCore.Factories
         public readonly City City = null!;
         public readonly string? Email;
         public readonly bool EmailConfirmed;
-        public readonly ExternalAuthProvider? Provider;
+        public readonly AuthProvider? Provider;
         public readonly string? ExternalId;
         public readonly string? PhoneNumber;
 
@@ -69,11 +63,11 @@ namespace Paraglider.Data.EntityFrameworkCore.Factories
             City city,
             string? email = null,
             bool emailConfirmed = false,
-            ExternalAuthProvider? provider = null,
+            AuthProvider? provider = null,
             string? externalId = null,
             string? phoneNumber = null)
         {
-            if (city is null) throw new ArgumentException(ExceptionMessages.ObjectIsNull(typeof(City)));
+            if (city is null) throw new ArgumentException(ExceptionMessages.ObjectIsNull(nameof(City)));
 
             foreach (var field in new List<string>() { firstName, surname, username, city!.Name })
             {

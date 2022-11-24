@@ -3,8 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
-using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
+using Paraglider.Infrastructure.Common.Response;
 using System.Net;
 using static Paraglider.Infrastructure.Common.AppData;
 
@@ -21,7 +21,7 @@ public class ConfigureExternalAuthPropertiesRequestValidator
 {
     public ConfigureExternalAuthPropertiesRequestValidator() => RuleSet(DefaultRuleSetName, () =>
     {
-        RuleFor(x => x.Provider).IsEnumName(typeof(ExternalAuthProvider), false);
+        RuleFor(x => x.Provider).IsEnumName(typeof(AuthProvider), false);
         RuleFor(x => x.ReturnUrl).NotEmpty().NotNull();
     });
 }

@@ -2,9 +2,8 @@
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class City : IIdentified, IAggregateRoot
+public class City : IAggregateRoot
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
-    public string Key { get; set; } = null!;
 }

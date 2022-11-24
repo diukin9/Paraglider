@@ -6,12 +6,13 @@ namespace Paraglider.Domain.Common.ValueObjects;
 public class TimeInterval
 {
     [BsonElement("start")]
-    public readonly TimeOnly? IntervalStart;
+    public TimeOnly? IntervalStart { get; set; }
 
     [BsonElement("end")]
-    public readonly TimeOnly? IntervalEnd;
+    public TimeOnly? IntervalEnd { get; set; }
 
     //for entity framework
+    //TODO попробовать потом сделать приватным
     public TimeInterval() { }
 
     public TimeInterval(TimeOnly intervalStart, TimeOnly intervalEnd)

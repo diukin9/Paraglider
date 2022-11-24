@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Paraglider.API.Extensions;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
-using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
+using Paraglider.Infrastructure.Common.Response;
 using Paraglider.Infrastructure.Extensions;
 using System.Security.Claims;
 using static Paraglider.Infrastructure.Common.AppData;
@@ -34,18 +34,18 @@ namespace Paraglider.API.Features.Authorization.Commands
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info is null)
             {
-                return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ExternalLoginInfo)));
+                return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ExternalLoginInfo)));
             }
 
             //получаем провайдера и внешний id
-            var provider = Enum.Parse<ExternalAuthProvider>(info.LoginProvider);
+            var provider = Enum.Parse<AuthProvider>(info.LoginProvider);
             var externalId = info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier);
 
             //получаем пользователя на основе ExternalLoginInfo
             var user = await _userManager.FindByExternalLoginInfoAsync(provider, externalId!);
             if (user is null)
             {
-                return operation.AddError(ExceptionMessages.ObjectIsNull(typeof(ApplicationUser)));
+                return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));
             }
 
             //если у пользователя нет такого UserLoginInfo - создаем

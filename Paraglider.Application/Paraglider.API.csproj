@@ -35,6 +35,7 @@
       <PackageReference Include="MediatR" Version="11.0.0" />
       <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -57,12 +58,6 @@
     <ProjectReference Include="..\Paraglider.Data\Paraglider.Data.EntityFrameworkCore\Paraglider.Data.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Paraglider.Data\Paraglider.Data.MongoDB\Paraglider.Data.MongoDB.csproj" />
     <ProjectReference Include="..\Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="DataTransferObjects\PhotographerDTO.cs">
-      <CopyToOutputDirectory></CopyToOutputDirectory>
-    </Compile>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

@@ -6,11 +6,17 @@ namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class Price
 {
+    [BsonIgnoreIfNull]
     [BsonElement("min")]
-    public readonly decimal? Min;
+    public decimal? Min { get; set; }
 
+    [BsonIgnoreIfNull]
     [BsonElement("max")]
-    public readonly decimal? Max;
+    public decimal? Max { get; set; }
+
+    //for deserialize
+    //TODO попробовать потом сделать приватным
+    public Price() { }
 
     public Price(decimal value, IntervalType intervalType)
     {

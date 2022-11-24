@@ -3,29 +3,18 @@ using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.RDB.Entities;
 
-/// <summary>
-/// Default user for application.
-/// Add profile data for application users by adding properties to the ApplicationUser class
-/// </summary>
 public class ApplicationUser : IdentityUser<Guid>, IAggregateRoot
 {
-    /// <summary>
-    /// User first name
-    /// </summary>
     public string FirstName { get; set; } = null!;
 
-    /// <summary>
-    /// User surname
-    /// </summary>
     public string Surname { get; set; } = null!;
 
     public Guid CityId { get; set; }
     public virtual City City { get; set; } = null!;
 
-    /// <summary>
-    /// External login information
-    /// </summary>
-    public virtual List<ExternalInfo> ExternalAuthInfo { get; set; } = new List<ExternalInfo>();
+    public Guid PlanningId { get; set; }
+    public virtual Planning Planning { get; set; } = null!;
 
-    public virtual List<WeddingPlanning> WeddingPlannings { get; set; } = new List<WeddingPlanning>();
+    public virtual List<UserComponent> Favourites { get; set; } = new List<UserComponent>();
+    public virtual List<ExternalAuthInfo> ExternalAuthInfo { get; set; } = new List<ExternalAuthInfo>();
 }

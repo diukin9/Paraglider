@@ -15,7 +15,7 @@ public class MapsterDefinition : AppDefinition
 
         typeAdapterConfig.Scan(Assembly.GetExecutingAssembly()!);
         typeAdapterConfig.Scan(Assembly.GetAssembly(typeof(ApplicationDbContext))!);
-        typeAdapterConfig.Scan(Assembly.GetAssembly(typeof(WeddingComponentDataAccess))!);
+        typeAdapterConfig.Scan(Assembly.GetAssembly(typeof(ComponentDataAccess))!);
 
         var mapperConfig = new Mapper(typeAdapterConfig);
         services.AddSingleton<IMapper>(mapperConfig);

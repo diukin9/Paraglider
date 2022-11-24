@@ -1,8 +1,7 @@
-﻿namespace Paraglider.Domain.NoSQL.Enums
+﻿namespace Paraglider.Domain.NoSQL.Enums;
+
+public enum HallRentalPriceType
 {
-    public enum HallRentalPriceType
-    {
-        PricePerPerson,
-        RentalPrice
-    }
+    PricePerPerson,
+    RentalPrice
 }

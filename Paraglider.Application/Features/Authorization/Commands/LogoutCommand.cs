@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
-using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
+using Paraglider.Infrastructure.Common.Response;
 using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.Common.AppData;
 

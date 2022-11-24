@@ -1,4 +1,6 @@
-﻿namespace Paraglider.Infrastructure.Common.Extensions;
+﻿using Paraglider.Infrastructure.Common.Response;
+
+namespace Paraglider.Infrastructure.Common.Extensions;
 
 public static class OperationResultExtensions
 {

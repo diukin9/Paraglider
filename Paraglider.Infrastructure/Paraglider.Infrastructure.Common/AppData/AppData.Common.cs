@@ -10,8 +10,9 @@ public static partial class AppData
     public const string ExternalAuthHandlerRelativePath = "/external-auth-handler";
 
     public const string DefaultCityName = "Москва";
-    public const string DefaultCityKey = "Moscow";
 
     //TODO найти базовый аватар
     public const string DefaultAvatarUrl = "url";
+
+    public const string MongoIdName = "_id";
 }

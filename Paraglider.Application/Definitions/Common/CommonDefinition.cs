@@ -13,6 +13,7 @@ public class CommonDefinition : AppDefinition
         services.AddMemoryCache();
 
         services.AddControllers();
+        services.AddApiVersioning();
     }
 
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)

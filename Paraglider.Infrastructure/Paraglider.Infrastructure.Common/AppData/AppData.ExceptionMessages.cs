@@ -10,9 +10,9 @@
 
             public static string ObjectNotFound(string name) => $"The '{name}' not foud";
             public static string NullOrEmpty(string name) => $"The '{name}' was null or empty.";
-            public static string ObjectIsNull(Type type) => $"The '{type.Name}' was null.";
+            public static string ObjectIsNull(string name) => $"The '{name}' was null.";
             public static string CannotBeNegative(string name) => $"The '{name}' cannot be negative.";
-            public static string CannotBeHigherThan(string first, string second) => $"The '{first}' cannot be higher than {second}";
+            public static string CannotBeHigherThan(string first, string second) => $"The '{first}' cannot be higher than {second}.";
             public static string CannotBeHigherThan(string name, double limit) => CannotBeHigherThan(name, limit.ToString());
         }
     }

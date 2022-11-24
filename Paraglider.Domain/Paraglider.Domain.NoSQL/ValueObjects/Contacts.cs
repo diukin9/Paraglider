@@ -7,28 +7,34 @@ namespace Paraglider.Domain.NoSQL.ValueObjects;
 public class Contacts
 {
     [BsonElement("id")]
-    public readonly string Id;
+    public string Id { get; set; } = null!;
 
     [BsonElement("phoneNumber")]
-    public readonly string PhoneNumber = null!;
+    public string PhoneNumber { get; set; } = null!;
 
+    [BsonIgnoreIfNull]
     [BsonElement("email")]
-    public readonly string? Email;
+    public string? Email { get; set; }
 
+    [BsonIgnoreIfNull]
     [BsonElement("telegram")]
-    public readonly string? Telegram;
+    public string? Telegram { get; set; }
 
+    [BsonIgnoreIfNull]
     [BsonElement("whatsApp")]
-    public readonly string? WhatsApp;
+    public string? WhatsApp { get; set; }
 
+    [BsonIgnoreIfNull]
     [BsonElement("viber")]
-    public readonly string? Viber;
+    public string? Viber { get; set; }
 
+    [BsonIgnoreIfNull]
     [BsonElement("vk")]
-    public readonly string? Vkontakte;
+    public string? Vkontakte { get; set; }
 
+    [BsonIgnoreIfNull]
     [BsonElement("instagram")]
-    public readonly string? Instagram;
+    public string? Instagram { get; set; }
 
     public Contacts(
         string id,

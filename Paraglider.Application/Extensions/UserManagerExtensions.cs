@@ -9,12 +9,14 @@ public static class UserManagerExtensions
 {
     public static async Task<ApplicationUser?> FindByExternalLoginInfoAsync(
         this UserManager<ApplicationUser> userManager,
-        ExternalAuthProvider provider,
+        AuthProvider provider,
         string externalId)
     {
         var user =  await userManager.Users
-            .Where(x => x.ExternalAuthInfo.Any(y => y.ExternalId == externalId && y.ExternalProvider == provider))
+            .Where(x => x.ExternalAuthInfo
+                .Any(y => y.ExternalId == externalId && y.ExternalProvider == provider))
             .SingleOrDefaultAsync();
+
         return user;
     }
 

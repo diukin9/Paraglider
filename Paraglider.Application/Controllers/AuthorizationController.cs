@@ -5,12 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 using Paraglider.API.Features.Authorization.Commands;
 using Paraglider.API.Features.Users.Commands;
 using Paraglider.API.Features.Users.Queries;
-using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
+using Paraglider.Infrastructure.Common.Response;
 
 namespace Paraglider.API.Controllers;
 
-public class AuthorizationController : Controller
+[ApiController]
+[ApiVersion("1.0")]
+[Route("/api/v{version:apiVersion}")]
+public class AuthorizationController : ControllerBase
 {
     private readonly IMediator _mediator;
 
@@ -20,18 +23,10 @@ public class AuthorizationController : Controller
     }
 
     [AllowAnonymous]
-    [HttpPost("/api/basic-auth")]
+    [HttpPost("basic-auth")]
     public async Task<IActionResult> BasicAuthorization([FromBody] BasicAuthRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
-        return response.IsOk ? Ok(response) : BadRequest(response);
-    }
-
-    [Authorize]
-    [HttpPost("/api/logout")]
-    public async Task<IActionResult> Logout()
-    {
-        var response = await _mediator.Send(new LogoutRequest(), HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);
     }
 
@@ -84,5 +79,13 @@ public class AuthorizationController : Controller
         if (!response.IsOk) return BadRequest(response);
 
         return Redirect(returnUrl);
+    }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        var response = await _mediator.Send(new LogoutRequest(), HttpContext.RequestAborted);
+        return response.IsOk ? Ok(response) : BadRequest(response);
     }
 }

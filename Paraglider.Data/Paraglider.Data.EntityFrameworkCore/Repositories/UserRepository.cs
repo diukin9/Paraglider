@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Paraglider.Data.EntityFrameworkCore.Repositories;
 
-public class UserRepository : RDbRepository<ApplicationUser>, IUserRepository
+public class UserRepository : Repository<ApplicationUser>, IUserRepository
 {
     private readonly ApplicationDbContext _context;
 
