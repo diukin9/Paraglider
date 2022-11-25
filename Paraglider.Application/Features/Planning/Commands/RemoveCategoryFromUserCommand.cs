@@ -4,12 +4,10 @@ using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Response;
-using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Planning.Commands;
 
-[TsClass]
 public record RemoveCategoryFromUserRequest(Guid CategoryId) : IRequest<OperationResult>;
 
 public class RemoveCategoryFromUserRequestValidator : AbstractValidator<RemoveCategoryFromUserRequest>

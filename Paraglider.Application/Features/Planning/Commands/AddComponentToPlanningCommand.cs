@@ -6,12 +6,10 @@ using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
 using Paraglider.Infrastructure.Common.Response;
-using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Planning.Commands;
 
-[TsClass]
 public record AddComponentToPlanningRequest(Guid ComponentId) : IRequest<OperationResult>;
 
 public class AddComponentToPlanningRequestValidator : AbstractValidator<AddComponentToPlanningRequest>

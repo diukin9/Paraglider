@@ -6,12 +6,10 @@ using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
 using Paraglider.Infrastructure.Common.Response;
-using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Commands;
 
-[TsClass]
 public record AddComponentToFavouritesRequest(Guid ComponentId) : IRequest<OperationResult>;
 
 public class AddComponentRequestValidator : AbstractValidator<AddComponentToFavouritesRequest>

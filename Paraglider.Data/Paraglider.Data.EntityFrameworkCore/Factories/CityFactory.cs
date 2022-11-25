@@ -1,33 +1,32 @@
 ﻿using Paraglider.Domain.RDB.Entities;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.Data.EntityFrameworkCore.Factories
+namespace Paraglider.Data.EntityFrameworkCore.Factories;
+
+public class CityFactory
 {
-    public class CityFactory
+    public static City Create(CityData data)
     {
-        public static City Create(CityData data)
+        var city = new City()
         {
-            var city = new City()
-            {
-                Name = data.Name
-            };
+            Name = data.Name
+        };
 
-            return city;
-        }
+        return city;
     }
+}
 
-    public class CityData
+public class CityData
+{
+    public readonly string Name = null!;
+
+    public CityData(string name)
     {
-        public readonly string Name = null!;
-
-        public CityData(string name)
+        if (string.IsNullOrEmpty(name))
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException(ExceptionMessages.NullOrEmpty(nameof(name)));
-            }
-
-            Name = name;
+            throw new ArgumentException(ExceptionMessages.NullOrEmpty(nameof(name)));
         }
+
+        Name = name;
     }
 }

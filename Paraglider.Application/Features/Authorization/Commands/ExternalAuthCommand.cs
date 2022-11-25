@@ -9,67 +9,66 @@ using Paraglider.Infrastructure.Extensions;
 using System.Security.Claims;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.API.Features.Authorization.Commands
+namespace Paraglider.API.Features.Authorization.Commands;
+
+public record ExternalAuthRequest() : IRequest<OperationResult>;
+
+public class ExternalAuthCommandHandler : IRequestHandler<ExternalAuthRequest, OperationResult>
 {
-    public record ExternalAuthRequest() : IRequest<OperationResult>;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public class ExternalAuthCommandHandler : IRequestHandler<ExternalAuthRequest, OperationResult>
+    public ExternalAuthCommandHandler(
+        SignInManager<ApplicationUser> signInManager,
+        UserManager<ApplicationUser> userManager)
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        _signInManager = signInManager;
+        _userManager = userManager;
+    }
 
-        public ExternalAuthCommandHandler(
-            SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
+    public async Task<OperationResult> Handle(ExternalAuthRequest request, CancellationToken cancellationToken)
+    {
+        var operation = new OperationResult();
+
+        //получаем ExternalLoginInfo
+        var info = await _signInManager.GetExternalLoginInfoAsync();
+        if (info is null)
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
+            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ExternalLoginInfo)));
         }
 
-        public async Task<OperationResult> Handle(ExternalAuthRequest request, CancellationToken cancellationToken)
+        //получаем провайдера и внешний id
+        var provider = Enum.Parse<AuthProvider>(info.LoginProvider);
+        var externalId = info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier);
+
+        //получаем пользователя на основе ExternalLoginInfo
+        var user = await _userManager.FindByExternalLoginInfoAsync(provider, externalId!);
+        if (user is null)
         {
-            var operation = new OperationResult();
-
-            //получаем ExternalLoginInfo
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info is null)
-            {
-                return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ExternalLoginInfo)));
-            }
-
-            //получаем провайдера и внешний id
-            var provider = Enum.Parse<AuthProvider>(info.LoginProvider);
-            var externalId = info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier);
-
-            //получаем пользователя на основе ExternalLoginInfo
-            var user = await _userManager.FindByExternalLoginInfoAsync(provider, externalId!);
-            if (user is null)
-            {
-                return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));
-            }
-
-            //если у пользователя нет такого UserLoginInfo - создаем
-            if (await _userManager.FindUserLoginInfoAsync(user, info.LoginProvider, info.ProviderKey) is null)
-            { 
-                var identityResult = await _userManager.AddLoginAsync(user, info);
-                if (!identityResult.Succeeded)
-                {
-                    return operation.AddError(string.Join("; ", identityResult.Errors));
-                }
-            }
-
-            //авторизовываем пользователя
-            var signInResult = await _signInManager.ExternalLoginSignInAsync(
-                info.LoginProvider,
-                info.ProviderKey,
-                true);
-
-            if (!signInResult.Succeeded)
-            {
-                return operation.AddError(ExceptionMessages.FailedExternalAuth);
-            }
-
-            return operation.AddSuccess(Messages.SuccessfullExternalAuth);
+            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));
         }
+
+        //если у пользователя нет такого UserLoginInfo - создаем
+        if (await _userManager.FindUserLoginInfoAsync(user, info.LoginProvider, info.ProviderKey) is null)
+        { 
+            var identityResult = await _userManager.AddLoginAsync(user, info);
+            if (!identityResult.Succeeded)
+            {
+                return operation.AddError(string.Join("; ", identityResult.Errors));
+            }
+        }
+
+        //авторизовываем пользователя
+        var signInResult = await _signInManager.ExternalLoginSignInAsync(
+            info.LoginProvider,
+            info.ProviderKey,
+            true);
+
+        if (!signInResult.Succeeded)
+        {
+            return operation.AddError(ExceptionMessages.FailedExternalAuth);
+        }
+
+        return operation.AddSuccess(Messages.SuccessfullExternalAuth);
     }
 }

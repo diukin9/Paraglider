@@ -33,14 +33,14 @@ public class PlanningController : ControllerBase
     }
 
     [HttpPost("add-category")]
-    public async Task<IActionResult> AddToUser([FromBody] AddCategoryToUserRequest request)
+    public async Task<IActionResult> AddCategory([FromBody] AddCategoryToUserRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);
     }
 
     [HttpDelete("remove-category")]
-    public async Task<IActionResult> RemoveFromUser([FromBody] RemoveCategoryFromUserRequest request)
+    public async Task<IActionResult> RemoveCategory([FromBody] RemoveCategoryFromUserRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);

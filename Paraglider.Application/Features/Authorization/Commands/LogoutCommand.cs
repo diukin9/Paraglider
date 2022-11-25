@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Response;
-using Reinforced.Typings.Attributes;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
-[TsClass]
 public record LogoutRequest() : IRequest<OperationResult>;
 
 public class LogoutCommandHandler : IRequestHandler<LogoutRequest, OperationResult>
