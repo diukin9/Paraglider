@@ -1,4 +1,4 @@
-import { createGlobalStyle, DefaultTheme } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   * {
@@ -10,7 +10,16 @@ export const GlobalStyle = createGlobalStyle`
   body {
     font-family: "Geometria", "Arial", sans-serif;
     font-size: 16px;
+    color: ${({ theme }) => theme.textColors.default};
   }
 `;
 
-export const theme: DefaultTheme = {};
+export const theme = {
+  bgColors: {
+    primary: "#FF8787",
+  },
+  textColors: {
+    default: "#3A3A3A",
+    light: "#FFFEF6",
+  },
+};
