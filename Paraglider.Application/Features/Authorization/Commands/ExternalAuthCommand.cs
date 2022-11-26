@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.API.Extensions;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
+using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
-using Paraglider.Infrastructure.Common.Response;
 using Paraglider.Infrastructure.Extensions;
-using System.Security.Claims;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;

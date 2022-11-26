@@ -2,11 +2,10 @@
 using FluentValidation.Validators;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Paraglider.Data.Factories;
-using Paraglider.Data.Repositories;
-using Paraglider.Domain.Entities;
+using Paraglider.Data.EntityFrameworkCore.Factories;
+using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
+using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Abstractions;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Registration;
@@ -21,7 +20,7 @@ public record RegisterUserCommand : IRequest<OperationResult>
 
     public string Surname { get; init; } = null!;
 
-    public string? CityKey { get; init; }
+    public Guid CityId { get; init; }
 
     public string? PhoneNumber { get; init; }
 
@@ -47,15 +46,14 @@ public record RegisterUserCommand : IRequest<OperationResult>
 public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, OperationResult>
 {
     private readonly UserManager<ApplicationUser> userManager;
-    private readonly CityRepository cityRepository;
+    private readonly ICityRepository cityRepository;
     private readonly IValidator<RegisterUserCommand> validator;
 
     public RegisterUserHandler(UserManager<ApplicationUser> userManager,
-        IUnitOfWork unitOfWork,
-        IValidator<RegisterUserCommand> validator)
+        IValidator<RegisterUserCommand> validator, ICityRepository cityRepository)
     {
         this.userManager = userManager;
-        cityRepository = (CityRepository) unitOfWork.GetRepository<City>();
+        this.cityRepository = cityRepository;
         this.validator = validator;
     }
 
@@ -67,10 +65,8 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Operatio
             return OperationResult.Error(string.Join(';', validateResult.Errors));
 
 
-        var city = request.CityKey != null
-            ? await cityRepository.GetByKeyAsync(request.CityKey)
-              ?? await cityRepository.GetDefaultCity()
-            : await cityRepository.GetDefaultCity();
+        var city = await cityRepository.FindByIdAsync(request.CityId)
+                   ?? await cityRepository.GetDefaultCity();
 
         var user = UserFactory.Create(new UserData(request.FirstName,
             request.Surname,

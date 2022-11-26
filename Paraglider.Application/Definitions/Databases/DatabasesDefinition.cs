@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Paraglider.API.Definitions.Base;
 using Paraglider.Data;
-using Paraglider.Data.MongoDB;
-using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.MongoDB;
 
-namespace Paraglider.API.Definitions.DbContext;
+namespace Paraglider.API.Definitions.Databases;
 
 public class DatabasesDefinition : AppDefinition
 {

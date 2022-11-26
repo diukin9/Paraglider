@@ -1,11 +1,11 @@
-﻿using FluentValidation;
+﻿using System.Net;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
+using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
-using Paraglider.Infrastructure.Common.Response;
-using System.Net;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;

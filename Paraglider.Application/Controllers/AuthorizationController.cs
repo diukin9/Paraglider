@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.API.Features.Authorization.Commands;
+using Paraglider.API.Features.Registration;
 using Paraglider.API.Features.Users.Commands;
 using Paraglider.API.Features.Users.Queries;
 using Paraglider.Infrastructure.Common;
@@ -68,40 +69,32 @@ public class AuthorizationController : Controller
         }
       
         var infoResponse = await _mediator.Send(
-            new GetExternalLoginInfoRequest(),
+            new GetUserByExternalLoginInfoRequest(),
             HttpContext.RequestAborted);
 
         if (!infoResponse.IsOk) return BadRequest(infoResponse);
         var info = (ExternalLoginInfo)infoResponse.GetDataObject()!;
 
         var userResponse = await _mediator.Send(
-            new GetUserByExternalLoginInfoRequest(info),
+            new GetUserByExternalLoginInfoRequest(),
             HttpContext.RequestAborted);
 
         if (!userResponse.IsOk)
         {
             var createResponse = await _mediator.Send(
-                new CreateExternalUserRequest() { Info = info },
+                new CreateExternalUserRequest(),
                 HttpContext.RequestAborted);
 
             if (!createResponse.IsOk) return BadRequest(createResponse);
         }
 
         var response = await _mediator.Send(
-            new ExternalAuthRequest(info),
+            new ExternalAuthRequest(),
             HttpContext.RequestAborted);
 
         if (!response.IsOk) return BadRequest(response);
 
         return Redirect(returnUrl);
-    }
-
-    [Authorize]
-    [HttpPost("logout")]
-    public async Task<IActionResult> Logout()
-    {
-        var response = await _mediator.Send(new LogoutRequest(), HttpContext.RequestAborted);
-        return response.IsOk ? Ok(response) : BadRequest(response);
     }
 
     [HttpPost]

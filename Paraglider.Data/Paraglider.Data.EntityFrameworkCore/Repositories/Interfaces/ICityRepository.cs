@@ -5,6 +5,8 @@ namespace Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 
 public interface ICityRepository : IRepository<City>
 {
-    public Task<City?> GetByNameAsync(string key);
+    public Task<City?> FindByNameAsync(string key);
     public Task<City> GetDefaultCity();
+
+    public Task<City?> FindByIdAsync(Guid id);
 }
