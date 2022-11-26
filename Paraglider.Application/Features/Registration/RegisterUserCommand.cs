@@ -32,10 +32,11 @@ public record RegisterUserCommand : IRequest<OperationResult>
         {
             RuleSet(DefaultRuleSetName, () =>
             {
-                RuleFor(e => e.Email).EmailAddress();
-                RuleFor(e => e.Password).NotNull().NotEmpty().Length(8);
-                RuleFor(e => e.FirstName).NotNull().NotEmpty();
-                RuleFor(e => e.Surname).NotNull().NotEmpty();
+                RuleFor(e => e.Email).NotEmpty().EmailAddress();
+                RuleFor(e => e.Password).NotEmpty().Length(8);
+                RuleFor(e => e.FirstName).NotEmpty();
+                RuleFor(e => e.Surname).NotEmpty();
+                RuleFor(e => e.CityId).NotEmpty();
                 RuleFor(e => e.PhoneNumber)
                     .SetValidator(new RegularExpressionValidator<RegisterUserCommand>(PhoneRegex));
             });
