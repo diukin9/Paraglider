@@ -5,9 +5,6 @@ namespace Paraglider.MailService;
 
 public interface IMailService
 {
-    public Task SendAsync(MailMessage message);
-    public Task SendByTemplateAsync(EmailTemplate template, MailMessage message);
-
-    public void Send(MailMessage message);
-    public void SendByTemplate(EmailTemplate template, MailMessage message);
+    public Task SendAsync(MailMessage message, CancellationToken cancellationToken);
+    public Task SendByTemplateAsync(EmailTemplate template, MailMessage message, CancellationToken cancellationToken);
 }

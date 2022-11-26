@@ -57,6 +57,7 @@
     <ProjectReference Include="..\Paraglider.Data\Paraglider.Data.EntityFrameworkCore\Paraglider.Data.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\Paraglider.Data\Paraglider.Data.MongoDB\Paraglider.Data.MongoDB.csproj" />
     <ProjectReference Include="..\Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\Paraglider.Infrastructure\Paraglider.MailService\Paraglider.MailService.csproj"/>
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

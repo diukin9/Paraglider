@@ -9,6 +9,9 @@ public static partial class AppData
     public const string DefaultRuleSetName = "default";
     public const string ExternalAuthHandlerRelativePath = "/external-auth-handler";
 
+    //TODO: указать url
+    public const string RedirectOnSuccessfullMailConfirmation = "/";
+
     public const string DefaultCityName = "Москва";
 
     //TODO найти базовый аватар

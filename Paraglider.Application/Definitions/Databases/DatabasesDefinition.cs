@@ -22,7 +22,8 @@ public class DatabasesDefinition : AppDefinition
             config.Password.RequireNonAlphanumeric = false;
             config.Password.RequireUppercase = false;
             config.Password.RequiredLength = 8;
-        }).AddEntityFrameworkStores<ApplicationDbContext>();
+        }).AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
 
         services.AddTransient<IdentityErrorDescriber>();
 

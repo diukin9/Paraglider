@@ -9,9 +9,9 @@ namespace Paraglider.Infrastructure.Common;
 [Serializable]
 public class OperationResult
 {
-    public static OperationResult Success(string message)
+    public static OperationResult Success(string message, object? data = null)
     {
-        return new OperationResult().AddSuccess(message);
+        return new OperationResult().AddSuccess(message, data);
     }
 
     public static OperationResult Error(string message)

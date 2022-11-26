@@ -6,9 +6,10 @@ using Paraglider.Data.EntityFrameworkCore.Factories;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
+using Paraglider.MailService;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.API.Features.Registration;
+namespace Paraglider.API.Features.Registration.Commands;
 
 public record RegisterUserCommand : IRequest<OperationResult>
 {
@@ -48,24 +49,35 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Operatio
 {
     private readonly UserManager<ApplicationUser> userManager;
     private readonly ICityRepository cityRepository;
+    private readonly IMailService mailService;
+    private readonly LinkGenerator linkGenerator;
+    private readonly IHttpContextAccessor accessor;
     private readonly IValidator<RegisterUserCommand> validator;
 
     public RegisterUserHandler(UserManager<ApplicationUser> userManager,
-        IValidator<RegisterUserCommand> validator, ICityRepository cityRepository)
+        IValidator<RegisterUserCommand> validator,
+        ICityRepository cityRepository,
+        IMailService mailService,
+        LinkGenerator linkGenerator,
+        IHttpContextAccessor accessor)
     {
         this.userManager = userManager;
         this.cityRepository = cityRepository;
+        this.mailService = mailService;
+        this.linkGenerator = linkGenerator;
+        this.accessor = accessor;
         this.validator = validator;
     }
 
     public async Task<OperationResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
         var validateResult = await validator.ValidateAsync(request, cancellationToken);
-
         if (!validateResult.IsValid)
             return OperationResult.Error(string.Join(';', validateResult.Errors));
 
-
+        if (await userManager.FindByEmailAsync(request.Email) != null)
+            return OperationResult.Error(ExceptionMessages.UserWithEmailAlreadyExist(request.Email));
+        
         var city = await cityRepository.FindByIdAsync(request.CityId)
                    ?? await cityRepository.GetDefaultCity();
 
@@ -81,6 +93,6 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Operatio
         if (!identityResult.Succeeded)
             return OperationResult.Error(string.Join(';', identityResult.Errors));
 
-        return OperationResult.Success(Messages.SuccessfulRegistration);
+        return OperationResult.Success(Messages.SuccessfulRegistration, user);
     }
 }

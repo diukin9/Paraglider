@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.API.Features.Authorization.Commands;
-using Paraglider.API.Features.Registration;
+using Paraglider.API.Features.Mail.Commands;
+using Paraglider.API.Features.Registration.Commands;
 using Paraglider.API.Features.Users.Commands;
 using Paraglider.API.Features.Users.Queries;
+using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
 
@@ -100,12 +102,34 @@ public class AuthorizationController : Controller
     [HttpPost]
     [AllowAnonymous]
     [Route("api/register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUserCommand command)
+    public async Task<IActionResult> Register([FromBody] RegisterUserCommand command,
+        CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(command, HttpContext.RequestAborted);
+        var registerResponse = await _mediator.Send(command, cancellationToken);
+
+        if (!registerResponse.IsOk) return BadRequest(registerResponse);
+
+        var user = (ApplicationUser) registerResponse.Metadata!.DataObject!;
+
+        var sendConfirmMailResponse = await _mediator.Send(new SendConfirmationEmailCommand(user),
+            cancellationToken);
+
+        if (!sendConfirmMailResponse.IsOk) return BadRequest(sendConfirmMailResponse);
+
+        return Ok(registerResponse);
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    [Route("confirm-email")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand confirmEmailCommand,
+        CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(confirmEmailCommand, cancellationToken);
 
         if (!response.IsOk) return BadRequest(response);
 
-        return CreatedAtAction(nameof(BasicAuthorization), null, null);
+        return Redirect((string) response.Metadata!.DataObject!);
     }
 }
