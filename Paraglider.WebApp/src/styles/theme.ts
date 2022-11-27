@@ -27,5 +27,6 @@ export const theme = {
   textColors: {
     default: "#3A3A3A",
     light: "#FFFEF6",
+    primary: "#FF8787",
   },
 };
