@@ -10,7 +10,7 @@ namespace Paraglider.API.Features.Authorization.Commands;
 public record ConfirmEmailCommand : IRequest<OperationResult>
 {
     public Guid UserId { get; init; }
-    public string Token { get; init; }
+    public string Token { get; init; } = null!;
 }
 
 public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, OperationResult>

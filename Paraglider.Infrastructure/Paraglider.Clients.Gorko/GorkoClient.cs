@@ -77,7 +77,7 @@ public class GorkoClient
 
         var reviews = jsonObject["reviews"]
             ?.Select(x => x.ToObject<Review>())
-            .ToList() ?? new List<Review>();
+            .ToList() ?? new List<Review?>();
 
         return reviews!;
     }
