@@ -27,11 +27,19 @@ public class MailMessage
         Body = body;
     }
 
-    public static MailMessage MailConfirmation(string recepient, string confirmationLink)
+    public static MailMessage MailConfirmation(string recipient, string confirmationLink)
     {
-        return new(recepient,
-            EmailSubjects.PasswordConfirmationAfterRegistration,
+        return new(recipient,
+            EmailSubjects.MailConfirmationAfterRegistration,
             EmailTemplates.MailConfirmationTemplate(confirmationLink),
+            TextFormat.Html);
+    }
+
+    public static MailMessage ResetPassword(string recipient, string confirmationLink)
+    {
+        return new(recipient,
+            EmailSubjects.PasswordReset,
+            EmailTemplates.PasswordResetTemplate(confirmationLink),
             TextFormat.Html);
     }
 }

@@ -6,8 +6,9 @@ public static partial class AppData
     {
         public const string NotEnoughUserInfoFromExternalProvider = "Couldn't get basic user information from an external provider.";
         public const string WrongPasswordEntered = "Wrong password entered.";
-        public const string FailedExternalAuth = $"Error when attempting external authorisation.";
-
+        public const string FailedExternalAuth = "Error when attempting external authorisation.";
+        public const string UnconfirmedEmail = "Uncomfirmed email was passed";
+        
         public static string ObjectNotFound(string name) => $"The '{name}' not foud";
         public static string NullOrEmpty(string name) => $"The '{name}' was null or empty.";
         public static string ObjectIsNull(string name) => $"The '{name}' was null.";

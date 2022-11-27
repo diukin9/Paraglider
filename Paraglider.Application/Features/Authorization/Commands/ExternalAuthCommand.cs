@@ -69,6 +69,6 @@ public class ExternalAuthCommandHandler : IRequestHandler<ExternalAuthRequest, O
             return operation.AddError(ExceptionMessages.FailedExternalAuth);
         }
 
-        return operation.AddSuccess(Messages.SuccessfullExternalAuth);
+        return operation.AddSuccess(Messages.SuccessfulExternalAuth);
     }
 }

@@ -30,7 +30,7 @@ public class MailService : IMailService
                 message.Body = EmailTemplates.MailConfirmationTemplate(message.Body);
                 break;
             case EmailTemplate.PasswordRecovery:
-                message.Body = EmailTemplates.PasswordRecoveryTemplate(message.Body);
+                message.Body = EmailTemplates.PasswordResetTemplate(message.Body);
                 break;
         }
 

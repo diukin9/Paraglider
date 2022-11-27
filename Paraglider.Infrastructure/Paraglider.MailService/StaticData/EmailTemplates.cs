@@ -7,5 +7,8 @@ public static class EmailTemplates
         return @$"Для подтверждения почты перйдите по <a href=""{confirmationLink}"">ссылке</a>";
     }
 
-    public static string PasswordRecoveryTemplate(string text) => throw new NotImplementedException();
+    public static string PasswordResetTemplate(string confirmationLink)
+    {
+        return @$"Для смены пароля перейдите по <a href=""{confirmationLink}"">ссылке</a>";
+    }
 }

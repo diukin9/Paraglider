@@ -37,7 +37,7 @@ public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, O
         if (!confirmationResult.Succeeded)
             return OperationResult.Error(string.Join(';', confirmationResult.Errors));
 
-        var redirectUrl = WebUtility.UrlEncode(AppData.RedirectOnSuccessfullMailConfirmation);
+        var redirectUrl = WebUtility.UrlEncode(AppData.RedirectOnSuccessfulMailConfirmation);
 
         return OperationResult.Success(AppData.Messages.SuccessfulEmailConfirmation, redirectUrl);
     }

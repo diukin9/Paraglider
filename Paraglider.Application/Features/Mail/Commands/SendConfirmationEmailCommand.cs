@@ -15,19 +15,16 @@ public class SendConfirmationEmailCommandHandler : IRequestHandler<SendConfirmat
     private readonly IHttpContextAccessor httpContextAccessor;
     private readonly UserManager<ApplicationUser> userManager;
     private readonly LinkGenerator linkGenerator;
-    private readonly ILogger<SendConfirmationEmailCommandHandler> logger;
 
     public SendConfirmationEmailCommandHandler(IMailService mailService,
         IHttpContextAccessor httpContextAccessor,
         UserManager<ApplicationUser> userManager,
-        LinkGenerator linkGenerator,
-        ILogger<SendConfirmationEmailCommandHandler> logger)
+        LinkGenerator linkGenerator)
     {
         this.mailService = mailService;
         this.httpContextAccessor = httpContextAccessor;
         this.userManager = userManager;
         this.linkGenerator = linkGenerator;
-        this.logger = logger;
     }
 
     public async Task<OperationResult> Handle(SendConfirmationEmailCommand request, CancellationToken cancellationToken)
@@ -41,6 +38,8 @@ public class SendConfirmationEmailCommandHandler : IRequestHandler<SendConfirmat
             "ConfirmEmail",
             "Authorization",
             new {userId = user.Id, token});
+        
+        
 
         if (confirmationLink == null)
             throw new Exception("Не удалось сгенерировать ссылку для подтверждения email");

@@ -114,9 +114,9 @@ public class AuthorizationController : Controller
         var sendConfirmMailResponse = await _mediator.Send(new SendConfirmationEmailCommand(user),
             cancellationToken);
 
-        if (!sendConfirmMailResponse.IsOk) return BadRequest(sendConfirmMailResponse);
+        if (!sendConfirmMailResponse.IsOk) return BadRequest(sendConfirmMailResponse.Metadata!.Message);
 
-        return Ok(registerResponse);
+        return Ok(registerResponse.Metadata.Message);
     }
 
     [HttpGet]
@@ -131,5 +131,32 @@ public class AuthorizationController : Controller
         if (!response.IsOk) return BadRequest(response);
 
         return Redirect((string) response.Metadata!.DataObject!);
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [Route("api/reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] SendPasswordResetMailCommand command,
+        CancellationToken cancellationToken)
+    {
+        var passwordResetMailResult = await _mediator.Send(command, cancellationToken);
+
+        if (!passwordResetMailResult.IsOk)
+            return BadRequest(passwordResetMailResult.Metadata!.Message);
+
+        return Ok(passwordResetMailResult.Metadata!.Message);
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    [Route("api/set-new-password")]
+    public async Task<IActionResult> ResetPasswordHandler([FromBody] SetNewPasswordCommand setNewPasswordCommand,
+        CancellationToken cancellationToken)
+    {
+        var resetPasswordResult = await _mediator.Send(setNewPasswordCommand, cancellationToken);
+
+        if (!resetPasswordResult.IsOk) return BadRequest(resetPasswordResult.Metadata!.Message);
+
+        return Ok(resetPasswordResult.Metadata!.Message);
     }
 }

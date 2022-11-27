@@ -10,7 +10,8 @@ public static partial class AppData
     public const string ExternalAuthHandlerRelativePath = "/external-auth-handler";
 
     //TODO: указать url
-    public const string RedirectOnSuccessfullMailConfirmation = "/";
+    public const string RedirectOnSuccessfulMailConfirmation = "/";
+    public const string RedirectPasswordResetPath = "/";
 
     public const string DefaultCityName = "Москва";
 

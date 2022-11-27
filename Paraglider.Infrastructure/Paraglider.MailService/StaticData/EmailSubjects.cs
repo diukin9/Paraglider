@@ -2,6 +2,8 @@
 
 public static class EmailSubjects
 {
-    public const string PasswordConfirmationAfterRegistration =
+    public const string MailConfirmationAfterRegistration =
         "Подтверждение почты при регистрации на сервисе ПараПлан";
+
+    public const string PasswordReset = "Смена пароля на сервисе ПараПлан";
 }
