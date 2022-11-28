@@ -4,6 +4,8 @@ namespace Paraglider.Infrastructure.Common.Abstractions;
 
 public interface IRepository<TEntity> where TEntity : class, new()
 {
+    public Task<IReadOnlyCollection<TEntity>> GetAll(CancellationToken cancellationToken);
+
     public Task<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> selector);
 
     public Task<TEntity?> FindByIdAsync(Guid id);

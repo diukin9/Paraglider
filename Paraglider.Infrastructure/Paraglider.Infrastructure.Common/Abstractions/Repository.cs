@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Paraglider.Infrastructure.Common.Abstractions;
 
@@ -10,6 +10,13 @@ public abstract class Repository<TEntity> : IRepository<TEntity>  where TEntity 
     public Repository(DbContext context)
     {
         _context = context;
+    }
+
+    public async Task<IReadOnlyCollection<TEntity>> GetAll(CancellationToken cancellationToken)
+    {
+        return await _context
+            .Set<TEntity>()
+            .ToArrayAsync(cancellationToken);
     }
 
     public abstract Task<TEntity?> FindByIdAsync(Guid id);
