@@ -1,4 +1,4 @@
-import React, { DetailedHTMLProps, HTMLAttributes } from "react";
+import { DetailedHTMLProps, HTMLAttributes } from "react";
 import { ButtonVariant } from "./Buttons.helpers";
 import { DefaultButton } from "./Buttons.styles";
 
