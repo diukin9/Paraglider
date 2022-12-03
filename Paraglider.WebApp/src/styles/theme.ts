@@ -17,7 +17,8 @@ export const GlobalStyle = createGlobalStyle`
 
 export const theme = {
   layout: {
-    maxWidth: "1140px",
+    padding: "20px",
+    maxWidth: "1290px",
   },
   bgColors: {
     white: "#FFFFFF",

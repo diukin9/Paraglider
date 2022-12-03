@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const HeaderRoot = styled.header`
-  position: fixed;
+  position: sticky;
   top: 0;
   right: 0;
   left: 0;
@@ -9,12 +9,12 @@ export const HeaderRoot = styled.header`
 `;
 
 export const HeaderWrapper = styled.div`
-  max-width: ${({ theme }) => theme.layout.maxWidth};
+  width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
 `;
 
 export const DefaultContentWrapper = styled.div`
-  height: 140px;
+  height: 110px;
   display: flex;
   justify-content: space-between;
   align-items: center;
