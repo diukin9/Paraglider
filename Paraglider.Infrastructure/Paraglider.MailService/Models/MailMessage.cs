@@ -9,9 +9,9 @@ public class MailMessage
     public TextFormat TextFormat { get; set; }
     public string Body { get; set; }
 
-    public MailMessage(string recipientMail, string subject, string body, TextFormat textFormat = TextFormat.Text)
+    public MailMessage(string recipientMail, string subject, string body, TextFormat textFormat)
     {
-        if (StringHelper.CheckForNullOrEmpty(recipientMail, subject, body))
+        if (StringHelper.CheckForNullOrEmpty(recipientMail, subject))
         {
             throw new ArgumentException(Exceptions.PassedEmptyParameter);
         }
@@ -25,5 +25,21 @@ public class MailMessage
         Subject = subject;
         TextFormat = textFormat;
         Body = body;
+    }
+
+    public static MailMessage MailConfirmation(string recipient, string confirmationLink)
+    {
+        return new(recipient,
+            EmailSubjects.MailConfirmationAfterRegistration,
+            EmailTemplates.MailConfirmationTemplate(confirmationLink),
+            TextFormat.Html);
+    }
+
+    public static MailMessage ResetPassword(string recipient, string confirmationLink)
+    {
+        return new(recipient,
+            EmailSubjects.PasswordReset,
+            EmailTemplates.PasswordResetTemplate(confirmationLink),
+            TextFormat.Html);
     }
 }

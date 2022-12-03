@@ -8,15 +8,23 @@ public class MailSettings
     public int Port { get; set; }
     public SecureSocketOptions SecureSocketOptions { get; set; }
     public string SenderMail { get; set; } = null!;
+
+    public string Login { get; set; } = null!;
     public string Password { get; set; } = null!;
 
+    public MailSettings(SecureSocketOptions secureSocketOptions = SecureSocketOptions.Auto)
+    {
+        SecureSocketOptions = secureSocketOptions;
+    }
+    
     public MailSettings(string host,
         int port,
         string senderMail,
+        string login,
         string password,
-        SecureSocketOptions secureSocketOptions = SecureSocketOptions.StartTls)
+        SecureSocketOptions secureSocketOptions = SecureSocketOptions.Auto) : this(secureSocketOptions)
     {
-        if (StringHelper.CheckForNullOrEmpty(host, senderMail, password))
+        if (StringHelper.CheckForNullOrEmpty(host, senderMail, login, password))
         {
             throw new ArgumentException(Exceptions.PassedEmptyParameter);
         }
@@ -28,8 +36,8 @@ public class MailSettings
 
         Host = host;
         Port = port;
-        SecureSocketOptions = secureSocketOptions;
         SenderMail = senderMail;
+        Login = login;
         Password = password;
     }
 }

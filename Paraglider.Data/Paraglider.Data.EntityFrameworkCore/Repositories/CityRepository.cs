@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Abstractions;
-using System.Linq.Expressions;
 
 namespace Paraglider.Data.EntityFrameworkCore.Repositories;
 
@@ -26,7 +26,7 @@ public class CityRepository : Repository<City>, ICityRepository
         return await _context.Cities.Where(x => x.Id == id).SingleOrDefaultAsync();
     }
 
-    public async Task<City?> GetByNameAsync(string name)
+    public async Task<City?> FindByNameAsync(string name)
     {
         var city = await _context.Cities
             .Where(u => u.Name == name)
@@ -36,6 +36,6 @@ public class CityRepository : Repository<City>, ICityRepository
 
     public async Task<City> GetDefaultCity()
     {
-        return (await GetByNameAsync(AppData.DefaultCityName))!;
+        return (await FindByNameAsync(AppData.DefaultCityName))!;
     }
 }

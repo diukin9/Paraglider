@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using System.Security.Claims;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
@@ -11,9 +12,7 @@ using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Helpers;
-using Paraglider.Infrastructure.Common.Response;
 using Paraglider.Infrastructure.Extensions;
-using System.Security.Claims;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Commands;
@@ -113,7 +112,7 @@ public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUs
                 var ipInfo = JsonConvert.DeserializeObject<IpInfo>(content);
 
                 //получаем application city
-                if (ipInfo?.City is not null) city = await _cityRepository.GetByNameAsync(ipInfo.City);
+                if (ipInfo?.City is not null) city = await _cityRepository.FindByNameAsync(ipInfo.City);
             }
             catch (Exception) { }
         }

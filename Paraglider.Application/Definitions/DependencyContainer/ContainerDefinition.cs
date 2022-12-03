@@ -7,5 +7,6 @@ public class ContainerDefinition : AppDefinition
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton(configuration);
+        services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
     }
 }
