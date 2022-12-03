@@ -39,5 +39,13 @@ public class UserController : ControllerBase
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);
     }
+
+    [HttpPatch("city")]
+    public async Task<IActionResult> ChangeCity([FromBody] ChangeUserCityCommand request,
+        CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(request, cancellationToken);
+        return response.IsOk ? Ok(response.Metadata) : BadRequest(response.Metadata);
+    }
 }
 

@@ -20,5 +20,10 @@ public static partial class AppData
         {
             return $"User with {email} already exist";
         }
+
+        public static string UpdateError(string resourceName)
+        {
+            return $"Error: can't update resource: {resourceName}";
+        }
     }
 }

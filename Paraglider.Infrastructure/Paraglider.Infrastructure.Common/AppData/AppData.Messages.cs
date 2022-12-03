@@ -16,6 +16,11 @@ public static partial class AppData
         public static string ObjectCreated(string name) => $"The '{name}' successfully created.";
         public static string ObjectUpdated(string name) => $"The '{name}' successfully updated.";
 
+        public static string ObjectUpdated(string name, params string[] propertyNames)
+        {
+            return $"The '{name}' successfully updated: " + string.Join(", ", propertyNames);
+        }
+
         public static string ConfirmationEmailSent(string mail)
         {
             return $"Confirmation mail was successfully sent on {mail}";

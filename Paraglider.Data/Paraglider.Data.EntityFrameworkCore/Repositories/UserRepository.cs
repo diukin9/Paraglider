@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.Abstractions;
-using System.Linq.Expressions;
 
 namespace Paraglider.Data.EntityFrameworkCore.Repositories;
 
@@ -34,5 +34,20 @@ public class UserRepository : Repository<ApplicationUser>, IUserRepository
             .Where(u => u.UserName == username)
             .SingleOrDefaultAsync();
         return user;
+    }
+
+    public async Task<bool> ChangeCity(Guid userId, Guid newCityId, CancellationToken cancellationToken)
+    {
+        var retrievedUser = await _context.Users.FindAsync(userId);
+        if (retrievedUser == null)
+            return false;
+
+        var city = await _context.Cities.FindAsync(newCityId);
+        if (city == null)
+            return false;
+
+        retrievedUser.City = city;
+
+        return await _context.SaveChangesAsync(cancellationToken) > 0;
     }
 }
