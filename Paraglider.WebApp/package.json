@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "storybook": "storybook dev -p 6006",
     "build": "vite build",
+    "build-storybook": "storybook build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -13,10 +15,20 @@
     "styled-components": "^5.3.6"
   },
   "devDependencies": {
+    "@babel/core": "^7.20.2",
+    "@storybook/addon-actions": "^7.0.0-alpha.54",
+    "@storybook/addon-essentials": "^7.0.0-alpha.54",
+    "@storybook/addon-interactions": "^7.0.0-alpha.54",
+    "@storybook/addon-links": "^7.0.0-alpha.54",
+    "@storybook/react": "^7.0.0-alpha.54",
+    "@storybook/react-vite": "^7.0.0-alpha.54",
+    "@storybook/testing-library": "^0.0.14-next.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@types/styled-components": "^5.1.26",
     "@vitejs/plugin-react": "^2.2.0",
+    "babel-loader": "^9.1.0",
+    "storybook": "next",
     "typescript": "^4.8.4",
     "vite": "^3.2.3"
   }
