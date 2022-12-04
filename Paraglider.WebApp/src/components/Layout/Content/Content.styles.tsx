@@ -7,6 +7,7 @@ export const ContentRoot = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
+  position: relative;
   width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
 `;
