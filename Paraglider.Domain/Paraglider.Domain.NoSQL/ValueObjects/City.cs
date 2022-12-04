@@ -5,7 +5,7 @@ namespace Paraglider.Domain.NoSQL.ValueObjects;
 public class City
 {
     [BsonElement("id")]
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
 
     [BsonElement("name")]
     public string? Name { get; set; } = null!;

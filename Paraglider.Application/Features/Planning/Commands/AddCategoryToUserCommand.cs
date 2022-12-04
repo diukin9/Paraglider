@@ -45,7 +45,7 @@ public class AddCategoryToUserCommandHandler : IRequestHandler<AddCategoryToUser
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
         {
-            return operation.AddError(string.Join("; ", validateResult.Errors));
+            return operation.AddError(validateResult.Errors);
         }
 
         //получаем текущего пользователя

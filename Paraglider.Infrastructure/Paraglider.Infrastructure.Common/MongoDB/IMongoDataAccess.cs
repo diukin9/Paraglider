@@ -20,6 +20,8 @@ public interface IMongoDataAccess<TEntity> where TEntity : class, new()
 
     Task AddAsync(TEntity value);
 
+    void AddRange(IEnumerable<TEntity> values);
+
     Task AddRangeAsync(IEnumerable<TEntity> values);
 
     Task<bool> UpdateAsync(TEntity value);

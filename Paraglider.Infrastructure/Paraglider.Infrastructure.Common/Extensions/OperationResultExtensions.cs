@@ -1,4 +1,7 @@
-﻿using Paraglider.Infrastructure.Common.Response;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Paraglider.Infrastructure.Common.Response;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Infrastructure.Common.Extensions;
 
@@ -26,6 +29,13 @@ public static class OperationResultExtensions
     {
         source.Exception = exception;
         source.Metadata = new Metadata(source, message, data, MetadataType.Error);
+        return source;
+    }
+
+    public static OperationResult AddError(this OperationResult source, List<ValidationFailure> failures, object? data = null)
+    {
+        source.Exception = new ValidationException(failures);
+        source.Metadata = new Metadata(source, ExceptionMessages.ValidationError, data, MetadataType.Error);
         return source;
     }
 

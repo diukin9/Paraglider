@@ -3,11 +3,10 @@ using MediatR;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Infrastructure.Common.Enums;
 using Paraglider.Infrastructure.Common.Extensions;
-using static Paraglider.Infrastructure.Common.AppData;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
-using Paraglider.Domain.NoSQL.ValueObjects;
 using Paraglider.Infrastructure.Common.Response;
 using Paraglider.Infrastructure.Common.MongoDB;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Components.Queries;
 
@@ -59,13 +58,7 @@ public class GetComponentsQueryHandler : IRequestHandler<GetComponentsRequest, O
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
         {
-            return operation.AddError(string.Join("; ", validateResult.Errors));
-        }
-
-        //проверяем, что такая категория существует
-        if (await _categoryRepository.FindByIdAsync(request.CategoryId) is null)
-        {
-            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(Category)));
+            return operation.AddError(validateResult.Errors);
         }
 
         //получаем компоненты
