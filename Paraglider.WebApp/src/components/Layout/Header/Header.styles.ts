@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
 export const HeaderRoot = styled.header`
-  position: fixed;
+  position: sticky;
   height: ${({ theme }) => theme.layout.header.height};
-  width: 100%;
   top: 0;
   left: 0;
+  right: 0;
   background-color: ${({ theme }) => theme.bgColors.white};
   z-index: 100;
 `;
