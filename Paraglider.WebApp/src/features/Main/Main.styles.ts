@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const MainContainer = styled.div`
+  padding-top: 60px;
+`;
+
 export const BgImage = styled.img`
   position: absolute;
   top: 0;

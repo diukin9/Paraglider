@@ -17,6 +17,9 @@ export const GlobalStyle = createGlobalStyle`
 
 export const theme = {
   layout: {
+    header: {
+      height: "110px",
+    },
     padding: "20px",
     maxWidth: "1290px",
   },

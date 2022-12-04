@@ -5,6 +5,7 @@ import {
   ButtonContainer,
   ListTitle,
   ListWrapper,
+  MainContainer,
   OrderedList,
   OrderedListItem,
 } from "./Main.styles";
@@ -12,7 +13,7 @@ import Newlyweds from "./images/newlyweds.png";
 
 export const Main = () => {
   return (
-    <>
+    <MainContainer>
       <BgImage src={Newlyweds} alt="" />
 
       <PageTitle marginBottom={24}>
@@ -34,6 +35,6 @@ export const Main = () => {
         <Button variant="default">Перейти к конфигуратору</Button>
         <Button variant="outlined">Подробнее</Button>
       </ButtonContainer>
-    </>
+    </MainContainer>
   );
 };
