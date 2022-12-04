@@ -13,7 +13,7 @@ public record UserDTO : IDataTransferObject
     public string? Email { get; init; }
     public CityDTO City { get; init; } = null!;
     public PlanningDTO Planning { get; init; } = null!;
-    public List<UserCompanentDTO> Favourites { get; set; } = null!;
+    public List<UserComponentDTO> Favourites { get; set; } = null!;
 
     public void Register(TypeAdapterConfig config)
     {

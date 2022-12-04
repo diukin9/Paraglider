@@ -1,11 +1,11 @@
-﻿using Mapster;
+﻿using System.Text.Json.Serialization;
+using Mapster;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.Abstractions;
-using System.Text.Json.Serialization;
 
 namespace Paraglider.API.DataTransferObjects;
 
-public class UserCompanentDTO : IDataTransferObject
+public class UserComponentDTO : IDataTransferObject
 {
     [JsonIgnore]
     public Guid ComponentId { get; set; }
@@ -15,7 +15,7 @@ public class UserCompanentDTO : IDataTransferObject
     {
 #pragma warning disable CS8603 // Возможно, возврат ссылки, допускающей значение NULL.
 
-        config.NewConfig<UserComponent, UserCompanentDTO>()
+        config.NewConfig<UserComponent, UserComponentDTO>()
             .Ignore(dest => dest.Component)
             .RequireDestinationMemberSource(true);
 
