@@ -65,7 +65,6 @@ public class GetUserCategoriesQueryHandlerTests
         Assert.False(act.IsOk);
     }
 
-    //TODO точно ли такое поведение, когда пользователь не авторизован
     [Fact]
     public async Task When_ThereIsNoAuthorizedUser_Expect_ErrorInOperationResult()
     {

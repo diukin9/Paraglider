@@ -4,9 +4,9 @@ using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Infrastructure.Common.Enums;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
-using Paraglider.Infrastructure.Common.Response;
 using Paraglider.Infrastructure.Common.MongoDB;
 using static Paraglider.Infrastructure.Common.AppData;
+using Paraglider.Infrastructure.Common;
 
 namespace Paraglider.API.Features.Components.Queries;
 
@@ -37,15 +37,12 @@ public class GetComponentsRequestValidator : AbstractValidator<GetComponentsRequ
 public class GetComponentsQueryHandler : IRequestHandler<GetComponentsRequest, OperationResult>
 {
     private readonly IMongoDataAccess<Component> _components;
-    private readonly ICategoryRepository _categoryRepository;
     private readonly IValidator<GetComponentsRequest> _validator;
 
     public GetComponentsQueryHandler(
         IMongoDataAccess<Component> components,
-        ICategoryRepository categoryRepository,
         IValidator<GetComponentsRequest> validator)
     {
-        _categoryRepository = categoryRepository;
         _components = components;
         _validator = validator;
     }
