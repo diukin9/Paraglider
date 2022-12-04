@@ -2,8 +2,8 @@
 using MediatR;
 using Paraglider.API.DataTransferObjects;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
+using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
-using Paraglider.Infrastructure.Common.Response;
 
 namespace Paraglider.API.Features.Categories.Queries;
 

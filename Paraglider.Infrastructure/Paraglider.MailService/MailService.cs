@@ -15,15 +15,14 @@ public class MailService : IMailService
         _settings = settings;
     }
 
-    public async Task SendAsync(MailMessage message)
+    public async Task SendAsync(MailMessage message, CancellationToken cancellationToken)
     {
         var mimeMessage = GetMimeMessage(message.RecipientMail, message.Subject, message.Body, message.TextFormat);
-        await SendUsingSmtpAsync(mimeMessage);
+        await SendUsingSmtpAsync(mimeMessage, cancellationToken);
     }
 
-    public void Send(MailMessage message) => SendAsync(message).Wait();
-
-    public async Task SendByTemplateAsync(EmailTemplate template, MailMessage message)
+    public async Task SendByTemplateAsync(EmailTemplate template, MailMessage message,
+        CancellationToken cancellationToken)
     {
         switch(template)
         {
@@ -31,13 +30,12 @@ public class MailService : IMailService
                 message.Body = EmailTemplates.MailConfirmationTemplate(message.Body);
                 break;
             case EmailTemplate.PasswordRecovery:
-                message.Body = EmailTemplates.PasswordRecoveryTemplate(message.Body);
+                message.Body = EmailTemplates.PasswordResetTemplate(message.Body);
                 break;
         }
-        await SendAsync(message);
-    }
 
-    public void SendByTemplate(EmailTemplate template, MailMessage message) => SendByTemplateAsync(template, message).Wait();
+        await SendAsync(message, cancellationToken);
+    }
 
     #region private methods
 
@@ -45,7 +43,7 @@ public class MailService : IMailService
         string recipientMail,
         string subject,
         string body,
-        TextFormat textFormat = TextFormat.Text)
+        TextFormat textFormat)
     {
         var mimeMessage = new MimeMessage();
         mimeMessage.From.Add(MailboxAddress.Parse(_settings.SenderMail));
@@ -56,13 +54,13 @@ public class MailService : IMailService
         return mimeMessage;
     }
 
-    private async Task SendUsingSmtpAsync(MimeMessage message)
+    private async Task SendUsingSmtpAsync(MimeMessage message, CancellationToken cancellationToken)
     {
         using var smtp = new SmtpClient();
-        await smtp.ConnectAsync(_settings.Host, _settings.Port, _settings.SecureSocketOptions);
-        await smtp.AuthenticateAsync(_settings.SenderMail, _settings.Password);
-        await smtp.SendAsync(message);
-        await smtp.DisconnectAsync(true);
+        await smtp.ConnectAsync(_settings.Host, _settings.Port, _settings.SecureSocketOptions, cancellationToken);
+        await smtp.AuthenticateAsync(_settings.Login, _settings.Password, cancellationToken);
+        await smtp.SendAsync(message, cancellationToken);
+        await smtp.DisconnectAsync(true, cancellationToken);
     }
 
     #endregion
