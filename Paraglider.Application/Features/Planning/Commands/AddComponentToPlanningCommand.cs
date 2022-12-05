@@ -49,7 +49,7 @@ public class AddComponentToPlanningCommandHandler : IRequestHandler<AddComponent
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
         {
-            return operation.AddError(string.Join("; ", validateResult.Errors));
+            return operation.AddError(validateResult.Errors);
         }
 
         //проверяем, что такой компонент существует

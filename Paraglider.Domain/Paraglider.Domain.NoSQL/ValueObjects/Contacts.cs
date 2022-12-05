@@ -6,9 +6,6 @@ namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class Contacts
 {
-    [BsonElement("id")]
-    public string Id { get; set; } = null!;
-
     [BsonElement("phoneNumber")]
     public string PhoneNumber { get; set; } = null!;
 
@@ -37,16 +34,12 @@ public class Contacts
     public string? Instagram { get; set; }
 
     public Contacts(
-        string id,
         string phoneNumber,
         string? email = null,
         string? telegram = null,
         string? whatsApp = null,
         string? viber = null)
     {
-        Id = id ?? throw new ArgumentNullException(
-            ExceptionMessages.NullOrEmpty(nameof(id)));
-
         PhoneNumber = phoneNumber?.ToPhoneNumberPattern() 
             ?? throw new ArgumentNullException(
                 ExceptionMessages.NullOrEmpty(nameof(phoneNumber)));

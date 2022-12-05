@@ -18,12 +18,12 @@ public class GetComponentByIdRequestValidator : AbstractValidator<GetComponentBy
     });
 }
 
-public class GetComponentByIdCommandHandler : IRequestHandler<GetComponentByIdRequest, OperationResult>
+public class GetComponentByIdQueryHandler : IRequestHandler<GetComponentByIdRequest, OperationResult>
 {
     private readonly IMongoDataAccess<Component> _components;
     private readonly IValidator<GetComponentByIdRequest> _validator;
 
-    public GetComponentByIdCommandHandler(
+    public GetComponentByIdQueryHandler(
         IMongoDataAccess<Component> components, 
         IValidator<GetComponentByIdRequest> validator)
     {
@@ -39,7 +39,7 @@ public class GetComponentByIdCommandHandler : IRequestHandler<GetComponentByIdRe
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
         {
-            return operation.AddError(string.Join("; ", validateResult.Errors));
+            return operation.AddError(validateResult.Errors);
         }
 
         //проверяем, что такой компонент существует

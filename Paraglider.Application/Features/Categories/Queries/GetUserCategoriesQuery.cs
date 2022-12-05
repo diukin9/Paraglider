@@ -35,7 +35,7 @@ public class GetUserCategoriesQueryHandler : IRequestHandler<GetUserCategoriesRe
         var operation = new OperationResult();
 
         //получаем текущего пользователя
-        var username = _accessor.HttpContext!.User!.Identity!.Name;
+        var username = _accessor.HttpContext?.User?.Identity?.Name;
         var user = await _userRepository.FindByUsernameAsync(username!);
         if (user is null) 
         {

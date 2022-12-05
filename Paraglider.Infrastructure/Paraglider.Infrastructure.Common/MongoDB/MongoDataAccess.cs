@@ -74,6 +74,11 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
         await _collection.InsertManyAsync(values);
     }
 
+    public void AddRange(IEnumerable<TEntity> values)
+    {
+        _collection.InsertMany(values);
+    }
+
     public async Task<bool> UpdateAsync(TEntity value)
     {
         var filter = Builders<TEntity>.Filter.Where(x => x.Id == value.Id);

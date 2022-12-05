@@ -27,7 +27,7 @@ public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesRequ
         //получаем все категории
         var collection = await _repository.FindAsync(_ => true);
 
-        var result = collection.Select(x => _mapper.Map<CategoryDTO>(x)).ToList();
+        var result = collection.Select(_mapper.Map<CategoryDTO>).ToList();
         return operation.AddSuccess(string.Empty, result);
     }
 }
