@@ -2,13 +2,12 @@
 using MediatR;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Components.Queries;
 
-public record GetComponentByIdRequest(Guid Id) : IRequest<OperationResult>;
+public record GetComponentByIdRequest(Guid Id) : IRequest<OperationResult<object>>;
 
 public class GetComponentByIdRequestValidator : AbstractValidator<GetComponentByIdRequest>
 {
@@ -18,7 +17,7 @@ public class GetComponentByIdRequestValidator : AbstractValidator<GetComponentBy
     });
 }
 
-public class GetComponentByIdQueryHandler : IRequestHandler<GetComponentByIdRequest, OperationResult>
+public class GetComponentByIdQueryHandler : IRequestHandler<GetComponentByIdRequest, OperationResult<object>>
 {
     private readonly IMongoDataAccess<Component> _components;
     private readonly IValidator<GetComponentByIdRequest> _validator;
@@ -31,9 +30,9 @@ public class GetComponentByIdQueryHandler : IRequestHandler<GetComponentByIdRequ
         _validator = validator;
     }
 
-    public async Task<OperationResult> Handle(GetComponentByIdRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<object>> Handle(GetComponentByIdRequest request, CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new OperationResult<object>();
 
         //валидируем полученные данные
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);

@@ -6,12 +6,13 @@ using Paraglider.Data.EntityFrameworkCore.Factories;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.MailService;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Registration.Commands;
 
-public record RegisterUserCommand : IRequest<OperationResult>
+public record RegisterUserCommand : IRequest<OperationResult<ApplicationUser>> //TODO возвращать DTO
 {
     public string Email { get; init; } = null!;
 
@@ -24,62 +25,55 @@ public record RegisterUserCommand : IRequest<OperationResult>
     public Guid CityId { get; init; }
 
     public string? PhoneNumber { get; init; }
+}
 
-    public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
+public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
+{
+    private const string PhoneRegex = @"((\+7|7|8)+([0-9]){10})$"; //TODO лучше вынести
+
+    public RegisterUserCommandValidator()
     {
-        private const string PhoneRegex = @"((\+7|7|8)+([0-9]){10})$";
-
-        public RegisterUserCommandValidator()
+        RuleSet(DefaultRuleSetName, () =>
         {
-            RuleSet(DefaultRuleSetName, () =>
-            {
-                RuleFor(e => e.Email).NotEmpty().EmailAddress();
-                RuleFor(e => e.Password).NotEmpty().Length(8);
-                RuleFor(e => e.FirstName).NotEmpty();
-                RuleFor(e => e.Surname).NotEmpty();
-                RuleFor(e => e.CityId).NotEmpty();
-                RuleFor(e => e.PhoneNumber)
-                    .SetValidator(new RegularExpressionValidator<RegisterUserCommand>(PhoneRegex));
-            });
-        }
+            RuleFor(e => e.Email).NotEmpty().EmailAddress();
+            RuleFor(e => e.Password).NotEmpty().Length(8);
+            RuleFor(e => e.FirstName).NotEmpty();
+            RuleFor(e => e.Surname).NotEmpty();
+            RuleFor(e => e.CityId).NotEmpty();
+            RuleFor(e => e.PhoneNumber)
+                .SetValidator(new RegularExpressionValidator<RegisterUserCommand>(PhoneRegex));
+        });
     }
 }
 
-public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, OperationResult>
+public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, OperationResult<ApplicationUser>>
 {
     private readonly UserManager<ApplicationUser> userManager;
     private readonly ICityRepository cityRepository;
-    private readonly IMailService mailService;
-    private readonly LinkGenerator linkGenerator;
-    private readonly IHttpContextAccessor accessor;
     private readonly IValidator<RegisterUserCommand> validator;
 
     public RegisterUserHandler(UserManager<ApplicationUser> userManager,
         IValidator<RegisterUserCommand> validator,
-        ICityRepository cityRepository,
-        IMailService mailService,
-        LinkGenerator linkGenerator,
-        IHttpContextAccessor accessor)
+        ICityRepository cityRepository)
     {
         this.userManager = userManager;
         this.cityRepository = cityRepository;
-        this.mailService = mailService;
-        this.linkGenerator = linkGenerator;
-        this.accessor = accessor;
         this.validator = validator;
     }
 
-    public async Task<OperationResult> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult<ApplicationUser>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<ApplicationUser>();
+
         var validateResult = await validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
-            return OperationResult.Error(string.Join(';', validateResult.Errors));
+            return operation.AddError(string.Join(';', validateResult.Errors));
 
         if (await userManager.FindByEmailAsync(request.Email) != null)
-            return OperationResult.Error(ExceptionMessages.UserWithEmailAlreadyExist(request.Email));
+            return operation.AddError(ExceptionMessages.UserWithEmailAlreadyExist(request.Email));
         
         var city = await cityRepository.FindByIdAsync(request.CityId)
-                   ?? await cityRepository.GetDefaultCity();
+                ?? await cityRepository.GetDefaultCity();
 
         var user = UserFactory.Create(new UserData(request.FirstName,
             request.Surname,
@@ -91,8 +85,8 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Operatio
         var identityResult = await userManager.CreateAsync(user, request.Password);
 
         if (!identityResult.Succeeded)
-            return OperationResult.Error(string.Join(';', identityResult.Errors));
+            return operation.AddError(string.Join(';', identityResult.Errors));
 
-        return OperationResult.Success(Messages.SuccessfulRegistration, user);
+        return operation.AddSuccess(Messages.SuccessfulRegistration, user);
     }
 }

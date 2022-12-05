@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
@@ -10,10 +11,11 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
-public record ConfigureExternalAuthPropertiesRequest(string provider, string returnUrl) : IRequest<OperationResult>
+public record ConfigureExternalAuthPropertiesRequest(string Provider, string ReturnUrl) 
+    : IRequest<OperationResult<AuthenticationProperties>>
 {
-    public string Provider { get; set; } = provider;
-    public string ReturnUrl { get; set; } = returnUrl;
+    public string Provider { get; set; } = Provider;
+    public string ReturnUrl { get; set; } = ReturnUrl;
 }
 
 public class ConfigureExternalAuthPropertiesRequestValidator 
@@ -27,7 +29,7 @@ public class ConfigureExternalAuthPropertiesRequestValidator
 }
 
 public class ConfigureExternalAuthPropertiesCommandHandler 
-    : IRequestHandler<ConfigureExternalAuthPropertiesRequest, OperationResult>
+    : IRequestHandler<ConfigureExternalAuthPropertiesRequest, OperationResult<AuthenticationProperties>>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IValidator<ConfigureExternalAuthPropertiesRequest> _validator;
@@ -40,11 +42,11 @@ public class ConfigureExternalAuthPropertiesCommandHandler
         _validator = validator;
     }
 
-    public async Task<OperationResult> Handle(
+    public async Task<OperationResult<AuthenticationProperties>> Handle(
         ConfigureExternalAuthPropertiesRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new OperationResult<AuthenticationProperties>();
 
         //валидируем полученные данные
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
@@ -53,7 +55,7 @@ public class ConfigureExternalAuthPropertiesCommandHandler
             return operation.AddError(validateResult.Errors);
         }
 
-        //конфигурируем authentication propertiess
+        //конфигурируем authentication properties
         request.ReturnUrl = WebUtility.UrlEncode(request.ReturnUrl);
         var callbackUrl = $"{ExternalAuthHandlerRelativePath}?returnUrl={request.ReturnUrl}";
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, callbackUrl);

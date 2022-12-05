@@ -46,16 +46,20 @@ public class ResetPasswordCommandHandler : IRequestHandler<SetNewPasswordCommand
 
     public async Task<OperationResult> Handle(SetNewPasswordCommand request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult();
+
+        //TODO нет валидации
+
         var user = await _userRepository.FindByIdAsync(request.UserId);
         if (user == null)
-            throw new ArgumentException($"User with id={request.UserId} not exist");
+            throw new ArgumentException($"User with id={request.UserId} not exist"); //TODO почему exception?
 
         var resetPasswordResult = await _userManager
             .ResetPasswordAsync(user, request.Token, request.NewPassword);
 
         if (!resetPasswordResult.Succeeded)
-            return OperationResult.Error(string.Join(';', resetPasswordResult.Errors));
+            return operation.AddError(string.Join(';', resetPasswordResult.Errors));
 
-        return OperationResult.Success(AppData.Messages.PasswordSuccesfullyChanged);
+        return operation.AddSuccess(AppData.Messages.PasswordSuccesfullyChanged);
     }
 }

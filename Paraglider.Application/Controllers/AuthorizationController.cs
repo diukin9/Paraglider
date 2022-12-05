@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.API.Features.Authorization.Commands;
 using Paraglider.API.Features.Mail.Commands;
@@ -75,7 +74,7 @@ public class AuthorizationController : Controller
             HttpContext.RequestAborted);
 
         if (!infoResponse.IsOk) return BadRequest(infoResponse);
-        var info = (ExternalLoginInfo)infoResponse.GetDataObject()!;
+        var info = infoResponse.GetDataObject()!;
 
         var userResponse = await _mediator.Send(
             new GetUserByExternalLoginInfoRequest(),

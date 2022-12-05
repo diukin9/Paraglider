@@ -7,13 +7,13 @@ using Paraglider.Infrastructure.Common;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
-public record ConfirmEmailCommand : IRequest<OperationResult>
+public record ConfirmEmailCommand : IRequest<OperationResult<string>>
 {
     public Guid UserId { get; init; }
     public string Token { get; init; } = null!;
 }
 
-public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, OperationResult>
+public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, OperationResult<string>>
 {
     private readonly UserManager<ApplicationUser> userManager;
     private readonly IUserRepository userRepository;
@@ -25,20 +25,22 @@ public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, O
         this.userRepository = userRepository;
     }
 
-    public async Task<OperationResult> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult<string>> Handle(ConfirmEmailCommand request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<string>();
+
         var user = await userRepository.FindByIdAsync(request.UserId);
 
         if (user == null)
-            return OperationResult.Error(AppData.ExceptionMessages.ObjectNotFound(nameof(user)));
+            return operation.AddError(AppData.ExceptionMessages.ObjectNotFound(nameof(user)));
 
         var confirmationResult = await userManager.ConfirmEmailAsync(user, request.Token);
 
         if (!confirmationResult.Succeeded)
-            return OperationResult.Error(string.Join(';', confirmationResult.Errors));
+            return operation.AddError(string.Join(';', confirmationResult.Errors));
 
         var redirectUrl = WebUtility.UrlEncode(AppData.RedirectOnSuccessfulMailConfirmation);
 
-        return OperationResult.Success(AppData.Messages.SuccessfulEmailConfirmation, redirectUrl);
+        return operation.AddSuccess(AppData.Messages.SuccessfulEmailConfirmation, redirectUrl);
     }
 }

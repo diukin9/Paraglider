@@ -4,14 +4,13 @@ using Paraglider.API.DataTransferObjects;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Extensions;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Categories.Queries;
 
-public record GetUserCategoriesRequest() : IRequest<OperationResult>;
+public record GetUserCategoriesRequest() : IRequest<OperationResult<IEnumerable<CategoryDTO>>>;
 
-public class GetUserCategoriesQueryHandler : IRequestHandler<GetUserCategoriesRequest, OperationResult>
+public class GetUserCategoriesQueryHandler : IRequestHandler<GetUserCategoriesRequest, OperationResult<IEnumerable<CategoryDTO>>>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
@@ -30,9 +29,9 @@ public class GetUserCategoriesQueryHandler : IRequestHandler<GetUserCategoriesRe
         _mapper = mapper;
     }
 
-    public async Task<OperationResult> Handle(GetUserCategoriesRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<IEnumerable<CategoryDTO>>> Handle(GetUserCategoriesRequest request, CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new OperationResult<IEnumerable<CategoryDTO>>();
 
         //получаем текущего пользователя
         var username = _accessor.HttpContext?.User?.Identity?.Name;

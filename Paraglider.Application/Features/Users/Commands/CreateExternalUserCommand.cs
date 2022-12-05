@@ -10,16 +10,15 @@ using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Helpers;
 using Paraglider.Infrastructure.Extensions;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Commands;
 
-public record CreateExternalUserRequest() : IRequest<OperationResult>;
+public record CreateExternalUserRequest() : IRequest<OperationResult<UserDTO>>;
 
-public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUserRequest, OperationResult>
+public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUserRequest, OperationResult<UserDTO>>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -41,11 +40,11 @@ public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUs
         _mapper = mapper;
     }
 
-    public async Task<OperationResult> Handle(
+    public async Task<OperationResult<UserDTO>> Handle(
         CreateExternalUserRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new OperationResult<UserDTO>();
 
         //получаем ExternalLoginInfo
         var info = await _signInManager.GetExternalLoginInfoAsync();

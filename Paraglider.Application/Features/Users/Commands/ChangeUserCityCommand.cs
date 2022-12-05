@@ -7,9 +7,7 @@ using Paraglider.Infrastructure.Common;
 
 namespace Paraglider.API.Features.Users.Commands;
 
-public record ChangeUserCityCommand(
-        [Required] Guid CityId)
-    : IRequest<OperationResult>;
+public record ChangeUserCityCommand([Required] Guid CityId) : IRequest<OperationResult>;
 
 public class ChangeUserCityCommandHandler : IRequestHandler<ChangeUserCityCommand, OperationResult>
 {
@@ -23,19 +21,21 @@ public class ChangeUserCityCommandHandler : IRequestHandler<ChangeUserCityComman
     {
         _userRepository = userRepository;
         _userManager = userManager;
-        _httpContext = httpContextAccessor.HttpContext
-                       ?? throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext));
+        _httpContext = httpContextAccessor.HttpContext 
+            ?? throw new ArgumentNullException(nameof(httpContextAccessor.HttpContext)); //TODO почему exception?
     }
 
     public async Task<OperationResult> Handle(ChangeUserCityCommand request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult();
+
         var user = await _userManager.GetUserAsync(_httpContext.User);
         if (user == null)
-            return OperationResult.Error(AppData.ExceptionMessages.ObjectIsNull(nameof(user)));
+            return operation.AddError(AppData.ExceptionMessages.ObjectIsNull(nameof(user)));
 
         return await _userRepository.ChangeCity(user.Id, request.CityId, cancellationToken)
-            ? OperationResult.Success(AppData.Messages.ObjectUpdated(nameof(ApplicationUser),
+            ? operation.AddSuccess(AppData.Messages.ObjectUpdated(nameof(ApplicationUser),
                 nameof(ApplicationUser.City)))
-            : OperationResult.Error(AppData.ExceptionMessages.UpdateError(nameof(ApplicationUser)));
+            : operation.AddError(AppData.ExceptionMessages.UpdateError(nameof(ApplicationUser)));
     }
 }

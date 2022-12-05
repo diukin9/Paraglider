@@ -29,6 +29,8 @@ public class SendConfirmationEmailCommandHandler : IRequestHandler<SendConfirmat
 
     public async Task<OperationResult> Handle(SendConfirmationEmailCommand request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult();
+
         var user = request.User;
 
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -42,15 +44,15 @@ public class SendConfirmationEmailCommandHandler : IRequestHandler<SendConfirmat
         
 
         if (confirmationLink == null)
-            throw new Exception("Не удалось сгенерировать ссылку для подтверждения email");
+            throw new Exception("Не удалось сгенерировать ссылку для подтверждения email"); //TODO почему exception?
         if (user.Email == null)
-            throw new ArgumentNullException(nameof(user.Email));
+            throw new ArgumentNullException(nameof(user.Email)); //TODO почему exception?
 
         var mailMessage = MailMessage.MailConfirmation(user.Email, confirmationLink);
 
         await mailService.SendAsync(mailMessage, cancellationToken);
 
 
-        return OperationResult.Success(AppData.Messages.ConfirmationEmailSent(user.Email));
+        return operation.AddSuccess(AppData.Messages.ConfirmationEmailSent(user.Email));
     }
 }

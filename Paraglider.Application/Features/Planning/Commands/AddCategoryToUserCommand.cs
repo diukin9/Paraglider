@@ -3,7 +3,6 @@ using MediatR;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Extensions;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Planning.Commands;

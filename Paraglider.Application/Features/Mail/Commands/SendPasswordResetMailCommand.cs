@@ -11,31 +11,31 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Mail.Commands;
 
-public record SendPasswordResetMailCommand : IRequest<OperationResult>
+public record SendPasswordResetMailCommand : IRequest<OperationResult<ApplicationUser>> //TODO возвращать DTO
 {
-    [Required] [EmailAddress] public string Email { get; init; } = null!;
+    [Required] [EmailAddress] public string Email { get; init; } = null!; //TODO совмещать виды валидации не стоит, наверное
 
     [Required] [Url] public string RelativePasswordResetUrl { get; init; } = null!;
+}
 
-    public class SendPasswordResetMailCommandValidator : AbstractValidator<SendPasswordResetMailCommand>
+public class SendPasswordResetMailCommandValidator : AbstractValidator<SendPasswordResetMailCommand>
+{
+    public SendPasswordResetMailCommandValidator()
     {
-        public SendPasswordResetMailCommandValidator()
+        RuleSet(DefaultRuleSetName, () =>
         {
-            RuleSet(DefaultRuleSetName, () =>
-            {
-                RuleFor(e => e.Email)
-                    .NotEmpty()
-                    .EmailAddress();
+            RuleFor(e => e.Email)
+                .NotEmpty()
+                .EmailAddress();
 
-                RuleFor(e => e.RelativePasswordResetUrl)
-                    .NotEmpty()
-                    .Must(e => Uri.TryCreate(e, UriKind.Relative, out _));
-            });
-        }
+            RuleFor(e => e.RelativePasswordResetUrl)
+                .NotEmpty()
+                .Must(e => Uri.TryCreate(e, UriKind.Relative, out _));
+        });
     }
 }
 
-public class SendPasswordResetMailCommandHandler : IRequestHandler<SendPasswordResetMailCommand, OperationResult>
+public class SendPasswordResetMailCommandHandler : IRequestHandler<SendPasswordResetMailCommand, OperationResult<ApplicationUser>>
 {
     private readonly IValidator<SendPasswordResetMailCommand> _validator;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -56,27 +56,28 @@ public class SendPasswordResetMailCommandHandler : IRequestHandler<SendPasswordR
         _linkGenerator = linkGenerator;
     }
 
-    public async Task<OperationResult> Handle(SendPasswordResetMailCommand request, CancellationToken cancellationToken)
+    public async Task<OperationResult<ApplicationUser>> Handle(SendPasswordResetMailCommand request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<ApplicationUser>();
+
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);
         if (!validateResult.IsValid)
-            return OperationResult.Error(string.Join(';', validateResult.Errors));
+            return operation.AddError(string.Join(';', validateResult.Errors));
 
         var user = await _userManager.FindByEmailAsync(request.Email);
         if (user == null)
-            return OperationResult.Error(ExceptionMessages.ObjectNotFound(nameof(user)));
+            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(user)));
 
         if (!await _userManager.IsEmailConfirmedAsync(user))
-            return OperationResult.Error(ExceptionMessages.UnconfirmedEmail);
+            return operation.AddError(ExceptionMessages.UnconfirmedEmail);
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
         var confirmationLink = GenerateAbsolutUrl(request.RelativePasswordResetUrl, user.Id, token);
 
-
         await _mailService.SendAsync(MailMessage.ResetPassword(request.Email, confirmationLink), cancellationToken);
 
-        return OperationResult.Success(Messages.ConfirmationEmailSent(request.Email), user);
+        return operation.AddSuccess(Messages.ConfirmationEmailSent(request.Email), user);
     }
 
     private string GenerateAbsolutUrl(string relativeUrl, Guid userId, string token)

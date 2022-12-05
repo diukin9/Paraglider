@@ -5,15 +5,14 @@ using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Queries;
 
-public record GetCurrentUserRequest() : IRequest<OperationResult>;
+public record GetCurrentUserRequest() : IRequest<OperationResult<UserDTO>>;
 
-public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserRequest, OperationResult>
+public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserRequest, OperationResult<UserDTO>>
 {
     private readonly IMongoDataAccess<Component> _components;
     private readonly IUserRepository _userRepository;
@@ -32,9 +31,9 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserRequest,
         _components = components;
     }
 
-    public async Task<OperationResult> Handle(GetCurrentUserRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<UserDTO>> Handle(GetCurrentUserRequest request, CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new OperationResult<UserDTO>();
 
         //получаем текущего пользователя
         var username = _accessor.HttpContext!.User!.Identity!.Name;

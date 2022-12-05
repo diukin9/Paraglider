@@ -7,9 +7,9 @@ using Paraglider.Infrastructure.Common;
 // ReSharper disable once CheckNamespace
 namespace Paraglider.API.Features;
 
-public record GetCitiesQuery : IRequest<OperationResult>;
+public record GetCitiesQuery : IRequest<OperationResult<IEnumerable<CityDTO>>>;
 
-public class GetCitiesQueryHandler : IRequestHandler<GetCitiesQuery, OperationResult>
+public class GetCitiesQueryHandler : IRequestHandler<GetCitiesQuery, OperationResult<IEnumerable<CityDTO>>>
 {
     private readonly ICityRepository _cityRepository;
     private readonly IMapper _mapper;
@@ -20,10 +20,11 @@ public class GetCitiesQueryHandler : IRequestHandler<GetCitiesQuery, OperationRe
         _mapper = mapper;
     }
 
-    public async Task<OperationResult> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult<IEnumerable<CityDTO>>> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
     {
+        var operation = new OperationResult<IEnumerable<CityDTO>>();
         var cities = await _cityRepository.GetAll(cancellationToken);
         var citiesDto = _mapper.Map<IEnumerable<CityDTO>>(cities);
-        return OperationResult.Success(string.Empty, citiesDto);
+        return operation.AddSuccess(string.Empty, citiesDto);
     }
 }

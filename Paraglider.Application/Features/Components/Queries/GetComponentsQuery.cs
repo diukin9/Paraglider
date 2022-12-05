@@ -2,8 +2,6 @@
 using MediatR;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Infrastructure.Common.Enums;
-using Paraglider.Infrastructure.Common.Extensions;
-using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Infrastructure.Common.MongoDB;
 using static Paraglider.Infrastructure.Common.AppData;
 using Paraglider.Infrastructure.Common;
@@ -11,7 +9,7 @@ using Paraglider.Infrastructure.Common;
 namespace Paraglider.API.Features.Components.Queries;
 
 public record GetComponentsRequest(Guid CategoryId, int PerPage, int Page, string? SorterKey = null) 
-    : IRequest<OperationResult>;
+    : IRequest<OperationResult<IEnumerable<object>>>;
 
 public class GetComponentsRequestValidator : AbstractValidator<GetComponentsRequest>
 {
@@ -34,7 +32,7 @@ public class GetComponentsRequestValidator : AbstractValidator<GetComponentsRequ
     });
 }
 
-public class GetComponentsQueryHandler : IRequestHandler<GetComponentsRequest, OperationResult>
+public class GetComponentsQueryHandler : IRequestHandler<GetComponentsRequest, OperationResult<IEnumerable<object>>>
 {
     private readonly IMongoDataAccess<Component> _components;
     private readonly IValidator<GetComponentsRequest> _validator;
@@ -47,9 +45,9 @@ public class GetComponentsQueryHandler : IRequestHandler<GetComponentsRequest, O
         _validator = validator;
     }
 
-    public async Task<OperationResult> Handle(GetComponentsRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<IEnumerable<object>>> Handle(GetComponentsRequest request, CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new OperationResult<IEnumerable<object>>();
 
         //валидируем полученные данные
         var validateResult = await _validator.ValidateAsync(request, cancellationToken);

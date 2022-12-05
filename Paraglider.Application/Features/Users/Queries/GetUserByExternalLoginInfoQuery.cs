@@ -13,9 +13,9 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Queries;
 
-public record GetUserByExternalLoginInfoRequest : IRequest<OperationResult>;
+public record GetUserByExternalLoginInfoRequest : IRequest<OperationResult<UserDTO>>;
 
-public class GetUserByExternalLoginInfoQueryHandler : IRequestHandler<GetUserByExternalLoginInfoRequest, OperationResult>
+public class GetUserByExternalLoginInfoQueryHandler : IRequestHandler<GetUserByExternalLoginInfoRequest, OperationResult<UserDTO>>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
@@ -31,11 +31,11 @@ public class GetUserByExternalLoginInfoQueryHandler : IRequestHandler<GetUserByE
         _signInManager = signInManager;
     }
 
-    public async Task<OperationResult> Handle(
+    public async Task<OperationResult<UserDTO>> Handle(
         GetUserByExternalLoginInfoRequest request, 
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new OperationResult<UserDTO>();
 
         //получаем ExternalLoginInfo
         var info = await _signInManager.GetExternalLoginInfoAsync();

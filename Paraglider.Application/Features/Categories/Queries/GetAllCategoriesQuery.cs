@@ -3,13 +3,12 @@ using MediatR;
 using Paraglider.API.DataTransferObjects;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Extensions;
 
 namespace Paraglider.API.Features.Categories.Queries;
 
-public record GetAllCategoriesRequest() : IRequest<OperationResult>;
+public record GetAllCategoriesRequest() : IRequest<OperationResult<IEnumerable<CategoryDTO>>>;
 
-public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesRequest, OperationResult>
+public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesRequest, OperationResult<IEnumerable<CategoryDTO>>>
 {
     private readonly ICategoryRepository _repository;
     private readonly IMapper _mapper;
@@ -20,9 +19,9 @@ public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesRequ
         _mapper = mapper;
     }
 
-    public async Task<OperationResult> Handle(GetAllCategoriesRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<IEnumerable<CategoryDTO>>> Handle(GetAllCategoriesRequest request, CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new OperationResult<IEnumerable<CategoryDTO>>();
 
         //получаем все категории
         var collection = await _repository.FindAsync(_ => true);
