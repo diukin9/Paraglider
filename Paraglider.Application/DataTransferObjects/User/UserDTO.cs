@@ -1,6 +1,4 @@
-﻿using Mapster;
-using Paraglider.Domain.RDB.Entities;
-using Paraglider.Infrastructure.Common.Abstractions;
+﻿using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.API.DataTransferObjects;
 
@@ -14,10 +12,4 @@ public record UserDTO : IDataTransferObject
     public CityDTO City { get; init; } = null!;
     public PlanningDTO Planning { get; init; } = null!;
     public List<UserComponentDTO> Favourites { get; set; } = null!;
-
-    public void Register(TypeAdapterConfig config)
-    {
-        config.NewConfig<ApplicationUser, UserDTO>()
-            .RequireDestinationMemberSource(true);
-    }
 }
