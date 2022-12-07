@@ -1,65 +1,56 @@
-﻿using System.Net;
-using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Attributes;
 using Paraglider.Infrastructure.Common.Extensions;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
-public record ConfigureExternalAuthPropertiesRequest(string Provider, string ReturnUrl) 
-    : IRequest<OperationResult<AuthenticationProperties>>
+public class ConfigureExternalAuthPropertiesRequest : IRequest<OperationResult<AuthenticationProperties>>
 {
-    public string Provider { get; set; } = Provider;
-    public string ReturnUrl { get; set; } = ReturnUrl;
-}
+    [Required, IsEnumName(typeof(AuthProvider))] public string Provider { get; set; } = null!;
+    [Required] public string ReturnUrl { get; set; } = null!;
 
-public class ConfigureExternalAuthPropertiesRequestValidator 
-    : AbstractValidator<ConfigureExternalAuthPropertiesRequest>
-{
-    public ConfigureExternalAuthPropertiesRequestValidator() => RuleSet(DefaultRuleSetName, () =>
+    public ConfigureExternalAuthPropertiesRequest(string provider, string returnUrl)
     {
-        RuleFor(x => x.Provider).IsEnumName(typeof(AuthProvider), false);
-        RuleFor(x => x.ReturnUrl).NotEmpty().NotNull();
-    });
+        Provider = provider;
+        ReturnUrl = returnUrl;
+    }
 }
 
 public class ConfigureExternalAuthPropertiesCommandHandler 
-    : IRequestHandler<ConfigureExternalAuthPropertiesRequest, OperationResult<AuthenticationProperties>>
+    : IRequestHandler<ConfigureExternalAuthPropertiesRequest, 
+        OperationResult<AuthenticationProperties>>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IValidator<ConfigureExternalAuthPropertiesRequest> _validator;
 
     public ConfigureExternalAuthPropertiesCommandHandler(
-        SignInManager<ApplicationUser> signInManager,
-        IValidator<ConfigureExternalAuthPropertiesRequest> validator)
+        SignInManager<ApplicationUser> signInManager)
     {
         _signInManager = signInManager;
-        _validator = validator;
     }
 
-    public async Task<OperationResult<AuthenticationProperties>> Handle(
+    public Task<OperationResult<AuthenticationProperties>> Handle(
         ConfigureExternalAuthPropertiesRequest request,
         CancellationToken cancellationToken)
     {
         var operation = new OperationResult<AuthenticationProperties>();
 
         //валидируем полученные данные
-        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validateResult.IsValid)
-        {
-            return operation.AddError(validateResult.Errors);
-        }
+        var validation = AttributeValidator.Validate(request);
+        if (!validation.IsValid()) return Task.FromResult(operation.AddError(validation));
 
         //конфигурируем authentication properties
         request.ReturnUrl = WebUtility.UrlEncode(request.ReturnUrl);
         var callbackUrl = $"{ExternalAuthHandlerRelativePath}?returnUrl={request.ReturnUrl}";
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, callbackUrl);
 
-        return operation.AddSuccess(string.Empty, properties);
+        return Task.FromResult(operation.AddSuccess(string.Empty, properties));
     }
 }

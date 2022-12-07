@@ -7,7 +7,6 @@ using Paraglider.API.Extensions;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Extensions;
 using static Paraglider.Infrastructure.Common.AppData;
 
@@ -15,7 +14,8 @@ namespace Paraglider.API.Features.Users.Queries;
 
 public record GetUserByExternalLoginInfoRequest : IRequest<OperationResult<UserDTO>>;
 
-public class GetUserByExternalLoginInfoQueryHandler : IRequestHandler<GetUserByExternalLoginInfoRequest, OperationResult<UserDTO>>
+public class GetUserByExternalLoginInfoQueryHandler 
+    : IRequestHandler<GetUserByExternalLoginInfoRequest, OperationResult<UserDTO>>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
@@ -49,7 +49,7 @@ public class GetUserByExternalLoginInfoQueryHandler : IRequestHandler<GetUserByE
         var externalId = info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(externalId))
         {
-            return operation.AddError(ExceptionMessages.NullOrEmpty(nameof(externalId)));
+            return operation.AddError(ExceptionMessages.ValueNullOrEmpty(nameof(externalId)));
         }
 
         //получаем пользователя

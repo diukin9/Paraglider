@@ -1,7 +1,7 @@
-﻿using FluentValidation;
-using Paraglider.API.Features.Components.Queries;
+﻿using Paraglider.API.Features.Components.Queries;
 using Paraglider.API.Tests.Common;
 using Paraglider.Infrastructure.Common.Extensions;
+using System.ComponentModel.DataAnnotations;
 using Xunit;
 using static Paraglider.Infrastructure.Common.AppData;
 
@@ -14,8 +14,7 @@ public class GetComponentByIdQueryHandlerTests
     {
         // Arrange
         var request = new GetComponentByIdRequest(Guid.Empty);
-        var validator = new GetComponentByIdRequestValidator();
-        var handler = new GetComponentByIdQueryHandler(Fixtures.Components, validator);
+        var handler = new GetComponentByIdQueryHandler(Fixtures.Components);
 
         //Act
         var act = await handler.Handle(request, CancellationToken.None);
@@ -23,7 +22,6 @@ public class GetComponentByIdQueryHandlerTests
         //Assert
         Assert.False(act.IsOk);
         Assert.True(act.Exception is ValidationException);
-        Assert.Equal(ExceptionMessages.ValidationError, act.GetMessage());
     }
 
     [Fact]
@@ -31,8 +29,7 @@ public class GetComponentByIdQueryHandlerTests
     {
         // Arrange
         var request = new GetComponentByIdRequest(Guid.NewGuid());
-        var validator = new GetComponentByIdRequestValidator();
-        var handler = new GetComponentByIdQueryHandler(Fixtures.Components, validator);
+        var handler = new GetComponentByIdQueryHandler(Fixtures.Components);
 
         //Act
         var act = await handler.Handle(request, CancellationToken.None);
@@ -47,8 +44,7 @@ public class GetComponentByIdQueryHandlerTests
     {
         // Arrange
         var request = new GetComponentByIdRequest(StaticData.PhotographerComponentId);
-        var validator = new GetComponentByIdRequestValidator();
-        var handler = new GetComponentByIdQueryHandler(Fixtures.Components, validator);
+        var handler = new GetComponentByIdQueryHandler(Fixtures.Components);
 
         //Act
         var act = await handler.Handle(request, CancellationToken.None);

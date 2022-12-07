@@ -9,7 +9,7 @@ public static partial class AppData
     public const string DefaultRuleSetName = "default";
     public const string ExternalAuthHandlerRelativePath = "/external-auth-handler";
 
-    //TODO: указать url
+    //TODO: указать url'ы
     public const string RedirectOnSuccessfulMailConfirmation = "/";
     public const string RedirectPasswordResetPath = "/";
 

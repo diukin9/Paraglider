@@ -1,6 +1,5 @@
-using FluentValidation;
-using FluentValidation.Results;
 using Paraglider.Infrastructure.Common.Response;
+using System.ComponentModel.DataAnnotations;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Infrastructure.Common;
@@ -45,10 +44,10 @@ public class OperationResult<T>
         return this;
     }
 
-    public OperationResult<T> AddError(List<ValidationFailure> failures, T? data = default)
+    public OperationResult<T> AddError(ValidationResult validation)
     {
-        Exception = new ValidationException(failures);
-        Metadata = new Metadata<T>(ExceptionMessages.ValidationError, data, MetadataType.Error);
+        Exception = new ValidationException(ExceptionMessages.ValidationError);
+        Metadata = new Metadata<T>(validation.ErrorMessage!, MetadataType.Error);
         return this;
     }
 }
@@ -74,10 +73,10 @@ public class OperationResult : OperationResult<None>
         return this;
     }
 
-    public OperationResult AddError(List<ValidationFailure> failures)
+    public new OperationResult AddError(ValidationResult validation)
     {
-        Exception = new ValidationException(failures);
-        Metadata = new Metadata<None>(ExceptionMessages.ValidationError, default, MetadataType.Error);
+        Exception = new ValidationException(ExceptionMessages.ValidationError);
+        Metadata = new Metadata<None>(validation.ErrorMessage!, MetadataType.Error);
         return this;
     }
 }

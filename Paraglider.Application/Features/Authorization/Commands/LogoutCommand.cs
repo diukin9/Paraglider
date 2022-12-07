@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
@@ -17,10 +16,12 @@ public class LogoutCommandHandler : IRequestHandler<LogoutRequest, OperationResu
         _signInManager = signInManager;
     }
 
-    public async Task<OperationResult> Handle(LogoutRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(
+        LogoutRequest request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult();
         await _signInManager.SignOutAsync();
-        return operation.AddSuccess(Messages.SuccessfulLogout);
+        return operation.AddSuccess("Пользователь успешно вышел из аккаунта.");
     }
 }

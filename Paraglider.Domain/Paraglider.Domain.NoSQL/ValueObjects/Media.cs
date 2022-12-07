@@ -15,6 +15,6 @@ public class Media
     public Media(MediaType type, string url)
     {
         Type = type;
-        Url = url ?? throw new ArgumentNullException(ExceptionMessages.NullOrEmpty(nameof(url)));
+        Url = url ?? throw new ArgumentNullException(ExceptionMessages.ValueNullOrEmpty(nameof(url)));
     }
 }

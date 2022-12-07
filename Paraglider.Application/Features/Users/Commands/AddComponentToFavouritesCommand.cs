@@ -1,28 +1,24 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Attributes;
+using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
+using System.ComponentModel.DataAnnotations;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Commands;
 
-public record AddComponentToFavouritesRequest(Guid ComponentId) : IRequest<OperationResult>;
-
-public class AddComponentRequestValidator : AbstractValidator<AddComponentToFavouritesRequest>
+public class AddComponentToFavouritesRequest : IRequest<OperationResult>
 {
-    public AddComponentRequestValidator() => RuleSet(DefaultRuleSetName, () =>
-    {
-        RuleFor(x => x.ComponentId).NotEmpty();
-    });
+    [Required, NotEmptyGuid] public Guid ComponentId { get; set; }
 }
 
 public class AddComponentToFavouritesCommandHandler 
     : IRequestHandler<AddComponentToFavouritesRequest, OperationResult>
 {
-    private readonly IValidator<AddComponentToFavouritesRequest> _validator;
     private readonly IUserRepository _userRepository;
     private readonly IMongoDataAccess<Component> _components;
     private readonly IHttpContextAccessor _accessor;
@@ -30,11 +26,9 @@ public class AddComponentToFavouritesCommandHandler
     public AddComponentToFavouritesCommandHandler(
         IMongoDataAccess<Component> components,
         IUserRepository userRepository,
-        IHttpContextAccessor accessor,
-        IValidator<AddComponentToFavouritesRequest> validator)
+        IHttpContextAccessor accessor)
     {
         _components = components;
-        _validator = validator;
         _userRepository = userRepository;
         _accessor = accessor;
     }
@@ -46,11 +40,8 @@ public class AddComponentToFavouritesCommandHandler
         var operation = new OperationResult();
 
         //валидируем полученные данные
-        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validateResult.IsValid)
-        {
-            return operation.AddError(validateResult.Errors);
-        }
+        var validation = AttributeValidator.Validate(request);
+        if (!validation.IsValid()) return operation.AddError(validation);
 
         //проверяем, что такой компонент существует
         dynamic? component = await _components.FindByIdAsync(request.ComponentId);
@@ -71,7 +62,7 @@ public class AddComponentToFavouritesCommandHandler
         var componentId = component[MongoIdName];
         if (user.Favourites.Any(x => x.Id == component))
         {
-            return operation.AddError("This component is already in the user's favorites");
+            return operation.AddError("Этот компонент уже находится в избранном.");
         }
 
         //добавляем компонент в избранное

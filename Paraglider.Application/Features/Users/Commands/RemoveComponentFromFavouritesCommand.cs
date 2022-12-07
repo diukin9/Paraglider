@@ -1,28 +1,24 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Attributes;
+using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
+using System.ComponentModel.DataAnnotations;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Users.Commands;
 
-public record RemoveComponentFromFavouritesRequest(Guid ComponentId) : IRequest<OperationResult>;
-
-public class RemoveComponentFromFavouritesRequestValidator : AbstractValidator<RemoveComponentFromFavouritesRequest>
+public class RemoveComponentFromFavouritesRequest : IRequest<OperationResult>
 {
-    public RemoveComponentFromFavouritesRequestValidator() => RuleSet(DefaultRuleSetName, () =>
-    {
-        RuleFor(x => x.ComponentId).NotEmpty();
-    });
+    [Required, NotEmptyGuid] public Guid ComponentId { get; set; }
 }
 
 public class RemoveComponentFromFavouritesCommandHandler 
     : IRequestHandler<RemoveComponentFromFavouritesRequest, OperationResult>
 {
-    private readonly IValidator<RemoveComponentFromFavouritesRequest> _validator;
     private readonly IUserRepository _userRepository;
     private readonly IMongoDataAccess<Component> _components;
     private readonly IHttpContextAccessor _accessor;
@@ -30,11 +26,9 @@ public class RemoveComponentFromFavouritesCommandHandler
     public RemoveComponentFromFavouritesCommandHandler(
         IMongoDataAccess<Component> components,
         IUserRepository userRepository,
-        IHttpContextAccessor accessor,
-        IValidator<RemoveComponentFromFavouritesRequest> validator)
+        IHttpContextAccessor accessor)
     {
         _components = components;
-        _validator = validator;
         _userRepository = userRepository;
         _accessor = accessor;
     }
@@ -46,11 +40,8 @@ public class RemoveComponentFromFavouritesCommandHandler
         var operation = new OperationResult();
 
         //валидируем полученные данные
-        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validateResult.IsValid)
-        {
-            return operation.AddError(validateResult.Errors);
-        }
+        var validation = AttributeValidator.Validate(request);
+        if (!validation.IsValid()) return operation.AddError(validation);
 
         //получаем текущего пользователя
         var username = _accessor.HttpContext!.User.Identity!.Name;
@@ -67,7 +58,7 @@ public class RemoveComponentFromFavouritesCommandHandler
         //проверяем, что такой компонент находится в избранном у пользователя
         if (removable is null)
         {
-            return operation.AddError("The user does not have such a component");
+            return operation.AddError("Пользователь не добавлял такой компонент в избранное.");
         }
 
         //удаляем компонент из избранного

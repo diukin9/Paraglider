@@ -1,27 +1,24 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Attributes;
+using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
+using System.ComponentModel.DataAnnotations;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Planning.Commands;
 
-public record AddComponentToPlanningRequest(Guid ComponentId) : IRequest<OperationResult>;
-
-public class AddComponentToPlanningRequestValidator : AbstractValidator<AddComponentToPlanningRequest>
+public class AddComponentToPlanningRequest : IRequest<OperationResult>
 {
-    public AddComponentToPlanningRequestValidator() => RuleSet(DefaultRuleSetName, () =>
-    {
-        RuleFor(x => x.ComponentId).NotEmpty();
-    });
+    [Required, NotEmptyGuid] public Guid ComponentId { get; set; }
 }
 
-public class AddComponentToPlanningCommandHandler : IRequestHandler<AddComponentToPlanningRequest, OperationResult>
+public class AddComponentToPlanningCommandHandler 
+    : IRequestHandler<AddComponentToPlanningRequest, OperationResult>
 {
-    private readonly IValidator<AddComponentToPlanningRequest> _validator;
     private readonly IUserRepository _userRepository;
     private readonly IMongoDataAccess<Component> _components;
     private readonly IHttpContextAccessor _accessor;
@@ -29,11 +26,9 @@ public class AddComponentToPlanningCommandHandler : IRequestHandler<AddComponent
     public AddComponentToPlanningCommandHandler(
         IMongoDataAccess<Component> components,
         IUserRepository userRepository,
-        IHttpContextAccessor accessor,
-        IValidator<AddComponentToPlanningRequest> validator)
+        IHttpContextAccessor accessor)
     {
         _components = components;
-        _validator = validator;
         _userRepository = userRepository;
         _accessor = accessor;
     }
@@ -45,11 +40,8 @@ public class AddComponentToPlanningCommandHandler : IRequestHandler<AddComponent
         var operation = new OperationResult();
 
         //валидируем полученные данные
-        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validateResult.IsValid)
-        {
-            return operation.AddError(validateResult.Errors);
-        }
+        var validation = AttributeValidator.Validate(request);
+        if (!validation.IsValid()) return operation.AddError(validation);
 
         //проверяем, что такой компонент существует
         dynamic? component = await _components.FindByIdAsync(request.ComponentId);
@@ -70,14 +62,14 @@ public class AddComponentToPlanningCommandHandler : IRequestHandler<AddComponent
         var categoryId = component[nameof(Component.Category).ToLower()][MongoIdName];
         if (!user.Planning.Categories.Any(x => x.Id == categoryId))
         {
-            return operation.AddError("The user does not have this category selected");
+            return operation.AddError("У пользователя не выбрана такая категория.");
         }
 
         //проверяем, что у пользователя еще нет такого компонента в плане
         var componentId = component[MongoIdName];
         if (user.Planning.PlanningComponents.Any(x => x.Id == componentId))
         {
-            return operation.AddError("This component is already in the user's plan");
+            return operation.AddError("Этот компонент уже находится в плане пользователя.");
         }
 
         //добавляем компонент

@@ -73,7 +73,7 @@ public class UserData
         {
             if (string.IsNullOrEmpty(field))
             {
-                throw new ArgumentException(ExceptionMessages.NullOrEmpty(nameof(field)));
+                throw new ArgumentException(ExceptionMessages.ValueNullOrEmpty(nameof(field)));
             }
         }
 

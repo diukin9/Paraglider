@@ -1,9 +1,6 @@
-﻿using System.Security.Claims;
-using MapsterMapper;
+﻿using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
-using Newtonsoft.Json;
 using Paraglider.API.DataTransferObjects;
 using Paraglider.Data.EntityFrameworkCore.Factories;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
@@ -12,13 +9,15 @@ using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Helpers;
 using Paraglider.Infrastructure.Extensions;
+using System.Security.Claims;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.API.Features.Users.Commands;
+namespace Paraglider.API.Features.Account.Commands;
 
 public record CreateExternalUserRequest() : IRequest<OperationResult<UserDTO>>;
 
-public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUserRequest, OperationResult<UserDTO>>
+public class CreateExternalUserCommandHandler
+    : IRequestHandler<CreateExternalUserRequest, OperationResult<UserDTO>>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -61,7 +60,8 @@ public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUs
 
         if (new[] { externalId, firstName, surname }.Any(string.IsNullOrEmpty))
         {
-            return operation.AddError(ExceptionMessages.NotEnoughUserInfoFromExternalProvider);
+            var message = "Не удалось получить основную информацию о пользователе от внешнего провайдера.";
+            return operation.AddError(message);
         }
 
         //формируем username внешнего пользователя и пытаемся получить почту, если провайдер делится ею
@@ -69,7 +69,8 @@ public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUs
         var email = info.Principal.Claims.GetByClaimType(ClaimTypes.Email);
 
         //пытаемся получить город пользователя на основе его ip
-        var city = await this.GetCityByUserIpAsync();
+        var cityName =  await InternetProtocolHelper.GetInfoAsync(_accessor.HttpContext);
+        var city = await _cityRepository.FindByNameAsync(cityName?.City ?? string.Empty);
 
         //создаем пользователя через фабрику
         var user = UserFactory.Create(
@@ -90,31 +91,6 @@ public class CreateExternalUserCommandHandler : IRequestHandler<CreateExternalUs
             return operation.AddError(string.Join("; ", identityResult.Errors));
         }
 
-        var result = _mapper.Map<UserDTO>(user);
-        return operation.AddSuccess(Messages.ObjectCreated(nameof(ApplicationUser)), result);
-    }
-
-    private async Task<City?> GetCityByUserIpAsync()
-    {
-        var city = default(City);
-
-        //получаем ip пользователя
-        var ip = _accessor.HttpContext?.Features.Get<IHttpConnectionFeature>()?.RemoteIpAddress?.ToString();
-        if (ip is not null)
-        {
-            try
-            {
-                //получаем данные о местоположении
-                var response = await new HttpClient().GetAsync($"http://ipinfo.io/{ip}");
-                if (!response.IsSuccessStatusCode || response.Content is null) throw new Exception();
-                var content = await response!.Content!.ReadAsStringAsync();
-                var ipInfo = JsonConvert.DeserializeObject<IpInfo>(content);
-
-                //получаем application city
-                if (ipInfo?.City is not null) city = await _cityRepository.FindByNameAsync(ipInfo.City);
-            }
-            catch (Exception) { }
-        }
-        return city;
+        return operation.AddSuccess(string.Empty, _mapper.Map<UserDTO>(user));
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
-using Paraglider.API.DataTransferObjects;
 using Paraglider.API.Features.Categories.Queries;
 using Paraglider.API.Tests.Common;
 using Paraglider.Infrastructure.Common.Extensions;
@@ -35,11 +34,9 @@ public class GetUserCategoriesQueryHandlerTests
 
         //Act
         var act = await handler.Handle(request, CancellationToken.None);
-        var collection = act.GetDataObject() as IEnumerable<CategoryDTO>;
 
         //Assert
-        Assert.NotNull(collection);
-        Assert.Equal(expected, collection.Count());
+        Assert.Equal(expected, act.GetDataObject()!.Count());
     }
 
     [Fact]

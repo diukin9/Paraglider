@@ -12,7 +12,8 @@ namespace Paraglider.API.Features.Users.Queries;
 
 public record GetCurrentUserRequest() : IRequest<OperationResult<UserDTO>>;
 
-public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserRequest, OperationResult<UserDTO>>
+public class GetCurrentUserQueryHandler 
+    : IRequestHandler<GetCurrentUserRequest, OperationResult<UserDTO>>
 {
     private readonly IMongoDataAccess<Component> _components;
     private readonly IUserRepository _userRepository;
@@ -31,7 +32,9 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserRequest,
         _components = components;
     }
 
-    public async Task<OperationResult<UserDTO>> Handle(GetCurrentUserRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<UserDTO>> Handle(
+        GetCurrentUserRequest request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult<UserDTO>();
 
@@ -49,7 +52,8 @@ public class GetCurrentUserQueryHandler : IRequestHandler<GetCurrentUserRequest,
         //TODO может можно лучше?
         foreach (var planningComponent in result.Planning.Components)
         {
-            planningComponent.Component = (await _components.FindByIdAsync(planningComponent.ComponentId))!;
+            var component = await _components.FindByIdAsync(planningComponent.ComponentId);
+            planningComponent.Component = component;
         }
 
         foreach(var favourite in result.Favourites)

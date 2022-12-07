@@ -24,7 +24,7 @@ public class CityData
     {
         if (string.IsNullOrEmpty(name))
         {
-            throw new ArgumentException(ExceptionMessages.NullOrEmpty(nameof(name)));
+            throw new ArgumentException(ExceptionMessages.ValueNullOrEmpty(nameof(name)));
         }
 
         Name = name;

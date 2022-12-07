@@ -12,8 +12,16 @@ public class CommonDefinition : AppDefinition
         services.AddResponseCaching();
         services.AddMemoryCache();
 
-        services.AddControllers();
-        services.AddApiVersioning();
+        services.AddControllers()
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
+        services.AddApiVersioning(options =>
+        {
+            options.AssumeDefaultVersionWhenUnspecified = true;
+        });
     }
 
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)

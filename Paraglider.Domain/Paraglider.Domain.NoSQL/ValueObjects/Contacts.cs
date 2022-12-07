@@ -42,7 +42,7 @@ public class Contacts
     {
         PhoneNumber = phoneNumber?.ToPhoneNumberPattern() 
             ?? throw new ArgumentNullException(
-                ExceptionMessages.NullOrEmpty(nameof(phoneNumber)));
+                ExceptionMessages.ValueNullOrEmpty(nameof(phoneNumber)));
 
         Email = email;
         Telegram = telegram;

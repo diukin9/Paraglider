@@ -1,25 +1,22 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Attributes;
+using Paraglider.Infrastructure.Common.Extensions;
+using System.ComponentModel.DataAnnotations;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Planning.Commands;
 
-public record AddCategoryToUserRequest(Guid CategoryId) : IRequest<OperationResult>;
-
-public class AddCategoryToUserRequestValidator : AbstractValidator<AddCategoryToUserRequest>
+public class AddCategoryToUserRequest : IRequest<OperationResult>
 {
-    public AddCategoryToUserRequestValidator() => RuleSet(DefaultRuleSetName, () =>
-    {
-        RuleFor(x => x.CategoryId).NotEmpty();
-    });
+    [Required, NotEmptyGuid] public Guid CategoryId { get; set; }
 }
 
-public class AddCategoryToUserCommandHandler : IRequestHandler<AddCategoryToUserRequest, OperationResult>
+public class AddCategoryToUserCommandHandler 
+    : IRequestHandler<AddCategoryToUserRequest, OperationResult>
 {
-    private readonly IValidator<AddCategoryToUserRequest> _validator;
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
     private readonly IHttpContextAccessor _accessor;
@@ -27,25 +24,22 @@ public class AddCategoryToUserCommandHandler : IRequestHandler<AddCategoryToUser
     public AddCategoryToUserCommandHandler(
         ICategoryRepository categoryRepository,
         IUserRepository userRepository,
-        IHttpContextAccessor accessor,
-        IValidator<AddCategoryToUserRequest> validator)
+        IHttpContextAccessor accessor)
     {
         _categoryRepository = categoryRepository;
         _userRepository = userRepository;
         _accessor = accessor;
-        _validator = validator;
     }
 
-    public async Task<OperationResult> Handle(AddCategoryToUserRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(
+        AddCategoryToUserRequest request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult();
 
         //валидируем полученные данные
-        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validateResult.IsValid)
-        {
-            return operation.AddError(validateResult.Errors);
-        }
+        var validation = AttributeValidator.Validate(request);
+        if (!validation.IsValid()) return operation.AddError(validation);
 
         //получаем текущего пользователя
         var username = _accessor.HttpContext!.User!.Identity!.Name;
@@ -65,7 +59,7 @@ public class AddCategoryToUserCommandHandler : IRequestHandler<AddCategoryToUser
         //проверяем, что у пользователя отсутствует добавляемая категория
         if (user.Planning.Categories.Any(x => x.Id == category.Id))
         {
-            return operation.AddWarning("The user already has this category");
+            return operation.AddWarning("Данная категория уже была выбрана пользователем");
         }
 
         //добавляем категорию пользователю

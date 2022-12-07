@@ -11,6 +11,6 @@ public class UserRegister : IRegister
     {
         config.NewConfig<ApplicationUser, UserDTO>();
         config.NewConfig<ApplicationUser, UserPatchDTO>();
-        config.NewConfig<UserPatchDTO, ChangeUserCityCommand>();
+        config.NewConfig<UserPatchDTO, ChangeUserCityRequest>();
     }
 }

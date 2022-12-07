@@ -9,7 +9,9 @@ namespace Paraglider.API.Features;
 
 public record GetCitiesQuery : IRequest<OperationResult<IEnumerable<CityDTO>>>;
 
-public class GetCitiesQueryHandler : IRequestHandler<GetCitiesQuery, OperationResult<IEnumerable<CityDTO>>>
+public class GetCitiesQueryHandler 
+    : IRequestHandler<GetCitiesQuery, 
+        OperationResult<IEnumerable<CityDTO>>>
 {
     private readonly ICityRepository _cityRepository;
     private readonly IMapper _mapper;
@@ -20,7 +22,9 @@ public class GetCitiesQueryHandler : IRequestHandler<GetCitiesQuery, OperationRe
         _mapper = mapper;
     }
 
-    public async Task<OperationResult<IEnumerable<CityDTO>>> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
+    public async Task<OperationResult<IEnumerable<CityDTO>>> Handle(
+        GetCitiesQuery request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult<IEnumerable<CityDTO>>();
         var cities = await _cityRepository.GetAll(cancellationToken);

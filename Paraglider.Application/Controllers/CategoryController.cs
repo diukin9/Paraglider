@@ -18,7 +18,7 @@ public class CategoryController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet()]
     public async Task<IActionResult> GetAll()
     {
         var response = await _mediator.Send(new GetAllCategoriesRequest(), HttpContext.RequestAborted);

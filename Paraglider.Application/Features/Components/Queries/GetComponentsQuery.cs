@@ -1,60 +1,50 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Paraglider.Domain.NoSQL.Entities;
-using Paraglider.Infrastructure.Common.Enums;
-using Paraglider.Infrastructure.Common.MongoDB;
-using static Paraglider.Infrastructure.Common.AppData;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Attributes;
+using Paraglider.Infrastructure.Common.Extensions;
+using Paraglider.Infrastructure.Common.MongoDB;
+using System.ComponentModel.DataAnnotations;
 
 namespace Paraglider.API.Features.Components.Queries;
 
-public record GetComponentsRequest(Guid CategoryId, int PerPage, int Page, string? SorterKey = null) 
-    : IRequest<OperationResult<IEnumerable<object>>>;
-
-public class GetComponentsRequestValidator : AbstractValidator<GetComponentsRequest>
+public class GetComponentsRequest : IRequest<OperationResult<IEnumerable<object>>>
 {
-    public GetComponentsRequestValidator() => RuleSet(DefaultRuleSetName, () =>
-    {
-        RuleFor(x => x.CategoryId).NotEmpty();
-        RuleFor(x => x.PerPage).GreaterThan(0);
-        RuleFor(x => x.Page).GreaterThan(0);
-        RuleFor(x => x.SorterKey).Custom((key, context) =>
-        {
-            var isEnumName = Enum
-                .GetNames(typeof(ComponentSorterKey))
-                .Contains(key, StringComparer.OrdinalIgnoreCase);
+    [Required, NotEmptyGuid] public Guid CategoryId { get; set; }
+    [NotNegative] public int PerPage { get; set; }
+    [NotNegative] public int Page { get; set; }
+    [IsSorterKey] public string? SorterKey { get; set; }
 
-            if (key is not null && !isEnumName)
-            {
-                context.AddFailure("Passed a non-existent sorting key.");
-            }
-        });
-    });
+    public GetComponentsRequest(Guid categoryId, int perPage, int page, string? sorterKey = null)
+    {
+        CategoryId = categoryId;
+        PerPage = perPage;
+        Page = page;
+        SorterKey = sorterKey;
+    }
 }
 
-public class GetComponentsQueryHandler : IRequestHandler<GetComponentsRequest, OperationResult<IEnumerable<object>>>
+public class GetComponentsQueryHandler 
+    : IRequestHandler<GetComponentsRequest, 
+        OperationResult<IEnumerable<object>>>
 {
     private readonly IMongoDataAccess<Component> _components;
-    private readonly IValidator<GetComponentsRequest> _validator;
 
     public GetComponentsQueryHandler(
-        IMongoDataAccess<Component> components,
-        IValidator<GetComponentsRequest> validator)
+        IMongoDataAccess<Component> components)
     {
         _components = components;
-        _validator = validator;
     }
 
-    public async Task<OperationResult<IEnumerable<object>>> Handle(GetComponentsRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<IEnumerable<object>>> Handle(
+        GetComponentsRequest request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult<IEnumerable<object>>();
 
         //валидируем полученные данные
-        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validateResult.IsValid)
-        {
-            return operation.AddError(validateResult.Errors);
-        }
+        var validation = AttributeValidator.Validate(request);
+        if (!validation.IsValid()) return operation.AddError(validation);
 
         //получаем компоненты
         var components = await _components.FindAsync(

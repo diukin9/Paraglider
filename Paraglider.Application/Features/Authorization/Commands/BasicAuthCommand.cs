@@ -1,49 +1,41 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Extensions;
+using System.ComponentModel.DataAnnotations;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
 
-public record BasicAuthRequest(string Login, string Password) : IRequest<OperationResult>;
-
-public class BasicAuthRequestValidator : AbstractValidator<BasicAuthRequest>
+public class BasicAuthRequest : IRequest<OperationResult>
 {
-    public BasicAuthRequestValidator() => RuleSet(DefaultRuleSetName, () =>
-    {
-        RuleFor(x => x.Login).NotNull().NotEmpty();
-        RuleFor(x => x.Password).NotNull().NotEmpty();
-    });
+    [Required] public string Login { get; set; } = null!;
+    [Required] public string Password { get; set; } = null!;
 }
 
 public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, OperationResult>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly IValidator<BasicAuthRequest> _validator;
 
     public BasicAuthCommandHandler(
         SignInManager<ApplicationUser> signInManager,
-        UserManager<ApplicationUser> userManager,
-        IValidator<BasicAuthRequest> validator)
+        UserManager<ApplicationUser> userManager)
     {
         _signInManager = signInManager;
         _userManager = userManager;
-        _validator = validator;
     }
 
-    public async Task<OperationResult> Handle(BasicAuthRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(
+        BasicAuthRequest request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult();
 
         //валидируем полученные данные
-        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validateResult.IsValid)
-        {
-            return operation.AddError(validateResult.Errors);
-        }
+        var validation = AttributeValidator.Validate(request);
+        if (!validation.IsValid()) return operation.AddError(validation);
 
         //получаем пользователя
         var user = await _userManager.FindByEmailAsync(request.Login)
@@ -55,12 +47,14 @@ public class BasicAuthCommandHandler : IRequestHandler<BasicAuthRequest, Operati
         }
 
         //пытаемся авторизовать
-        var signInResult = await _signInManager.PasswordSignInAsync(user, request.Password, true, false);
+        var signInResult = await _signInManager
+            .PasswordSignInAsync(user, request.Password, true, false);
+
         if (!signInResult.Succeeded)
         {
-            return operation.AddError(ExceptionMessages.WrongPasswordEntered);
+            return operation.AddError("Введен неверный пароль.");
         }
 
-        return operation.AddSuccess(Messages.SuccessfulAuth);
+        return operation.AddSuccess("Пользователь успешно авторизован.");
     }
 }

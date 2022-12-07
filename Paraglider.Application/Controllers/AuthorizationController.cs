@@ -1,15 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Paraglider.API.Features.Account.Commands;
 using Paraglider.API.Features.Authorization.Commands;
-using Paraglider.API.Features.Mail.Commands;
-using Paraglider.API.Features.Registration.Commands;
-using Paraglider.API.Features.Users.Commands;
 using Paraglider.API.Features.Users.Queries;
-using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Extensions;
 
 namespace Paraglider.API.Controllers;
 
@@ -52,7 +47,7 @@ public class AuthorizationController : Controller
             HttpContext.RequestAborted);
 
         if (!response.IsOk) return BadRequest(response);
-        var properties = (AuthenticationProperties)response.Metadata!.DataObject!;
+        var properties = response.Metadata!.DataObject!;
         return Challenge(properties, provider);
     }
 
@@ -69,13 +64,6 @@ public class AuthorizationController : Controller
             return BadRequest(operation);
         }
       
-        var infoResponse = await _mediator.Send(
-            new GetUserByExternalLoginInfoRequest(),
-            HttpContext.RequestAborted);
-
-        if (!infoResponse.IsOk) return BadRequest(infoResponse);
-        var info = infoResponse.GetDataObject()!;
-
         var userResponse = await _mediator.Send(
             new GetUserByExternalLoginInfoRequest(),
             HttpContext.RequestAborted);
@@ -96,66 +84,5 @@ public class AuthorizationController : Controller
         if (!response.IsOk) return BadRequest(response);
 
         return Redirect(returnUrl);
-    }
-
-    [HttpPost]
-    [AllowAnonymous]
-    [Route("api/register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUserCommand command,
-        CancellationToken cancellationToken)
-    {
-        var registerResponse = await _mediator.Send(command, cancellationToken);
-
-        if (!registerResponse.IsOk) return BadRequest(registerResponse);
-
-        var user = (ApplicationUser) registerResponse.Metadata!.DataObject!;
-
-        var sendConfirmMailResponse = await _mediator.Send(new SendConfirmationEmailCommand(user),
-            cancellationToken);
-
-        if (!sendConfirmMailResponse.IsOk) return BadRequest(sendConfirmMailResponse.Metadata!.Message);
-
-        return Ok(registerResponse.Metadata.Message);
-    }
-
-    [HttpGet]
-    [AllowAnonymous]
-    [Route("confirm-email")]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailCommand confirmEmailCommand,
-        CancellationToken cancellationToken)
-    {
-        var response = await _mediator.Send(confirmEmailCommand, cancellationToken);
-
-        if (!response.IsOk) return BadRequest(response);
-
-        return Redirect((string) response.Metadata!.DataObject!);
-    }
-
-    [HttpPost]
-    [AllowAnonymous]
-    [Route("api/reset-password")]
-    public async Task<IActionResult> ResetPassword([FromBody] SendPasswordResetMailCommand command,
-        CancellationToken cancellationToken)
-    {
-        var passwordResetMailResult = await _mediator.Send(command, cancellationToken);
-
-        if (!passwordResetMailResult.IsOk)
-            return BadRequest(passwordResetMailResult.Metadata!.Message);
-
-        return Ok(passwordResetMailResult.Metadata!.Message);
-    }
-
-    [HttpPost]
-    [AllowAnonymous]
-    [Route("api/set-new-password")]
-    public async Task<IActionResult> ResetPasswordHandler([FromBody] SetNewPasswordCommand setNewPasswordCommand,
-        CancellationToken cancellationToken)
-    {
-        var resetPasswordResult = await _mediator.Send(setNewPasswordCommand, cancellationToken);
-
-        if (!resetPasswordResult.IsOk) return BadRequest(resetPasswordResult.Metadata!.Message);
-
-        return Ok(resetPasswordResult.Metadata!.Message);
     }
 }

@@ -1,45 +1,44 @@
-﻿using FluentValidation;
-using MediatR;
+﻿using MediatR;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Attributes;
+using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
+using System.ComponentModel.DataAnnotations;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Components.Queries;
 
-public record GetComponentByIdRequest(Guid Id) : IRequest<OperationResult<object>>;
-
-public class GetComponentByIdRequestValidator : AbstractValidator<GetComponentByIdRequest>
+public class GetComponentByIdRequest : IRequest<OperationResult<object>>
 {
-    public GetComponentByIdRequestValidator() => RuleSet(DefaultRuleSetName, () =>
+    [Required, NotEmptyGuid] public Guid Id { get; set; }
+
+    public GetComponentByIdRequest(Guid id)
     {
-        RuleFor(x => x.Id).NotEmpty();
-    });
+        Id = id;
+    }
 }
 
-public class GetComponentByIdQueryHandler : IRequestHandler<GetComponentByIdRequest, OperationResult<object>>
+public class GetComponentByIdQueryHandler 
+    : IRequestHandler<GetComponentByIdRequest, OperationResult<object>>
 {
     private readonly IMongoDataAccess<Component> _components;
-    private readonly IValidator<GetComponentByIdRequest> _validator;
 
     public GetComponentByIdQueryHandler(
-        IMongoDataAccess<Component> components, 
-        IValidator<GetComponentByIdRequest> validator)
+        IMongoDataAccess<Component> components)
     {
         _components = components;
-        _validator = validator;
     }
 
-    public async Task<OperationResult<object>> Handle(GetComponentByIdRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<object>> Handle(
+        GetComponentByIdRequest request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult<object>();
 
         //валидируем полученные данные
-        var validateResult = await _validator.ValidateAsync(request, cancellationToken);
-        if (!validateResult.IsValid)
-        {
-            return operation.AddError(validateResult.Errors);
-        }
+        var validation = AttributeValidator.Validate(request);
+        if (!validation.IsValid()) return operation.AddError(validation);
 
         //проверяем, что такой компонент существует
         var component = await _components.FindByIdAsync(request.Id);

@@ -21,23 +21,13 @@ public class Metadata<T>
     /// </summary>
     public T? DataObject { get; private set; }
 
-    public Metadata()
-    {
-        Type = MetadataType.Info;
-    }
-
-    public Metadata(string message) : this()
-    {
-        Message = message;
-    }
-
-    public Metadata(string message, MetadataType type = MetadataType.Info)
+    public Metadata(string message, MetadataType type)
     {
         Type = type;
         Message = message;
     }
 
-    public Metadata(string message, T? data, MetadataType type = MetadataType.Info)
+    public Metadata(string message, T? data, MetadataType type)
     {
         Type = type;
         Message = message;

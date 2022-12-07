@@ -10,7 +10,9 @@ namespace Paraglider.API.Features.Categories.Queries;
 
 public record GetUserCategoriesRequest() : IRequest<OperationResult<IEnumerable<CategoryDTO>>>;
 
-public class GetUserCategoriesQueryHandler : IRequestHandler<GetUserCategoriesRequest, OperationResult<IEnumerable<CategoryDTO>>>
+public class GetUserCategoriesQueryHandler 
+    : IRequestHandler<GetUserCategoriesRequest, 
+        OperationResult<IEnumerable<CategoryDTO>>>
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
@@ -29,7 +31,9 @@ public class GetUserCategoriesQueryHandler : IRequestHandler<GetUserCategoriesRe
         _mapper = mapper;
     }
 
-    public async Task<OperationResult<IEnumerable<CategoryDTO>>> Handle(GetUserCategoriesRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult<IEnumerable<CategoryDTO>>> Handle(
+        GetUserCategoriesRequest request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult<IEnumerable<CategoryDTO>>();
 

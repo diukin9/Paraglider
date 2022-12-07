@@ -41,7 +41,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPatch("city")]
-    public async Task<IActionResult> ChangeCity([FromBody] ChangeUserCityCommand request,
+    public async Task<IActionResult> ChangeCity([FromBody] ChangeUserCityRequest request,
         CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(request, cancellationToken);

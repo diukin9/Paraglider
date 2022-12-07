@@ -1,11 +1,11 @@
-﻿using System.Security.Claims;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.API.Extensions;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Extensions;
+using System.Security.Claims;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Authorization.Commands;
@@ -25,7 +25,9 @@ public class ExternalAuthCommandHandler : IRequestHandler<ExternalAuthRequest, O
         _userManager = userManager;
     }
 
-    public async Task<OperationResult> Handle(ExternalAuthRequest request, CancellationToken cancellationToken)
+    public async Task<OperationResult> Handle(
+        ExternalAuthRequest request, 
+        CancellationToken cancellationToken)
     {
         var operation = new OperationResult();
 
@@ -65,9 +67,9 @@ public class ExternalAuthCommandHandler : IRequestHandler<ExternalAuthRequest, O
 
         if (!signInResult.Succeeded)
         {
-            return operation.AddError(ExceptionMessages.FailedExternalAuth);
+            return operation.AddError("Ошибка при попытке внешней авторизации.");
         }
 
-        return operation.AddSuccess(Messages.SuccessfulExternalAuth);
+        return operation.AddSuccess("Пользователь успешно авторизан через внешнего провайдера.");
     }
 }
