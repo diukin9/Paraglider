@@ -9,7 +9,7 @@ namespace Paraglider.API.Controllers;
 [Authorize]
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}/users")]
+[Route("api/v{version:apiVersion}/user")]
 public class UserController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -19,7 +19,7 @@ public class UserController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("current")]
+    [HttpGet]
     public async Task<IActionResult> GetCurrentUser()
     {
         var response = await _mediator.Send(new GetCurrentUserRequest(), HttpContext.RequestAborted);
