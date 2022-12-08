@@ -7,5 +7,5 @@ public class UserComponentDTO : IDataTransferObject
 {
     [JsonIgnore]
     public Guid ComponentId { get; set; }
-    public object? Component { get; set; }
+    public ComponentDTO? Component { get; set; }
 }

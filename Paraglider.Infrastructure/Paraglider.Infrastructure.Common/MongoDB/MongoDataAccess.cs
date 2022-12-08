@@ -10,14 +10,14 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
 {
     private readonly IMongoCollection<TEntity> _collection;
 
-    public MongoDataAccess(IMongoClient client, IMongoDbSettings settings, string collectionName)
+    public MongoDataAccess(IMongoClient client, IMongoDbSettings settings)
     {
         _collection = client
             .GetDatabase(settings.DatabaseName)
-            .GetCollection<TEntity>(collectionName);
+            .GetCollection<TEntity>(typeof(TEntity).Name);
     }
 
-    public async Task<List<object>> FindAsync(
+    public async Task<IEnumerable<TEntity>> FindAsync(
         Expression<Func<TEntity, bool>>? filter = null,
         Expression<Func<TEntity, object>>? sort = null,
         SortDirection sortDirection = SortDirection.Ascending,
@@ -39,16 +39,12 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
             .Limit(limit)
             .ToListAsync();
 
-        return entities
-            .Select(x => BsonTypeMapper.MapToDotNetValue(x.ToBsonDocument()))
-            .ToList();
+        return entities;
     }
 
-    public async Task<object?> FindByIdAsync(Guid id)
+    public async Task<TEntity?> FindByIdAsync(Guid id)
     {
-        var entity = await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
-        if (entity is null) return entity;
-        return BsonTypeMapper.MapToDotNetValue(entity?.ToBsonDocument());
+        return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }
 
     public async Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> selector)
@@ -59,6 +55,7 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
     public async Task<long> CountAsync(Expression<Func<TEntity, bool>>? filter = null)
     {
         filter = filter ??= _ => true;
+
         return await _collection
             .Find(Builders<TEntity>.Filter.Where(filter))
             .CountDocumentsAsync();

@@ -49,16 +49,18 @@ public class GetCurrentUserQueryHandler
         //маппим в дто и заполняем компоненты из mongoDB
         var result = _mapper.Map<UserDTO>(user!);
 
-        //TODO может можно лучше?
+        //заполняем компоненты из плана
         foreach (var planningComponent in result.Planning.Components)
         {
-            var component = await _components.FindByIdAsync(planningComponent.ComponentId);
-            planningComponent.Component = component;
+            var component = await _components.FindByIdAsync(planningComponent.ComponentId)!;
+            planningComponent.Component = _mapper.Map<ComponentDTO>(component!);
         }
 
+        //заполняем компоненты из избранного
         foreach(var favourite in result.Favourites)
         {
-            favourite.Component = (await _components.FindByIdAsync(favourite.ComponentId))!;
+            var component = await _components.FindByIdAsync(favourite.ComponentId)!;
+            favourite.Component = _mapper.Map<ComponentDTO>(component!);
         }
 
         return operation.AddSuccess(string.Empty, result);

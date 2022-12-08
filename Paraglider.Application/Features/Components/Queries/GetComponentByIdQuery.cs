@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using MapsterMapper;
+using MediatR;
+using Paraglider.API.DataTransferObjects;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Attributes;
@@ -9,7 +11,7 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.API.Features.Components.Queries;
 
-public class GetComponentByIdRequest : IRequest<OperationResult<object>>
+public class GetComponentByIdRequest : IRequest<OperationResult<ComponentDTO>>
 {
     [Required, NotEmptyGuid] public Guid Id { get; set; }
 
@@ -20,21 +22,24 @@ public class GetComponentByIdRequest : IRequest<OperationResult<object>>
 }
 
 public class GetComponentByIdQueryHandler 
-    : IRequestHandler<GetComponentByIdRequest, OperationResult<object>>
+    : IRequestHandler<GetComponentByIdRequest, OperationResult<ComponentDTO>>
 {
     private readonly IMongoDataAccess<Component> _components;
+    private readonly IMapper _mapper;
 
     public GetComponentByIdQueryHandler(
-        IMongoDataAccess<Component> components)
+        IMongoDataAccess<Component> components,
+        IMapper mapper)
     {
         _components = components;
+        _mapper = mapper;
     }
 
-    public async Task<OperationResult<object>> Handle(
+    public async Task<OperationResult<ComponentDTO>> Handle(
         GetComponentByIdRequest request, 
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<object>();
+        var operation = new OperationResult<ComponentDTO>();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
@@ -47,6 +52,7 @@ public class GetComponentByIdQueryHandler
             return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(Component)));
         }
 
-        return operation.AddSuccess(string.Empty, component);
+        var model = _mapper.Map<ComponentDTO>(component);
+        return operation.AddSuccess(string.Empty, model);
     }
 }

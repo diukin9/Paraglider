@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
@@ -16,4 +15,7 @@ public class Review
 
     [BsonElement("evaluation")]
     public double Evaluation { get; set; }
+
+    [BsonElement("date")]
+    public DateTime Date { get; set; }
 }

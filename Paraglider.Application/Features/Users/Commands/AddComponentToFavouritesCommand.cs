@@ -44,7 +44,7 @@ public class AddComponentToFavouritesCommandHandler
         if (!validation.IsValid()) return operation.AddError(validation);
 
         //проверяем, что такой компонент существует
-        dynamic? component = await _components.FindByIdAsync(request.ComponentId);
+        var component = await _components.FindByIdAsync(request.ComponentId);
         if (component is null)
         {
             return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(Component)));
@@ -59,14 +59,13 @@ public class AddComponentToFavouritesCommandHandler
         }
 
         //проверяем, что у пользователя этот компонент еще не добавлен в избранное
-        var componentId = component[MongoIdName];
-        if (user.Favourites.Any(x => x.Id == component))
+        if (user.Favourites.Any(x => x.Id == component.Id))
         {
             return operation.AddError("Этот компонент уже находится в избранном.");
         }
 
         //добавляем компонент в избранное
-        user.Favourites.Add(new UserComponent() { ComponentId = componentId });
+        user.Favourites.Add(new UserComponent() { ComponentId = component.Id });
 
         try
         {

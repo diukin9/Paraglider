@@ -44,7 +44,7 @@ public class AddComponentToPlanningCommandHandler
         if (!validation.IsValid()) return operation.AddError(validation);
 
         //проверяем, что такой компонент существует
-        dynamic? component = await _components.FindByIdAsync(request.ComponentId);
+        var component = await _components.FindByIdAsync(request.ComponentId);
         if (component is null)
         {
             return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(Component)));
@@ -59,15 +59,14 @@ public class AddComponentToPlanningCommandHandler
         }
 
         //проверяем, что категория добавляемого компонента выбрана пользователем
-        var categoryId = component[nameof(Component.Category).ToLower()][MongoIdName];
+        var categoryId = component.Category.Id;
         if (!user.Planning.Categories.Any(x => x.Id == categoryId))
         {
             return operation.AddError("У пользователя не выбрана такая категория.");
         }
 
         //проверяем, что у пользователя еще нет такого компонента в плане
-        var componentId = component[MongoIdName];
-        if (user.Planning.PlanningComponents.Any(x => x.Id == componentId))
+        if (user.Planning.PlanningComponents.Any(x => x.Id == component.Id))
         {
             return operation.AddError("Этот компонент уже находится в плане пользователя.");
         }
@@ -76,7 +75,7 @@ public class AddComponentToPlanningCommandHandler
         user.Planning.PlanningComponents.Add(new PlanningComponent()
         {
             CategoryId = categoryId,
-            ComponentId = componentId,
+            ComponentId = component.Id,
             ComponentDesc = new ComponentDesc()
         });
 

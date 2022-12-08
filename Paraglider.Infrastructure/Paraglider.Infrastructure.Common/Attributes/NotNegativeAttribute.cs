@@ -15,7 +15,7 @@ public class NotNegativeAttribute : ValidationAttribute
         if (value is null) return new ValidationResult("Значение было null.");
 
         return Convert.ToInt32(value) > 0
-            ? new ValidationResult("Переданное значение должно быть больше нуля.")
-            : ValidationResult.Success;
+            ? ValidationResult.Success
+            : new ValidationResult("Переданное значение должно быть больше нуля."); ;
     }
 }

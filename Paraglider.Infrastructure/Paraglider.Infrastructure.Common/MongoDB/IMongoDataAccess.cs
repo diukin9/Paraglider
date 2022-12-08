@@ -5,14 +5,14 @@ namespace Paraglider.Infrastructure.Common.MongoDB;
 
 public interface IMongoDataAccess<TEntity> where TEntity : class, new()
 {
-    Task<List<object>> FindAsync(
+    Task<IEnumerable<TEntity>> FindAsync(
         Expression<Func<TEntity, bool>>? filter = null,
         Expression<Func<TEntity, object>>? sort = null,
         SortDirection sortDirection = SortDirection.Ascending,
         int skip = 0,
         int limit = 1000);
 
-    Task<object?> FindByIdAsync(Guid id);
+    Task<TEntity?> FindByIdAsync(Guid id);
 
     Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> selector);
 

@@ -7,6 +7,7 @@ public class CommonDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
+        services.AddHttpClient();
         services.AddLocalization();
         services.AddHttpContextAccessor();
         services.AddResponseCaching();

@@ -10,56 +10,56 @@ public class Component : IIdentified
 {
     [BsonId]
     [BsonElement("id")]
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } //
 
     [BsonElement("externalId")]
-    public string ExternalId { get; set; } = null!;
+    public string ExternalId { get; set; } = null!; //
 
     [BsonElement("provider")]
-    public string Provider { get; set; } = null!;
+    public string Provider { get; set; } = null!; //
 
     [BsonElement("category")]
-    public Category Category { get; set; } = null!;
+    public Category Category { get; set; } = null!; //
 
     [BsonElement("name")]
-    public string Name { get; set; } = null!;
+    public string Name { get; set; } = null!; //
 
     [BsonElement("description")]
-    public string? Description { get; set; } = null!;
+    public string? Description { get; set; } = null!; //
 
     [BsonElement("avatarUrl")]
-    public string? AvatarUrl { get; set; }
+    public string? AvatarUrl { get; set; } //
 
     [BsonElement("city")]
-    public City City { get; set; } = null!;
+    public City City { get; set; } = null!; //
 
     [BsonElement("album")]
-    public Album Album { get; set; } = null!;
+    public Album Album { get; set; } = null!; //
 
     [BsonElement("contacts")]
-    public Contacts Contacts { get; set; } = null!;
+    public Contacts Contacts { get; set; } = null!; //
 
     [BsonElement("reviews")]
-    public List<Review> Reviews { get; set; } = new List<Review>();
+    public List<Review> Reviews { get; set; } = new List<Review>(); //
 
-
-    [BsonIgnoreIfNull]
     [BsonElement("manufactureYear")]
-    public DateTime? ManufactureYear { get; set; }
+    public DateTime? ManufactureYear { get; set; } //
 
-    [BsonIgnoreIfNull]
     [BsonElement("minRentLength")]
-    public TimeSpan? MinRentLength { get; set; }
+    public TimeSpan? MinRentLength { get; set; } //
 
-    [BsonIgnoreIfNull]
     [BsonElement("capacity")]
-    public int? Capacity { get; set; }
+    public int? Capacity { get; set; } //
 
-    [BsonIgnoreIfNull]
     [BsonElement("services")]
-    public List<Service>? Services { get; set; }
+    public List<Service>? Services { get; set; } //
 
-    [BsonIgnoreIfNull]
     [BsonElement("halls")]
-    public List<Hall>? Halls { get; set; }
+    public List<Hall>? Halls { get; set; } //
+
+    [BsonElement("createdAt")]
+    public DateTime CreatedAt { get; set; }
+
+    [BsonElement("updatedAt")]
+    public DateTime UpdatedAt { get; set; }
 }

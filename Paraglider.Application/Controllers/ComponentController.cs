@@ -19,15 +19,9 @@ public class ComponentController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get(
-        [FromQuery] Guid categoryId,
-        [FromQuery] string? sorterKey = null, //TODO обсудить сортировку компонентов и реализовать ее
-        [FromQuery] int? perPage = 15,
-        [FromQuery] int? page = 1)
+    public async Task<IActionResult> Get([FromQuery] GetComponentsRequest request)
     {
-        var response = await _mediator.Send(
-            new GetComponentsRequest(categoryId, perPage!.Value, page!.Value, sorterKey), 
-            HttpContext.RequestAborted);
+        var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);
     }
 

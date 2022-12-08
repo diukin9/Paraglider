@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+      <PackageReference Include="Hangfire" Version="1.7.32" />
+      <PackageReference Include="Hangfire.Core" Version="1.7.32" />
+      <PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
       <PackageReference Include="Mapster" Version="7.3.0" />
       <PackageReference Include="Mapster.Async" Version="2.0.0" />
       <PackageReference Include="Mapster.Core" Version="1.2.0" />

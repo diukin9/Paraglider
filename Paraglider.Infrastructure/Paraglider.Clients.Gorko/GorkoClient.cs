@@ -21,10 +21,24 @@ public class GorkoClient
         return new GorkoClientConfiguration(httpClient);
     }
 
+    public async IAsyncEnumerable<City> GetCitiesAsync(int perPage = 10, int page = 1)
+    {
+        var cities = await BuildRequestFor().Cities
+            .WithPaging(new PagingParameters(page, perPage))
+            .GetResult();
+
+        if (!cities.IsSuccessful) yield break;
+
+        foreach (var city in cities.Value!.Items)
+        {
+            yield return city;
+        }
+    }
+
     public IAsyncEnumerable<User> GetUsersAsync(UserRole userRole,
         int perPage = 10,
         int page = 1,
-        int? cityId = null)
+        long? cityId = null)
     {
         var usersResource = BuildRequestFor()
             .Users
@@ -35,7 +49,7 @@ public class GorkoClient
 
     public IAsyncEnumerable<Restaurant> GetRestaurantsAsync(int perPage = 10,
         int page = 1,
-        int? cityId = null)
+        long? cityId = null)
     {
         var restaurantResource = BuildRequestFor()
             .Restaurants;
@@ -46,7 +60,7 @@ public class GorkoClient
     private async IAsyncEnumerable<T> FillWithReviews<T>(IGorkoResource<T> resource,
         int perPage,
         int page,
-        int? cityId) where T : IHaveId, IHaveReviews, IHaveCityId
+        long? cityId) where T : IHaveId, IHaveReviews, IHaveCityId
     {
         if (cityId != null)
             resource = resource.FilterBy(e => e.CityId, cityId);

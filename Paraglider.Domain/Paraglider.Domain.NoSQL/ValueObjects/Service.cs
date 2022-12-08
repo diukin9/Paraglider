@@ -13,6 +13,5 @@ public class Service
 
     [BsonElement("price")]
     public Price Price { get; set; } = null!;
-
 }
 
