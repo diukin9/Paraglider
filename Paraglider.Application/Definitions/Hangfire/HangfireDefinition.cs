@@ -1,7 +1,9 @@
 ﻿using Hangfire;
 using Hangfire.MemoryStorage;
+using Paraglider.API.BackgroundProcessing.ReccuringJobs.Gorko;
 using Paraglider.API.Definitions.Base;
-using Paraglider.Data.MongoDB.BackgroundUploads.ReccuringJobs.Gorko;
+using Paraglider.Clients.Gorko;
+using Paraglider.Domain.NoSQL.ValueObjects;
 
 namespace Paraglider.API.Definitions.Hangfire;
 
@@ -16,6 +18,9 @@ public class HangfireDefinition : AppDefinition
             .UseMemoryStorage());
 
         services.AddHangfireServer();
+
+        services.AddSingleton<GorkoClient>();
+        services.AddScoped<GorkoReccuringJob>();
     }
 
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)

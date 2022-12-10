@@ -6,11 +6,11 @@ using Paraglider.Infrastructure.Common.Abstractions;
 namespace Paraglider.Domain.NoSQL.Entities;
 
 [BsonIgnoreExtraElements]
-public class Component : IIdentified
+public class Component : IIdentified<string>
 {
     [BsonId]
     [BsonElement("id")]
-    public Guid Id { get; set; } //
+    public string Id { get; set; } = null!; //
 
     [BsonElement("externalId")]
     public string ExternalId { get; set; } = null!; //

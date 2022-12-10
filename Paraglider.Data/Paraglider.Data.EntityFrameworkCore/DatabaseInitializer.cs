@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Paraglider.Data.EntityFrameworkCore.Factories;
 using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Exceptions;
 
@@ -31,19 +32,19 @@ public static class DatabaseInitializer
 
         var categories = new List<Category>()
         {
-            new Category() { Name = "Банкетные залы" },
-            new Category() { Name = "Видеографы" },
-            new Category() { Name = "Фотографы" },
-            new Category() { Name = "Ведущие" },
-            new Category() { Name = "Оформители" },
-            new Category() { Name = "Службы кейтеринга" },
-            new Category() { Name = "Выездные регистраторы" },
-            new Category() { Name = "Диджеи" },
-            new Category() { Name = "Кондитеры" },
-            new Category() { Name = "Фотостудии" },
-            new Category() { Name = "Лимузины" },
-            new Category() { Name = "Свадебные стилисты" },
-            new Category() { Name = "Другое" }
+            new Category() { Name = "Банкетные залы", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Видеографы", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Фотографы", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Ведущие", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Оформители", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Службы кейтеринга", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Выездные регистраторы", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Диджеи", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Кондитеры", Keys = new List<ExternalCategoryKey>() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Фотостудии", Keys = new List < ExternalCategoryKey >() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Лимузины", Keys = new List < ExternalCategoryKey >() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Свадебные стилисты", Keys = new List < ExternalCategoryKey >() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } },
+            new Category() { Name = "Другое", Keys = new List < ExternalCategoryKey >() { new ExternalCategoryKey() { Source = Source.Gorko, Key = "" } } }
         };
 
         categories = categories
@@ -60,9 +61,9 @@ public static class DatabaseInitializer
 
         var cities = new List<City>()
         {
-            new City() { Name = "Москва" },
-            new City() { Name = "Санкт-Петербург",  },
-            new City() { Name = "Екатеринбург" }
+            new City() { Name = "Москва", Keys = new List<ExternalCityKey>() { new ExternalCityKey() { Source = Source.Gorko, Key = "4400" } } },
+            new City() { Name = "Санкт-Петербург", Keys = new List<ExternalCityKey>() { new ExternalCityKey() { Source = Source.Gorko, Key = "4962" } } },
+            new City() { Name = "Екатеринбург", Keys = new List<ExternalCityKey>() { new ExternalCityKey() { Source = Source.Gorko, Key = "5106" } } }
         };
 
         cities = cities

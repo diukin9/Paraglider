@@ -6,6 +6,6 @@ namespace Paraglider.API.DataTransferObjects;
 public class UserComponentDTO : IDataTransferObject
 {
     [JsonIgnore]
-    public Guid ComponentId { get; set; }
+    public string ComponentId { get; set; } = null!;
     public ComponentDTO? Component { get; set; }
 }

@@ -15,7 +15,7 @@ public partial class User : IHaveId, IHaveReviews
 
     public Role? Role { get; set; }
 
-    public List<CatalogMedia>? CatalogMedia { get; set; }
+    public IReadOnlyCollection<CatalogMedia>? CatalogMedia { get; set; }
 
     public City? City { get; set; }
 

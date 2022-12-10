@@ -6,7 +6,7 @@ namespace Paraglider.API.DataTransferObjects;
 public class PlanningComponentDTO : IDataTransferObject
 {
     [JsonIgnore]
-    public Guid ComponentId { get; set; }
+    public string ComponentId { get; set; } = null!;
     public ComponentDTO? Component { get; set; }
     public ComponentDescDTO ComponentDesc { get; set; } = null!;
 }

@@ -13,7 +13,7 @@ namespace Paraglider.API.Features.Planning.Commands;
 
 public class AddComponentToPlanningRequest : IRequest<OperationResult>
 {
-    [Required, NotEmptyGuid] public Guid ComponentId { get; set; }
+    [Required] public string ComponentId { get; set; } = null!;
 }
 
 public class AddComponentToPlanningCommandHandler 
@@ -66,7 +66,7 @@ public class AddComponentToPlanningCommandHandler
         }
 
         //проверяем, что у пользователя еще нет такого компонента в плане
-        if (user.Planning.PlanningComponents.Any(x => x.Id == component.Id))
+        if (user.Planning.PlanningComponents.Any(x => x.ComponentId == component.Id))
         {
             return operation.AddError("Этот компонент уже находится в плане пользователя.");
         }

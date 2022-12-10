@@ -3,7 +3,6 @@ using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Attributes;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
 using System.ComponentModel.DataAnnotations;
@@ -13,7 +12,7 @@ namespace Paraglider.API.Features.Users.Commands;
 
 public class RemoveComponentFromFavouritesRequest : IRequest<OperationResult>
 {
-    [Required, NotEmptyGuid] public Guid ComponentId { get; set; }
+    [Required] public string ComponentId { get; set; } = null!;
 }
 
 public class RemoveComponentFromFavouritesCommandHandler 

@@ -3,7 +3,7 @@ using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class Payment : IIdentified
+public class Payment : IIdentified<Guid>
 {
     public Guid Id { get; set; }
     public DateOnly Date { get; set; }

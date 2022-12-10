@@ -44,7 +44,7 @@ public class GorkoClient
             .Users
             .WithRole(userRole);
 
-        return FillWithReviews(usersResource, perPage, page, cityId);
+        return FillWithReviews(ComponentType.User, usersResource, perPage, page, cityId);
     }
 
     public IAsyncEnumerable<Restaurant> GetRestaurantsAsync(int perPage = 10,
@@ -54,10 +54,12 @@ public class GorkoClient
         var restaurantResource = BuildRequestFor()
             .Restaurants;
 
-        return FillWithReviews(restaurantResource, perPage, page, cityId);
+        return FillWithReviews(ComponentType.Restaurant, restaurantResource, perPage, page, cityId);
     }
 
-    private async IAsyncEnumerable<T> FillWithReviews<T>(IGorkoResource<T> resource,
+    private async IAsyncEnumerable<T> FillWithReviews<T>(
+        ComponentType type,
+        IGorkoResource<T> resource,
         int perPage,
         int page,
         long? cityId) where T : IHaveId, IHaveReviews, IHaveCityId
@@ -65,34 +67,48 @@ public class GorkoClient
         if (cityId != null)
             resource = resource.FilterBy(e => e.CityId, cityId);
 
-        var restaurants = await resource
+        var response = await resource
             .WithPaging(new PagingParameters(page, perPage))
             .GetResult();
 
-        if (!restaurants.IsSuccessful)
+        if (!response.IsSuccessful)
             yield break;
 
-        foreach (var restaurant in restaurants.Value!.Items)
+        foreach (var item in response.Value!.Items)
         {
-            restaurant.Reviews = await GetReviews(restaurant.Id);
-            yield return restaurant;
+            item.Reviews = await GetReviews(type, item.Id);
+            yield return item;
         }
     }
 
-    private async Task<List<Review>> GetReviews(long? id)
+    private async Task<List<Review>> GetReviews(ComponentType type, long? id)
     {
         if (id == null)
             return new List<Review>();
         
-        var response = await httpClient.GetAsync(Endpoints.RestaurantReviews(id.Value));
+        var request = type switch
+        {
+            ComponentType.User => Endpoints.UserReviews(id.Value),
+            ComponentType.Restaurant => Endpoints.RestaurantReviews(id.Value),
+            _ => throw new NotImplementedException()
+        };
 
-        var json = await response.Content.ReadAsStringAsync();
-        var jsonObject = JObject.Parse(json);
+        var response = await httpClient.GetAsync(request);
 
-        var reviews = jsonObject["reviews"]
-            ?.Select(x => x.ToObject<Review>())
-            .ToList() ?? new List<Review?>();
+        try
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var jsonObject = JObject.Parse(json);
 
-        return reviews!;
+            var reviews = jsonObject["reviews"]
+                ?.Select(x => x.ToObject<Review>())
+                .ToList() ?? new List<Review?>();
+
+            return reviews!;
+        }
+        catch
+        {
+            return null!;
+        }
     }
 }

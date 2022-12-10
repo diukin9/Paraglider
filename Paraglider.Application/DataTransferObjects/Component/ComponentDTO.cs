@@ -5,7 +5,7 @@ namespace Paraglider.API.DataTransferObjects;
 
 public class ComponentDTO : IDataTransferObject
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; } = null!;
 
     public CategoryDTO Category { get; set; } = null!;
 

@@ -1,9 +1,10 @@
 ﻿using MongoDB.Driver;
+using Paraglider.Infrastructure.Common.Abstractions;
 using System.Linq.Expressions;
 
 namespace Paraglider.Infrastructure.Common.MongoDB;
 
-public interface IMongoDataAccess<TEntity> where TEntity : class, new()
+public interface IMongoDataAccess<TEntity> where TEntity : class, IIdentified<string>, new()
 {
     Task<IEnumerable<TEntity>> FindAsync(
         Expression<Func<TEntity, bool>>? filter = null,
@@ -12,7 +13,7 @@ public interface IMongoDataAccess<TEntity> where TEntity : class, new()
         int skip = 0,
         int limit = 1000);
 
-    Task<TEntity?> FindByIdAsync(Guid id);
+    Task<TEntity?> FindByIdAsync(string id);
 
     Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> selector);
 
@@ -26,7 +27,7 @@ public interface IMongoDataAccess<TEntity> where TEntity : class, new()
 
     Task<bool> UpdateAsync(TEntity value);
 
-    Task RemoveAsync(Guid id);
+    Task RemoveAsync(string id);
 
     Task RemoveAsync(TEntity entity);
 

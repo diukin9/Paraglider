@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 namespace Paraglider.Infrastructure.Common.MongoDB;
 
 public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
-    where TEntity : class, IIdentified, new()
+    where TEntity : class, IIdentified<string>, new()
 {
     private readonly IMongoCollection<TEntity> _collection;
 
@@ -42,7 +42,7 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
         return entities;
     }
 
-    public async Task<TEntity?> FindByIdAsync(Guid id)
+    public async Task<TEntity?> FindByIdAsync(string id)
     {
         return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }
@@ -83,7 +83,7 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
         return result.IsAcknowledged;
     }
 
-    public async Task RemoveAsync(Guid id)
+    public async Task RemoveAsync(string id)
     {
         await _collection.DeleteOneAsync(x => x.Id == id);
     }

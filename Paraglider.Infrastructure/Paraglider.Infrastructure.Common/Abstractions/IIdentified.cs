@@ -1,6 +1,6 @@
 ﻿namespace Paraglider.Infrastructure.Common.Abstractions;
 
-public interface IIdentified
+public interface IIdentified<T>
 {
-    public Guid Id { get; set; }
+    public T Id { get; set; }
 }

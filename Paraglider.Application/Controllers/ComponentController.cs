@@ -26,7 +26,7 @@ public class ComponentController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    public async Task<IActionResult> GetById([FromRoute] string id)
     {
         var response = await _mediator.Send(new GetComponentByIdRequest(id), HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);

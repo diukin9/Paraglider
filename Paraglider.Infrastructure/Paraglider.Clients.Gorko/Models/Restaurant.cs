@@ -7,6 +7,8 @@ public partial class Restaurant : IHaveId, IHaveReviews
 {
     public long? Id { get; set; }
 
+    public string Role { get; set; } = null!;
+
     public string? Name { get; set; }
     public City? City { get; set; }
 
@@ -33,7 +35,7 @@ public class RoomParameters
 
     [JsonProperty("param_capacity_min")] public Parameter<int>? CapacityMin { get; set; }
 
-    [JsonProperty("param_capacity")] public Parameter<decimal>? CapacityMax { get; set; }
+    [JsonProperty("param_capacity")] public Parameter<int>? CapacityMax { get; set; }
 
     [JsonProperty("param_features")] public Parameter<string>? Features { get; set; }
 }

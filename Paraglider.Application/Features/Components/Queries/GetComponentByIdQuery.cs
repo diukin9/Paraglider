@@ -13,9 +13,9 @@ namespace Paraglider.API.Features.Components.Queries;
 
 public class GetComponentByIdRequest : IRequest<OperationResult<ComponentDTO>>
 {
-    [Required, NotEmptyGuid] public Guid Id { get; set; }
+    [Required] public string Id { get; set; } = null!;
 
-    public GetComponentByIdRequest(Guid id)
+    public GetComponentByIdRequest(string id)
     {
         Id = id;
     }
