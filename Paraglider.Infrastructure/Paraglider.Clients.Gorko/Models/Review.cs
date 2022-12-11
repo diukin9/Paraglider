@@ -12,4 +12,6 @@ public class Review : IHaveId
     [JsonProperty("user_name")] public string? UserName { get; set; }
 
     public string? Text { get; set; }
+    
+    [JsonProperty("user_avatar")] public string? UserAvatar { get; set; }
 }

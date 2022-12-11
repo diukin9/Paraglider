@@ -18,6 +18,9 @@ public partial class Restaurant : IHaveId, IHaveReviews
 
     public IReadOnlyCollection<Room>? Rooms { get; set; }
     public IReadOnlyCollection<Review>? Reviews { get; set; }
+    
+    [JsonProperty("text")] public string? Description { get; set; }
+    [JsonProperty("cover_url")] public string? Avatar { get; set; }
 }
 
 public class Room
@@ -27,6 +30,8 @@ public class Room
     [JsonProperty("params")] public RoomParameters? Parameters { get; set; }
 
     public IReadOnlyCollection<CatalogMedia>? Media { get; set; }
+    
+    [JsonProperty("cover_url")] public string? Avatar { get; set; }
 }
 
 public class RoomParameters

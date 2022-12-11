@@ -22,7 +22,7 @@ internal static class Endpoints
 
     internal static string Cities => "v2/cities";
 
-    internal static string Restaurants => "v2/restaurants";
+    internal static string Restaurants => "v2/restaurants?fields=text";
 }
 
 public class PagingParameters
