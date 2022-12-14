@@ -2,63 +2,69 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Paraglider.Domain.NoSQL.ValueObjects;
 using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Paraglider.Domain.NoSQL.Entities;
 
 [BsonIgnoreExtraElements]
 public class Component : IIdentified<string>
 {
-    [BsonId]
-    [BsonElement("id")]
-    public string Id { get; set; } = null!; //
+    [BsonId, BsonElement("id")]
+    [Required]
+    public string Id { get; set; } = null!;
 
     [BsonElement("externalId")]
-    public string ExternalId { get; set; } = null!; //
+    [Required]
+    public string ExternalId { get; set; } = null!;
 
+    [Required, IsEnumName(typeof(Common.Enums.Source))]
     [BsonElement("provider")]
-    public string Provider { get; set; } = null!; //
+    public string Provider { get; set; } = null!;
 
     [BsonElement("category")]
-    public Category Category { get; set; } = null!; //
+    [Required]
+    public Category Category { get; set; } = null!;
 
     [BsonElement("name")]
-    public string Name { get; set; } = null!; //
+    [Required]
+    public string Name { get; set; } = null!;
 
     [BsonElement("description")]
-    public string? Description { get; set; } = null!; //
+    public string? Description { get; set; } = null!;
 
     [BsonElement("avatarUrl")]
-    public string? AvatarUrl { get; set; } //
+    [Required]
+    public string? AvatarUrl { get; set; }
 
     [BsonElement("city")]
-    public City City { get; set; } = null!; //
+    [Required]
+    public City City { get; set; } = null!;
 
     [BsonElement("album")]
-    public Album Album { get; set; } = null!; //
+    public Album Album { get; set; } = null!; 
 
     [BsonElement("contacts")]
-    public Contacts Contacts { get; set; } = null!; //
+    [Required]
+    public Contacts Contacts { get; set; } = null!; 
 
     [BsonElement("reviews")]
-    public List<Review> Reviews { get; set; } = new List<Review>(); //
+    public ICollection<Review> Reviews { get; set; } = new HashSet<Review>(); 
 
     [BsonElement("manufactureYear")]
-    public DateTime? ManufactureYear { get; set; } //
+    public DateTime? ManufactureYear { get; set; } 
 
     [BsonElement("minRentLength")]
-    public TimeSpan? MinRentLength { get; set; } //
+    public TimeSpan? MinRentLength { get; set; } 
 
     [BsonElement("capacity")]
-    public int? Capacity { get; set; } //
+    public int? Capacity { get; set; } 
 
     [BsonElement("services")]
-    public List<Service>? Services { get; set; } //
+    public ICollection<Service>? Services { get; set; } 
 
     [BsonElement("halls")]
-    public List<Hall>? Halls { get; set; } //
-
-    [BsonElement("createdAt")]
-    public DateTime CreatedAt { get; set; }
+    public ICollection<Hall>? Halls { get; set; } 
 
     [BsonElement("updatedAt")]
     public DateTime UpdatedAt { get; set; }

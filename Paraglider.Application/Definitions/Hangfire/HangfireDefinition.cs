@@ -3,7 +3,6 @@ using Hangfire.MemoryStorage;
 using Paraglider.API.BackgroundProcessing.ReccuringJobs.Gorko;
 using Paraglider.API.Definitions.Base;
 using Paraglider.Clients.Gorko;
-using Paraglider.Domain.NoSQL.ValueObjects;
 
 namespace Paraglider.API.Definitions.Hangfire;
 
@@ -26,7 +25,7 @@ public class HangfireDefinition : AppDefinition
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
     {
         app.UseHangfireDashboard();
-
-        RecurringJob.AddOrUpdate<GorkoReccuringJob>("gorko", service => service.RunAsync(), Cron.Minutely);
+        BackgroundJob.Enqueue<GorkoReccuringJob>(_ => _.RunAsync());
+        //RecurringJob.AddOrUpdate<GorkoReccuringJob>("gorko", service => service.RunAsync(), Cron.Daily);
     }
 }

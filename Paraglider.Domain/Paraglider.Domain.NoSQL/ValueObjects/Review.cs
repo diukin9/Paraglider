@@ -15,7 +15,4 @@ public class Review
 
     [BsonElement("evaluation")]
     public double Evaluation { get; set; }
-
-    [BsonElement("date")]
-    public DateTime Date { get; set; }
 }

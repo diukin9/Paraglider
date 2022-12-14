@@ -6,14 +6,9 @@ internal static class Endpoints
 
     internal static string Users => "v2/users?fields=catalog_media,specs,text";
 
-    internal static Uri UserReviews(long userId)
+    internal static Uri Reviews(long id)
     {
-        return new(BaseUrl, $"v2/users/{userId}/reviews");
-    }
-
-    internal static Uri RestaurantReviews(long restaurantId)
-    {
-        return new(BaseUrl, $"v2/restaurants/{restaurantId}/reviews");
+        return new(BaseUrl, $"v3/venue/{id}?entity[languageId]=1");
     }
 
     internal static string Cars => "v2/cars?fields=media,params,contacts,text";

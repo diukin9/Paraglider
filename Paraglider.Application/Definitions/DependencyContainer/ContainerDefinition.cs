@@ -1,6 +1,4 @@
-﻿using Paraglider.API.BackgroundProcessing.ReccuringJobs.Gorko;
-using Paraglider.API.Definitions.Base;
-using Paraglider.Clients.Gorko;
+﻿using Paraglider.API.Definitions.Base;
 
 namespace Paraglider.API.Definitions.DependencyContainer;
 

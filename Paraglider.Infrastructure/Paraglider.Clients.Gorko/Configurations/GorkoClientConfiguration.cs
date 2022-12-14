@@ -83,7 +83,7 @@ internal class GorkoClientConfiguration : IGorkoClientConfiguration
     
     public IUsersResource Users => CreateConfiguration<User>(Endpoints.Users);
 
-    public IGorkoResource<Role> Roles => CreateConfiguration<Role>(Endpoints.Roles);
+    public IGorkoResource<RoleType> Roles => CreateConfiguration<RoleType>(Endpoints.Roles);
 
     public IGorkoResource<City> Cities => CreateConfiguration<City>(Endpoints.Cities);
     public IGorkoResource<Restaurant> Restaurants => CreateConfiguration<Restaurant>(Endpoints.Restaurants);

@@ -2,5 +2,5 @@
 
 public class Spec
 {
-    public List<Price>? Prices { get; set; }
+    public ICollection<Price>? Prices { get; set; }
 }

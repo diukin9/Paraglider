@@ -20,19 +20,6 @@ public class Hall
     [BsonElement("album")]
     public Album Album { get; set; } = null!;
 
-    private decimal? minimalPrice;
-
     [BsonElement("minPrice")]
-    public decimal? MinimalPrice
-    {
-        get => minimalPrice;
-        set
-        {
-            if (value.HasValue && value.Value < 0)
-            {
-                throw new ArgumentException(ExceptionMessages.CannotBeNegative(nameof(Price)));
-            }
-            minimalPrice = value;
-        }
-    }
+    public decimal? MinimalPrice { get; set; }
 }

@@ -5,7 +5,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <UserSecretsId>a727ca50-8e3b-4f43-b744-20ea4e889ca0</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,10 +16,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Logs\**" />
     <Compile Remove="wwwroot\**" />
+    <Content Remove="Logs\**" />
     <Content Remove="wwwroot\**" />
+    <EmbeddedResource Remove="Logs\**" />
     <EmbeddedResource Remove="wwwroot\**" />
+    <None Remove="Logs\**" />
     <None Remove="wwwroot\**" />
+    <TypeScriptCompile Remove="Logs\**" />
   </ItemGroup>
 
   <ItemGroup>

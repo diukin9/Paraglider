@@ -11,10 +11,4 @@ public class Media
 
     [BsonElement("url")]
     public string Url { get; set; } = null!;
-
-    public Media(MediaType type, string url)
-    {
-        Type = type;
-        Url = url ?? throw new ArgumentNullException(ExceptionMessages.ValueNullOrEmpty(nameof(url)));
-    }
 }

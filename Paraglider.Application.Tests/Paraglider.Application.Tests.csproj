@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Paraglider.Application\Paraglider.API.csproj" />
+    <ProjectReference Include="..\Paraglider.Application\Paraglider.Application.csproj" />
   </ItemGroup>
 
 </Project>

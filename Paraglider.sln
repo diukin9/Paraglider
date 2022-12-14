@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.API", "Paraglider.Application\Paraglider.API.csproj", "{BE68F287-AC03-44D0-A277-F91DC5AB9D72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Application", "Paraglider.Application\Paraglider.Application.csproj", "{BE68F287-AC03-44D0-A277-F91DC5AB9D72}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{325F9549-2FBC-4574-9999-9CC84452AC6B}"
 EndProject
@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.MailService", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Domain.Common", "Paraglider.Domain\Paraglider.Domain.Common\Paraglider.Domain.Common.csproj", "{5F3685B6-D95D-4EF8-AB51-02DDC4D60D1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Paraglider.API.Tests", "Paraglider.Application.Tests\Paraglider.API.Tests.csproj", "{C57D8E40-F8E7-4C82-8038-4A8199CB100B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Application.Tests", "Paraglider.Application.Tests\Paraglider.Application.Tests.csproj", "{C57D8E40-F8E7-4C82-8038-4A8199CB100B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

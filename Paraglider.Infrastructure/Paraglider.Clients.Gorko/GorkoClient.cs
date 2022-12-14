@@ -44,7 +44,7 @@ public class GorkoClient
             .Users
             .WithRole(userRole);
 
-        return FillWithReviews(ComponentType.User, usersResource, perPage, page, cityId);
+        return FillWithReviews(usersResource, perPage, page, cityId);
     }
 
     public IAsyncEnumerable<Restaurant> GetRestaurantsAsync(int perPage = 10,
@@ -54,11 +54,10 @@ public class GorkoClient
         var restaurantResource = BuildRequestFor()
             .Restaurants;
 
-        return FillWithReviews(ComponentType.Restaurant, restaurantResource, perPage, page, cityId);
+        return FillWithReviews(restaurantResource, perPage, page, cityId);
     }
 
     private async IAsyncEnumerable<T> FillWithReviews<T>(
-        ComponentType type,
         IGorkoResource<T> resource,
         int perPage,
         int page,
@@ -67,32 +66,25 @@ public class GorkoClient
         if (cityId != null)
             resource = resource.FilterBy(e => e.CityId, cityId);
 
-        var response = await resource
-            .WithPaging(new PagingParameters(page, perPage))
-            .GetResult();
+        resource = resource.WithPaging(new PagingParameters(page, perPage));
+
+        var response = await resource.GetResult();
 
         if (!response.IsSuccessful)
             yield break;
 
         foreach (var item in response.Value!.Items)
         {
-            item.Reviews = await GetReviews(type, item.Id);
+            item.Reviews = await GetReviews(item.Id);
             yield return item;
         }
     }
 
-    private async Task<List<Review>> GetReviews(ComponentType type, long? id)
+    private async Task<ICollection<Review>?> GetReviews(long? id)
     {
-        if (id == null)
-            return new List<Review>();
-        
-        var request = type switch
-        {
-            ComponentType.User => Endpoints.UserReviews(id.Value),
-            ComponentType.Restaurant => Endpoints.RestaurantReviews(id.Value),
-            _ => throw new NotImplementedException()
-        };
+        if (id == null) return new List<Review>();
 
+        var request = Endpoints.Reviews(id.Value);
         var response = await httpClient.GetAsync(request);
 
         try
@@ -100,15 +92,17 @@ public class GorkoClient
             var json = await response.Content.ReadAsStringAsync();
             var jsonObject = JObject.Parse(json);
 
-            var reviews = jsonObject["reviews"]
-                ?.Select(x => x.ToObject<Review>())
-                .ToList() ?? new List<Review?>();
+            var entity = jsonObject["entity"]!.Children().Single();
 
-            return reviews!;
+            var reviews = entity.Values(key: "review")
+                .Select(x => x.ToObject<ICollection<Review>>())
+                .Single();
+
+            return reviews;
         }
         catch
         {
-            return null!;
+            return new HashSet<Review>();
         }
     }
 }

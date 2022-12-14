@@ -10,9 +10,6 @@ public enum UserRole
     Decorator = 12,
     Catering = 18,
     Cake = 23,
-    BanquetHall = 28,
     OutsideReceptionist = 30,
     PhotoStudio = 35
-
-
 }
