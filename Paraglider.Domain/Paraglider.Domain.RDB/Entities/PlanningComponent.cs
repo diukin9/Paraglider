@@ -2,10 +2,10 @@
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class PlanningComponent : IIdentified
+public class PlanningComponent : IIdentified<Guid>
 {
     public Guid Id { get; set; }
-    public Guid ComponentId { get; set; }
+    public string ComponentId { get; set; } = null!;
 
     public Guid CategoryId { get; set; }
     public virtual Category Category { get; set; } = null!;

@@ -15,4 +15,16 @@ public static class StringHelper
 
         return $"{provider}-{externalId}";
     }
+
+    public static bool CompareLetters(string? first, string? second)
+    {
+        if (first is null || second is null) return false;
+        var format = (string str) => GetLetters(str).ToUpper().Normalize();
+        return format(first) == format(second);
+    }
+
+    private static string GetLetters(string str)
+    {
+        return new string(str.Where(c => char.IsLetter(c)).ToArray());
+    }
 }

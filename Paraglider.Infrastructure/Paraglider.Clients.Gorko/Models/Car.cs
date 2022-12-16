@@ -11,11 +11,11 @@ public class Car : IHaveId
 
     public string? Text { get; set; }
 
-    public IReadOnlyCollection<CatalogMedia>? Media { get; set; }
+    public ICollection<CatalogMedia>? Media { get; set; }
 
     [JsonProperty("params")] public CarParameters? Parameters { get; set; }
 
-    public IReadOnlyCollection<Contact>? Contacts { get; set; }
+    public ICollection<Contact>? Contacts { get; set; }
 
 
     public long? CityId => City?.Id;

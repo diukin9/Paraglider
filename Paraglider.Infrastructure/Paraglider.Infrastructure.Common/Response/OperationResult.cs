@@ -1,8 +1,7 @@
-using Paraglider.Infrastructure.Common.Response;
 using System.ComponentModel.DataAnnotations;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.Infrastructure.Common;
+namespace Paraglider.Infrastructure.Common.Response;
 
 /// <summary>
 ///     Generic operation result for any requests for Web API service and some MVC actions.

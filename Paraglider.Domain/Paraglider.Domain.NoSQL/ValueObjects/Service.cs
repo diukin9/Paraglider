@@ -1,5 +1,4 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
-using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Domain.NoSQL.ValueObjects;
 
@@ -13,6 +12,5 @@ public class Service
 
     [BsonElement("price")]
     public Price Price { get; set; } = null!;
-
 }
 

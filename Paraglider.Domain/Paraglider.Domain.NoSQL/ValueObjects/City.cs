@@ -8,5 +8,5 @@ public class City
     public Guid Id { get; set; }
 
     [BsonElement("name")]
-    public string? Name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 }

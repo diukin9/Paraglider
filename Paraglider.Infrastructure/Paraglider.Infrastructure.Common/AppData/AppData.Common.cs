@@ -14,9 +14,9 @@ public static partial class AppData
     public const string RedirectPasswordResetPath = "/";
 
     public const string DefaultCityName = "Москва";
+    public const string DefaultUserName = "Анонимный пользователь";
 
-    //TODO найти базовый аватар
-    public const string DefaultAvatarUrl = "url";
+    public const string DefaultAvatarUrl = "https://ie.wampi.ru/2022/12/14/Avatarc84d942c6fb6b199.png";
 
     public const string MongoIdName = "_id";
 }

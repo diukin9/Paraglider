@@ -21,64 +21,78 @@ public class GorkoClient
         return new GorkoClientConfiguration(httpClient);
     }
 
-    public IAsyncEnumerable<User> GetUsersAsync(UserRole userRole,
+    public async Task<PagedResult<City>?> GetCitiesAsync(int perPage = 10, int page = 1)
+    {
+        var request = BuildRequestFor().Cities.WithPaging(new PagingParameters(page, perPage));
+        var response = await request.GetResultAsync();
+        return response.IsSuccessful ? response.Value : default;
+    }
+
+    public async Task<PagedResult<User>?> GetUsersAsync(
+        UserRole userRole,
         int perPage = 10,
         int page = 1,
-        int? cityId = null)
+        long? cityId = null)
     {
-        var usersResource = BuildRequestFor()
-            .Users
-            .WithRole(userRole);
-
-        return FillWithReviews(usersResource, perPage, page, cityId);
+        var request = BuildRequestFor().Users.WithRole(userRole);
+        return await FillWithReviewsAsync(request, perPage, page, cityId);
     }
 
-    public IAsyncEnumerable<Restaurant> GetRestaurantsAsync(int perPage = 10,
+    public async Task<PagedResult<Restaurant>?> GetRestaurantsAsync(
+        int perPage = 10,
         int page = 1,
-        int? cityId = null)
+        long? cityId = null)
     {
-        var restaurantResource = BuildRequestFor()
-            .Restaurants;
-
-        return FillWithReviews(restaurantResource, perPage, page, cityId);
+        var request = BuildRequestFor().Restaurants;
+        return await FillWithReviewsAsync(request, perPage, page, cityId);
     }
 
-    private async IAsyncEnumerable<T> FillWithReviews<T>(IGorkoResource<T> resource,
+    private async Task<PagedResult<T>?> FillWithReviewsAsync<T>(
+        IGorkoResource<T> request,
         int perPage,
         int page,
-        int? cityId) where T : IHaveId, IHaveReviews, IHaveCityId
+        long? cityId) where T : IHaveId, IHaveReviews, IHaveCityId
     {
         if (cityId != null)
-            resource = resource.FilterBy(e => e.CityId, cityId);
-
-        var restaurants = await resource
-            .WithPaging(new PagingParameters(page, perPage))
-            .GetResult();
-
-        if (!restaurants.IsSuccessful)
-            yield break;
-
-        foreach (var restaurant in restaurants.Value!.Items)
         {
-            restaurant.Reviews = await GetReviews(restaurant.Id);
-            yield return restaurant;
+            request = request.FilterBy(e => e.CityId, cityId);
         }
+
+        request = request.WithPaging(new PagingParameters(page, perPage));
+        var response = await request.GetResultAsync();
+
+        if (!response.IsSuccessful) return default;
+
+        foreach (var item in response.Value!.Items)
+        {
+            item.Reviews = await GetReviewsAsync(item.Id);
+        }
+
+        return response.Value;
     }
 
-    private async Task<List<Review>> GetReviews(long? id)
+    private async Task<ICollection<Review>?> GetReviewsAsync(long? id)
     {
-        if (id == null)
-            return new List<Review>();
-        
-        var response = await httpClient.GetAsync(Endpoints.RestaurantReviews(id.Value));
+        if (id == null) return new HashSet<Review>();
 
-        var json = await response.Content.ReadAsStringAsync();
-        var jsonObject = JObject.Parse(json);
+        var request = Endpoints.Reviews(id.Value);
+        var response = await httpClient.GetAsync(request);
 
-        var reviews = jsonObject["reviews"]
-            ?.Select(x => x.ToObject<Review>())
-            .ToList() ?? new List<Review?>();
+        try
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var jObject = JObject.Parse(json);
+            var entity = jObject["entity"]!.Children().Single();
 
-        return reviews!;
+            var reviews = entity.Values(key: "review")
+                .Select(x => x.ToObject<ICollection<Review>>())
+                .Single();
+
+            return reviews;
+        }
+        catch
+        {
+            return new HashSet<Review>();
+        }
     }
 }
