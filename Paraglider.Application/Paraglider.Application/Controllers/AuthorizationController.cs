@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Paraglider.Application.Features.Account.Commands;
 using Paraglider.Application.Features.Authorization.Commands;
 using Paraglider.Application.Features.Users.Queries;
-using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Response;
 
 namespace Paraglider.Application.Controllers;
@@ -20,7 +19,7 @@ public class AuthorizationController : Controller
 
     [HttpPost]
     [AllowAnonymous]
-    [Route("/api/basic-auth")]
+    [Route("basic-auth")]
     public async Task<IActionResult> BasicAuthorization([FromBody] BasicAuthRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
@@ -29,7 +28,7 @@ public class AuthorizationController : Controller
 
     [HttpPost]
     [Authorize]
-    [Route("/api/logout")]
+    [Route("logout")]
     public async Task<IActionResult> Logout()
     {
         var response = await _mediator.Send(new LogoutRequest(), HttpContext.RequestAborted);
@@ -38,7 +37,7 @@ public class AuthorizationController : Controller
 
     [HttpGet]
     [AllowAnonymous]
-    [Route("/external-auth")]
+    [Route("external-auth")]
     public async Task<IActionResult> VerifyUserAuthentication(
         [FromQuery] string provider, 
         [FromQuery] string returnUrl)
@@ -53,7 +52,7 @@ public class AuthorizationController : Controller
     }
 
     [AllowAnonymous]
-    [Route("/external-auth-handler")]
+    [Route("external-auth-handler")]
     [ApiExplorerSettings(IgnoreApi = true)]
     public async Task<IActionResult> ExternalAuthorization(
         [FromQuery] string remoteError, 

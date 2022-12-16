@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.Application.Features.Categories.Queries;
+using Paraglider.Application.Features.Planning.Commands;
 
 namespace Paraglider.Application.Controllers;
 
