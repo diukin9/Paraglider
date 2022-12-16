@@ -8,7 +8,7 @@ namespace Paraglider.Application.Controllers;
 [Authorize]
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}/planning")]
+[Route("api/v{version:apiVersion}/user/planning")]
 public class PlanningController : ControllerBase
 {
     private readonly IMediator _mediator;

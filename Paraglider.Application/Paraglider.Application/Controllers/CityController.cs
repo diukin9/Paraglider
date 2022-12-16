@@ -17,7 +17,7 @@ public class CityController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetCitiesQuery(), cancellationToken);
         return response.IsOk ? Ok(response.Metadata) : BadRequest(response.Metadata);
