@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Hangfire.MemoryStorage;
+using Paraglider.Application.BackgroundJobs;
 using Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko;
 using Paraglider.Application.Definitions.Base;
 using Paraglider.Clients.Gorko;
@@ -25,22 +26,15 @@ public class HangfireDefinition : AppDefinition
                 .UseMemoryStorage(options));
 
             services.AddHangfireServer();
-
-            services.AddSingleton<GorkoClient>();
-            services.AddScoped<ImportComponentsFromGorkoReccuringJob>();
         }
     }
 
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)
     {
-        if (Convert.ToBoolean(app.Configuration["Hangfire:UseInterface"]))
+        if (Convert.ToBoolean(app.Configuration["Hangfire:UseHangfire"]))
         {
             app.UseHangfireDashboard();
+            QueueTasks.Run();
         }
-
-        RecurringJob.AddOrUpdate<ImportComponentsFromGorkoReccuringJob>(
-            Source.Gorko.ToString(),
-            service => service.RunAsync(),
-            "* 0 * * *");
     }
 }
