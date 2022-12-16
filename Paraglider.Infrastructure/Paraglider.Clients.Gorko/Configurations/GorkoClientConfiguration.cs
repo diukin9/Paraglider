@@ -18,7 +18,6 @@ internal class GorkoClientConfiguration<T> :
 {
     private readonly Uri uri;
 
-
     internal GorkoClientConfiguration(HttpClient httpClient, Uri uri) : base(httpClient)
     {
         this.uri = uri;

@@ -1,5 +1,5 @@
 ﻿using Paraglider.Domain.RDB.Enums;
-using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Paraglider.Domain.RDB.Entities;

@@ -1,6 +1,6 @@
-﻿using Paraglider.Application.Definitions.Base;
-using Serilog;
+﻿using Serilog;
 using Serilog.Events;
+using Paraglider.Infrastructure.Common.AppDefinition;
 
 try
 {

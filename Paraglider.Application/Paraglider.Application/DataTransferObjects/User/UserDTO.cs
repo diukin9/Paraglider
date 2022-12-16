@@ -1,5 +1,5 @@
 ﻿using Paraglider.Application.DataTransferObjects;
-using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Application.DataTransferObjects;
 

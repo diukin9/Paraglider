@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.RDB.Entities;
 

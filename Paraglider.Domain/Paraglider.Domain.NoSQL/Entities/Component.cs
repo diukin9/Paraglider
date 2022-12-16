@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using Paraglider.Domain.NoSQL.Enums;
 using Paraglider.Domain.NoSQL.ValueObjects;
-using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.NoSQL.Entities;
 

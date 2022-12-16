@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Interfaces;
 using System.Linq.Expressions;
 
 namespace Paraglider.Infrastructure.Common.MongoDB;
