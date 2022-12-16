@@ -20,7 +20,8 @@ internal static class HttpClientExtensions
                 JsonConvert.DeserializeObject<TResponse>(await response.Content.ReadAsStringAsync(),
                     new JsonSerializerSettings
                     {
-                        ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()}
+                        ContractResolver = new DefaultContractResolver {NamingStrategy = new SnakeCaseNamingStrategy()},
+                        Error = (obj, args) => args.ErrorContext.Handled = true
                     });
             return Result<TResponse?>.Ok(deserializedResult);
         }

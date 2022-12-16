@@ -2,7 +2,7 @@
 using Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
 using Paraglider.Domain.RDB.Entities;
 
-namespace Paraglider.Data;
+namespace Paraglider.Data.EntityFrameworkCore;
 
 public class ApplicationDbContext : DbContextBase
 {

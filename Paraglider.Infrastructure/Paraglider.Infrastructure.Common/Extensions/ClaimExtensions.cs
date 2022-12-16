@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Paraglider.Infrastructure.Extensions;
+namespace Paraglider.Infrastructure.Common.Extensions;
 
 public static class ClaimExtensions
 {

@@ -3,6 +3,7 @@ using MimeKit;
 using MimeKit.Text;
 using Paraglider.MailService.Enums;
 using Paraglider.MailService.Models;
+using Paraglider.MailService.StaticData;
 
 namespace Paraglider.MailService;
 

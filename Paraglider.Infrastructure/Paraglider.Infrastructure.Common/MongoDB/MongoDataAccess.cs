@@ -83,6 +83,19 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
         return result.IsAcknowledged;
     }
 
+    public async Task<bool> PartialUpdateAsync<TField>(
+        Expression<Func<TEntity, bool>> filter,
+        Expression<Func<TEntity, TField>> update,
+        TField value)
+    {
+        var filterDefinition = Builders<TEntity>.Filter.Where(filter);
+        var updateDefinition = Builders<TEntity>.Update.Set(update, value);
+
+        var result = await _collection.UpdateOneAsync(filterDefinition, updateDefinition);
+
+        return result.IsAcknowledged;
+    }
+
     public async Task RemoveAsync(string id)
     {
         await _collection.DeleteOneAsync(x => x.Id == id);

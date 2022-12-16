@@ -1,5 +1,5 @@
-﻿using Paraglider.Domain.RDB.Entities;
-using Paraglider.Domain.RDB.Enums;
+﻿using Paraglider.Domain.Common.Enums;
+using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;

@@ -27,6 +27,11 @@ public interface IMongoDataAccess<TEntity> where TEntity : class, IIdentified<st
 
     Task<bool> UpdateAsync(TEntity value);
 
+    Task<bool> PartialUpdateAsync<TField>(
+        Expression<Func<TEntity, bool>> filter,
+        Expression<Func<TEntity, TField>> update,
+        TField value);
+
     Task RemoveAsync(string id);
 
     Task RemoveAsync(TEntity entity);

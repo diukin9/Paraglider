@@ -1,4 +1,4 @@
-﻿using Paraglider.Domain.RDB.Enums;
+﻿using Paraglider.Domain.Common.Enums;
 using Paraglider.Infrastructure.Common.Abstractions;
 
 namespace Paraglider.Domain.RDB.Entities;

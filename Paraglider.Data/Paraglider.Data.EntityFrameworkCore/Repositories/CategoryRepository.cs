@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
+using Paraglider.Domain.Common.Enums;
 using Paraglider.Domain.RDB.Entities;
-using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common.Abstractions;
 using System.Linq.Expressions;
 

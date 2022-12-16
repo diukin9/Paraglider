@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Application", "Paraglider.Application\Paraglider.Application.csproj", "{BE68F287-AC03-44D0-A277-F91DC5AB9D72}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{325F9549-2FBC-4574-9999-9CC84452AC6B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{F003D42D-2584-4DF3-A823-2C16F90A1D2D}"
@@ -27,7 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.MailService", "P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Domain.Common", "Paraglider.Domain\Paraglider.Domain.Common\Paraglider.Domain.Common.csproj", "{5F3685B6-D95D-4EF8-AB51-02DDC4D60D1B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Application.Tests", "Paraglider.Application.Tests\Paraglider.Application.Tests.csproj", "{C57D8E40-F8E7-4C82-8038-4A8199CB100B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Application", "Paraglider.Application\Paraglider.Application\Paraglider.Application.csproj", "{155E2D44-16D1-4D90-9BDA-9D2677A67D1F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Application.Tests", "Paraglider.Application\Paraglider.Application.Tests\Paraglider.Application.Tests.csproj", "{880D0B58-2DFC-4EEC-9E5F-E3E63C255C27}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{F0D28167-A945-4C92-B4FE-D57811050874}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Paraglider.Application.BackgroundJobs", "Paraglider.Application\Paraglider.Application.BackgroundJobs\Paraglider.Application.BackgroundJobs.csproj", "{E13451D5-767F-4ABD-833B-4695ED5D9892}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +39,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE68F287-AC03-44D0-A277-F91DC5AB9D72}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46BBE932-E92E-45C4-B44E-52C1C41F4EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46BBE932-E92E-45C4-B44E-52C1C41F4EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46BBE932-E92E-45C4-B44E-52C1C41F4EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,10 +71,18 @@ Global
 		{5F3685B6-D95D-4EF8-AB51-02DDC4D60D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F3685B6-D95D-4EF8-AB51-02DDC4D60D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F3685B6-D95D-4EF8-AB51-02DDC4D60D1B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C57D8E40-F8E7-4C82-8038-4A8199CB100B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C57D8E40-F8E7-4C82-8038-4A8199CB100B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C57D8E40-F8E7-4C82-8038-4A8199CB100B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C57D8E40-F8E7-4C82-8038-4A8199CB100B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{155E2D44-16D1-4D90-9BDA-9D2677A67D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{155E2D44-16D1-4D90-9BDA-9D2677A67D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{155E2D44-16D1-4D90-9BDA-9D2677A67D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{155E2D44-16D1-4D90-9BDA-9D2677A67D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{880D0B58-2DFC-4EEC-9E5F-E3E63C255C27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{880D0B58-2DFC-4EEC-9E5F-E3E63C255C27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{880D0B58-2DFC-4EEC-9E5F-E3E63C255C27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{880D0B58-2DFC-4EEC-9E5F-E3E63C255C27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E13451D5-767F-4ABD-833B-4695ED5D9892}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E13451D5-767F-4ABD-833B-4695ED5D9892}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E13451D5-767F-4ABD-833B-4695ED5D9892}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E13451D5-767F-4ABD-833B-4695ED5D9892}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,6 +96,9 @@ Global
 		{A4CCA9CB-78B1-4ABA-A8F5-2CFCC799DA77} = {C44F003B-047B-42FE-A1BC-AD909372308A}
 		{791E9ABD-446A-4F43-9DD6-1AA8DEF0A62D} = {C44F003B-047B-42FE-A1BC-AD909372308A}
 		{5F3685B6-D95D-4EF8-AB51-02DDC4D60D1B} = {325F9549-2FBC-4574-9999-9CC84452AC6B}
+		{155E2D44-16D1-4D90-9BDA-9D2677A67D1F} = {F0D28167-A945-4C92-B4FE-D57811050874}
+		{880D0B58-2DFC-4EEC-9E5F-E3E63C255C27} = {F0D28167-A945-4C92-B4FE-D57811050874}
+		{E13451D5-767F-4ABD-833B-4695ED5D9892} = {F0D28167-A945-4C92-B4FE-D57811050874}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F4D5E558-541B-4569-BAF2-341EEDD5C1EE}

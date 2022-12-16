@@ -21,68 +21,59 @@ public class GorkoClient
         return new GorkoClientConfiguration(httpClient);
     }
 
-    public async IAsyncEnumerable<City> GetCitiesAsync(int perPage = 10, int page = 1)
+    public async Task<PagedResult<City>?> GetCitiesAsync(int perPage = 10, int page = 1)
     {
-        var cities = await BuildRequestFor().Cities
-            .WithPaging(new PagingParameters(page, perPage))
-            .GetResult();
-
-        if (!cities.IsSuccessful) yield break;
-
-        foreach (var city in cities.Value!.Items)
-        {
-            yield return city;
-        }
+        var request = BuildRequestFor().Cities.WithPaging(new PagingParameters(page, perPage));
+        var response = await request.GetResultAsync();
+        return response.IsSuccessful ? response.Value : default;
     }
 
-    public IAsyncEnumerable<User> GetUsersAsync(UserRole userRole,
+    public async Task<PagedResult<User>?> GetUsersAsync(
+        UserRole userRole,
         int perPage = 10,
         int page = 1,
         long? cityId = null)
     {
-        var usersResource = BuildRequestFor()
-            .Users
-            .WithRole(userRole);
-
-        return FillWithReviews(usersResource, perPage, page, cityId);
+        var request = BuildRequestFor().Users.WithRole(userRole);
+        return await FillWithReviewsAsync(request, perPage, page, cityId);
     }
 
-    public IAsyncEnumerable<Restaurant> GetRestaurantsAsync(int perPage = 10,
+    public async Task<PagedResult<Restaurant>?> GetRestaurantsAsync(
+        int perPage = 10,
         int page = 1,
         long? cityId = null)
     {
-        var restaurantResource = BuildRequestFor()
-            .Restaurants;
-
-        return FillWithReviews(restaurantResource, perPage, page, cityId);
+        var request = BuildRequestFor().Restaurants;
+        return await FillWithReviewsAsync(request, perPage, page, cityId);
     }
 
-    private async IAsyncEnumerable<T> FillWithReviews<T>(
-        IGorkoResource<T> resource,
+    private async Task<PagedResult<T>?> FillWithReviewsAsync<T>(
+        IGorkoResource<T> request,
         int perPage,
         int page,
         long? cityId) where T : IHaveId, IHaveReviews, IHaveCityId
     {
         if (cityId != null)
-            resource = resource.FilterBy(e => e.CityId, cityId);
+        {
+            request = request.FilterBy(e => e.CityId, cityId);
+        }
 
-        resource = resource.WithPaging(new PagingParameters(page, perPage));
+        request = request.WithPaging(new PagingParameters(page, perPage));
+        var response = await request.GetResultAsync();
 
-        var response = await resource.GetResult();
-
-        if (!response.IsSuccessful)
-            yield break;
+        if (!response.IsSuccessful) return default;
 
         foreach (var item in response.Value!.Items)
         {
-            item.Reviews = await GetReviews(item.Id);
-            yield return item;
+            item.Reviews = await GetReviewsAsync(item.Id);
         }
+
+        return response.Value;
     }
 
-    private async Task<ICollection<Review>?> GetReviews(long? id)
+    private async Task<ICollection<Review>?> GetReviewsAsync(long? id)
     {
-        if (id == null) return new List<Review>();
+        if (id == null) return new HashSet<Review>();
 
         var request = Endpoints.Reviews(id.Value);
         var response = await httpClient.GetAsync(request);
@@ -90,9 +81,8 @@ public class GorkoClient
         try
         {
             var json = await response.Content.ReadAsStringAsync();
-            var jsonObject = JObject.Parse(json);
-
-            var entity = jsonObject["entity"]!.Children().Single();
+            var jObject = JObject.Parse(json);
+            var entity = jObject["entity"]!.Children().Single();
 
             var reviews = entity.Values(key: "review")
                 .Select(x => x.ToObject<ICollection<Review>>())

@@ -58,10 +58,9 @@ internal class GorkoClientConfiguration<T> :
             .AddQueryParameter("page", pagingParameters.PageNumber.ToString()));
     }
 
-    public async Task<Result<PagedResult<T>?>> GetResult()
+    public async Task<Result<PagedResult<T>?>> GetResultAsync()
     {
         var result = await HttpClient.GetAsync<PagedResult<T>>(uri);
-
         return result;
     }
 
