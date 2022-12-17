@@ -1,6 +1,6 @@
 ﻿namespace Paraglider.Domain.RDB.Enums;
 
-public enum ComponentStatus
+public enum AgreementStatus
 {
     PreSelection,
     Agreed,

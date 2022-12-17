@@ -20,14 +20,14 @@ public class ComponentController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+    [HttpGet("components")]
     public async Task<IActionResult> Get([FromQuery] GetComponentsRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response) : BadRequest(response);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("components/{id}")]
     public async Task<IActionResult> GetById([FromRoute] string id)
     {
         var response = await _mediator.Send(new GetComponentByIdRequest(id), HttpContext.RequestAborted);

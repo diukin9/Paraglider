@@ -3,10 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.DataTransferObjects;
 
-public class ContactsDTO : IDataTransferObject
+public class TimeIntervalDTO : IDataTransferObject
 {
-    public ICollection<string> PhoneNumbers { get; set; } = null!;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public TimeOnly? IntervalStart { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ICollection<string>? Emails { get; set; }
+    public TimeOnly? IntervalEnd { get; set; }
 }

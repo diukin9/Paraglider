@@ -2,7 +2,7 @@
 
 namespace Paraglider.Application.DataTransferObjects;
 
-public record UserPatchDTO : IDataTransferObject
+public class UserPatchDTO : IDataTransferObject
 {
     public string? FirstName { get; init; }
     public string? Surname { get; init; }

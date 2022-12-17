@@ -14,8 +14,9 @@ namespace Paraglider.Application.Features.Components.Queries;
 
 public class GetComponentsRequest : IRequest<OperationResult<IEnumerable<ComponentDTO>>>
 {
-    [Required, NotEmptyGuid] public Guid CategoryId { get; set; } //TODO сделать верхнюю границу для пагинации
-    [NotNegative] public int? PerPage { get; set; } = 15;
+    [Required, NotEmptyGuid] public Guid CategoryId { get; set; }
+    [Required, NotEmptyGuid] public Guid CityId { get; set; }
+    [Range(1, 100)] public int? PerPage { get; set; } = 15;
     [NotNegative] public int? Page { get; set; } = 1;
     [IsSortingKey(typeof(ComponentSorterKey))] public string? SortingKey { get; set; }
 }
@@ -47,7 +48,7 @@ public class GetComponentsQueryHandler
 
         //получаем компоненты
         var components = await _components.FindAsync(
-            filter: x => x.Category.Id == request.CategoryId,
+            filter: x => x.Category.Id == request.CategoryId && x.City.Id == request.CityId,
             // TODO доделать сортировку sort: x => ...
             skip: request.PerPage!.Value * request.Page!.Value - request.PerPage!.Value,
             limit: request.PerPage.Value);

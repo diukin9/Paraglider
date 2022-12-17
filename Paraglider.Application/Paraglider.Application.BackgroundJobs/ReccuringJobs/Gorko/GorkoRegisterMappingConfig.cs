@@ -124,7 +124,12 @@ public class GorkoRegisterMappingConfig : IRegister
                 .ToList())
             .Map(x => x.PhoneNumbers, y =>
                 y.Where(x => x.Key == GorkoStaticData.PhoneNumber && !string.IsNullOrEmpty(x.Value))
-                .Select(x => x.Value!.ToPhoneNumberPattern())
+                .Select(x => x.Value!.ToPhoneNumberOrDefault())
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToList())
+            .Map(x => x.Messengers, y => y.
+                Where(x => !string.IsNullOrEmpty(x.Value) 
+                    && (x.Key == GorkoStaticData.Telegram || x.Key == GorkoStaticData.WhatsApp))
                 .ToList());
 
         config.NewConfig<Domain.RDB.Entities.Category, Domain.NoSQL.ValueObjects.Category>()

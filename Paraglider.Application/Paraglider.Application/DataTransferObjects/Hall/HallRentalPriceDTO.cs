@@ -1,13 +1,13 @@
-﻿using Newtonsoft.Json;
-using Paraglider.Infrastructure.Common.Interfaces;
+﻿using Paraglider.Infrastructure.Common.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.DataTransferObjects;
 
 public class HallRentalPriceDTO : IDataTransferObject
 {
-    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public decimal? PricePerPerson { get; set; }
 
-    [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public decimal? RentalPrice { get; set; }
 }
