@@ -14,7 +14,8 @@ public class DependencyContainerDefinition : AppDefinition
         services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
 
         services.AddSingleton<GorkoClient>();
-        services.AddScoped<ImportComponentsFromGorkoReccuringJob>();
+        services.AddScoped<ImportComponentsFromGorkoRecurringJob>();
+        services.AddScoped<UpdateComponentPopularityDataRecurringJob>();
 
         var mailSettings = new MailSettings();
         configuration.Bind(nameof(MailSettings), mailSettings);

@@ -8,9 +8,14 @@ public static class QueueTasks
 {
     public static void Run()
     {
-        RecurringJob.AddOrUpdate<ImportComponentsFromGorkoReccuringJob>(
-            Source.Gorko.ToString(),
-            service => service.RunAsync(),
-            "* 0 * * *");
+        RecurringJob.AddOrUpdate<ImportComponentsFromGorkoRecurringJob>(
+            methodCall: service => service.RunAsync(),
+            cronExpression: "* 0 * * *",
+            queue: Source.Gorko.ToString().ToLower());
+
+        RecurringJob.AddOrUpdate<UpdateComponentPopularityDataRecurringJob>(
+            methodCall: service => service.RunAsync(),
+            cronExpression: "0 * * * *",
+            queue: Source.Gorko.ToString().ToLower());
     }
 }

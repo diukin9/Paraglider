@@ -9,14 +9,21 @@ public class ApplicationDbContext : DbContextBase
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
     public DbSet<ExternalAuthInfo> ExternalAuthInfo { get; set; } = null!;
+
     public DbSet<City> Cities { get; set; } = null!;
-    public DbSet<UserComponent> UserComponents { get; set; } //
+
+    public DbSet<UserComponent> UserComponents { get; set; }
 
     public DbSet<Planning> Plannings { get; set; } = null!;
-    public DbSet<Category> Categories { get; set; } = null!;
-    public DbSet<PlanningComponent> PlanningComponents { get; set; } = null!; //
 
-    public DbSet<ComponentDesc> ComponentDescs { get; set; } = null!; //
+    public DbSet<Category> Categories { get; set; } = null!;
+
+    public DbSet<PlanningComponent> PlanningComponents { get; set; } = null!;
+
+    public DbSet<ComponentDesc> ComponentDescs { get; set; } = null!; 
+
+    public DbSet<ComponentAdditionHistory> ComponentAdditionHistory { get; set; } = null!;
+
     public DbSet<Payment> Payments { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder builder)

@@ -18,8 +18,8 @@ using System.Data;
 
 namespace Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko;
 
-public class ImportComponentsFromGorkoReccuringJob 
-    : BaseReccuringJob<ImportComponentsFromGorkoReccuringJob>
+public class ImportComponentsFromGorkoRecurringJob 
+    : BaseReccuringJob<ImportComponentsFromGorkoRecurringJob>
 {
     private const int PER_PAGE = 20;
 
@@ -33,7 +33,7 @@ public class ImportComponentsFromGorkoReccuringJob
     private readonly UserValidator _userValidator = new();
     private readonly RestaurantValidator _restaurantValidator = new();
 
-    public ImportComponentsFromGorkoReccuringJob(
+    public ImportComponentsFromGorkoRecurringJob(
         GorkoClient gorkoClient,
         ICityRepository cityRepository,
         ICategoryRepository categoryRepository,
@@ -175,7 +175,7 @@ public class ImportComponentsFromGorkoReccuringJob
             component.Category = _mapper.Map<Domain.NoSQL.ValueObjects.Category>(category!);
             component.City = _mapper.Map<Domain.NoSQL.ValueObjects.City>(city!);
 
-            return await SetComponentStatus(component);
+            return await RestoreNecessaryData(component);
         }
         catch (Exception exception)
         {
@@ -184,13 +184,15 @@ public class ImportComponentsFromGorkoReccuringJob
         };
     }
 
-    private async Task<Component> SetComponentStatus(Component component)
+    private async Task<Component> RestoreNecessaryData(Component component)
     {
         var local = await _components.FindByIdAsync(component.Id);
 
         component.Status = local is null
             ? Domain.NoSQL.Enums.ComponentStatus.Announced
             : local.Status;
+
+        component.Popularity = local?.Popularity ?? default;
 
         return component;
     }
