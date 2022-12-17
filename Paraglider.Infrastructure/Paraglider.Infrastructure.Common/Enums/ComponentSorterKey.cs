@@ -2,4 +2,6 @@
 
 public enum ComponentSorterKey
 {
+    Popularity,
+    Rating
 }

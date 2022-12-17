@@ -8,6 +8,8 @@ using Paraglider.Infrastructure.Common.Response;
 
 namespace Paraglider.Application.Controllers;
 
+[ApiController]
+[ApiVersion("1.0")]
 public class AuthorizationController : Controller
 {
     private readonly IMediator _mediator;
