@@ -1,6 +1,5 @@
 ﻿using Hangfire;
 using Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko;
-using Paraglider.Domain.Common.Enums;
 
 namespace Paraglider.Application.BackgroundJobs;
 
@@ -10,12 +9,10 @@ public static class QueueTasks
     {
         RecurringJob.AddOrUpdate<ImportComponentsFromGorkoRecurringJob>(
             methodCall: service => service.RunAsync(),
-            cronExpression: "* 0 * * *",
-            queue: Source.Gorko.ToString().ToLower());
+            cronExpression: "* 0 * * *");
 
         RecurringJob.AddOrUpdate<UpdateComponentPopularityDataRecurringJob>(
             methodCall: service => service.RunAsync(),
-            cronExpression: "0 * * * *",
-            queue: Source.Gorko.ToString().ToLower());
+            cronExpression: "0 * * * *");
     }
 }
