@@ -6,10 +6,7 @@ namespace Paraglider.Data.MongoDB;
 
 public class ComponentDataAccess : MongoDataAccess<Component>
 {
-    private const string COLLECTION_NAME = "wedding-components";
-
-    public ComponentDataAccess(IMongoClient client, IMongoDbSettings settings) 
-        : base(client, settings, COLLECTION_NAME)
+    public ComponentDataAccess(IMongoClient client, IMongoDbSettings settings) : base(client, settings)
     {
 
     }

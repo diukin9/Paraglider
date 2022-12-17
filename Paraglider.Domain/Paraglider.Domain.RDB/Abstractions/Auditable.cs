@@ -1,11 +1,11 @@
-﻿using Paraglider.Infrastructure.Common.Abstractions;
+﻿using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.RDB.Abstractions;
 
 /// <summary>
 /// Represents 'Audit-able' table from the Property Database
 /// </summary>
-public abstract class Auditable : IIdentified, IAuditable
+public abstract class Auditable : IIdentified<Guid>, IAuditable
 {
     public Guid Id { get; set; }
 

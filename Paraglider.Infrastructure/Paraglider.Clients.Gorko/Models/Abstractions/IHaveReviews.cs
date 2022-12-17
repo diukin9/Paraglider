@@ -2,5 +2,5 @@
 
 public interface IHaveReviews
 {
-    public IReadOnlyCollection<Review>? Reviews { get; set; }
+    public ICollection<Review>? Reviews { get; set; }
 }

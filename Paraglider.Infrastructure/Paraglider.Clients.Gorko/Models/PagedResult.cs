@@ -6,38 +6,38 @@ namespace Paraglider.Clients.Gorko.Models;
 [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
 public class PagedResult<T>
 {
-    [JsonIgnore] public IReadOnlyCollection<T> Items { get; set; } = null!;
+    [JsonIgnore] public ICollection<T> Items { get; set; } = null!;
     
     public Meta? Meta { get; set; }
 
     #region setters
-    //костыль для легкого маппинга разных имен в одну коллекцию
+
     [JsonProperty]
-    private IReadOnlyCollection<T> Users
+    private ICollection<T> Users
     {
         set => Items = value;
     }
 
     [JsonProperty]
-    private IReadOnlyCollection<T> Roles
+    private ICollection<T> Roles
     {
         set => Items = value;
     }
 
     [JsonProperty]
-    private IReadOnlyCollection<T> Cities
+    private ICollection<T> Cities
     {
         set => Items = value;
     }
     
     [JsonProperty]
-    private IReadOnlyCollection<T> Cars
+    private ICollection<T> Cars
     {
         set => Items = value;
     }
 
     [JsonProperty]
-    private IReadOnlyCollection<T> Restaurants
+    private ICollection<T> Restaurants
     {
         set => Items = value;
     }

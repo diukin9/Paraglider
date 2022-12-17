@@ -11,5 +11,5 @@ public interface IGorkoResource<T>
 
     IGorkoResource<T> WithPaging(PagingParameters pagingParameters);
 
-    Task<Result<PagedResult<T>?>> GetResult();
+    Task<Result<PagedResult<T>?>> GetResultAsync();
 }

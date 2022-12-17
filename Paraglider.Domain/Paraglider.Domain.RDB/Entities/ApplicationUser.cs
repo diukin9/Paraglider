@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.RDB.Entities;
 
@@ -15,6 +15,6 @@ public class ApplicationUser : IdentityUser<Guid>, IAggregateRoot
     public Guid PlanningId { get; set; }
     public virtual Planning Planning { get; set; } = null!;
 
-    public virtual List<UserComponent> Favourites { get; set; } = new List<UserComponent>();
-    public virtual List<ExternalAuthInfo> ExternalAuthInfo { get; set; } = new List<ExternalAuthInfo>();
+    public virtual ICollection<UserComponent> Favourites { get; set; } = new List<UserComponent>();
+    public virtual ICollection<ExternalAuthInfo> ExternalAuthInfo { get; set; } = new List<ExternalAuthInfo>();
 }

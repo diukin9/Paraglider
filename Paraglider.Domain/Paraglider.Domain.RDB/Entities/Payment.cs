@@ -1,9 +1,9 @@
 ﻿using Paraglider.Domain.RDB.Enums;
-using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class Payment : IIdentified
+public class Payment : IIdentified<Guid>
 {
     public Guid Id { get; set; }
     public DateOnly Date { get; set; }

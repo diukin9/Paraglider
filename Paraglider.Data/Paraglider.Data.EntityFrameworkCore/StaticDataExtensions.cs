@@ -21,4 +21,16 @@ public static class StaticDataExtensions
                 .ThenInclude(x => x.PlanningComponents)
                     .ThenInclude(x => x.Category);
     }
+
+    public static IQueryable<City> IncludeAll(this IQueryable<City> queryable)
+    {
+        return queryable
+            .Include(x => x.Keys);
+    }
+
+    public static IQueryable<Category> IncludeAll(this IQueryable<Category> queryable)
+    {
+        return queryable
+            .Include(x => x.Keys);
+    }
 }

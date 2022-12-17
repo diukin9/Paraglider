@@ -1,4 +1,5 @@
 ﻿using MimeKit.Text;
+using Paraglider.MailService.StaticData;
 
 namespace Paraglider.MailService.Models;
 

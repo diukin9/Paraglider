@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Paraglider.Data;
 
 #nullable disable
 
@@ -326,6 +325,52 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.ToTable("AspNetExternalAuthInfo");
                 });
 
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCategoryKey", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ExternalCategoryKey");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCityKey", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("CityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Source")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CityId");
+
+                    b.ToTable("ExternalCityKey");
+                });
+
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Payment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -377,8 +422,9 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Property<Guid>("ComponentDescId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ComponentId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("ComponentId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("PlanningId")
                         .HasColumnType("uuid");
@@ -398,8 +444,9 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ComponentId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("ComponentId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -541,6 +588,20 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCategoryKey", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Category", null)
+                        .WithMany("Keys")
+                        .HasForeignKey("CategoryId");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCityKey", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.City", null)
+                        .WithMany("Keys")
+                        .HasForeignKey("CityId");
+                });
+
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Payment", b =>
                 {
                     b.HasOne("Paraglider.Domain.RDB.Entities.ComponentDesc", "ComponentDesc")
@@ -587,6 +648,16 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Navigation("ExternalAuthInfo");
 
                     b.Navigation("Favourites");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Category", b =>
+                {
+                    b.Navigation("Keys");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.City", b =>
+                {
+                    b.Navigation("Keys");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ComponentDesc", b =>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Paraglider.Infrastructure.Common.Abstractions;
 using Paraglider.Infrastructure.Common.MongoDB;
+using Paraglider.Infrastructure.Common.Repository;
 using System.Reflection;
 
 namespace Paraglider.Infrastructure.Common.Extensions;

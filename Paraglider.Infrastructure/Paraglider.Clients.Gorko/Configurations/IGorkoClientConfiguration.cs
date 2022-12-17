@@ -6,7 +6,7 @@ namespace Paraglider.Clients.Gorko.Configurations;
 public interface IGorkoClientConfiguration
 {
     public IUsersResource Users { get; }
-    public IGorkoResource<Role> Roles { get; }
+    public IGorkoResource<RoleType> Roles { get; }
     public IGorkoResource<City> Cities { get; }
     public IGorkoResource<Restaurant> Restaurants { get; }
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Paraglider.Domain.RDB.Abstractions;
 using Paraglider.Domain.RDB.Entities;
 
-namespace Paraglider.Data;
+namespace Paraglider.Data.EntityFrameworkCore;
 
 /// <summary>
 /// Base DbContext with predefined configuration
@@ -21,9 +21,9 @@ public abstract class DbContextBase : IdentityDbContext<ApplicationUser, Applica
             DbSaveChanges();
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
-        catch 
-        { 
-            return Task.FromResult(0); 
+        catch
+        {
+            return Task.FromResult(0);
         }
     }
 
@@ -34,9 +34,9 @@ public abstract class DbContextBase : IdentityDbContext<ApplicationUser, Applica
             DbSaveChanges();
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
-        catch 
-        { 
-            return 0; 
+        catch
+        {
+            return 0;
         }
     }
 
@@ -47,9 +47,9 @@ public abstract class DbContextBase : IdentityDbContext<ApplicationUser, Applica
             DbSaveChanges();
             return base.SaveChanges();
         }
-        catch 
-        { 
-            return 0; 
+        catch
+        {
+            return 0;
         }
     }
 
@@ -60,9 +60,9 @@ public abstract class DbContextBase : IdentityDbContext<ApplicationUser, Applica
             DbSaveChanges();
             return base.SaveChangesAsync(cancellationToken);
         }
-        catch 
-        { 
-            return Task.FromResult(0); 
+        catch
+        {
+            return Task.FromResult(0);
         }
     }
 

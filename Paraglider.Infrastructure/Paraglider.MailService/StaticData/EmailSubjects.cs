@@ -1,4 +1,4 @@
-﻿namespace Paraglider.MailService;
+﻿namespace Paraglider.MailService.StaticData;
 
 public static class EmailSubjects
 {

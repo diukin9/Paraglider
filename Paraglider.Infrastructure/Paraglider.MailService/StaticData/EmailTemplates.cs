@@ -1,10 +1,10 @@
-﻿namespace Paraglider.MailService;
+﻿namespace Paraglider.MailService.StaticData;
 
 public static class EmailTemplates
 {
     public static string MailConfirmationTemplate(string confirmationLink)
     {
-        return @$"Для подтверждения почты перйдите по <a href=""{confirmationLink}"">ссылке</a>";
+        return @$"Для подтверждения почты перейдите по <a href=""{confirmationLink}"">ссылке</a>";
     }
 
     public static string PasswordResetTemplate(string confirmationLink)

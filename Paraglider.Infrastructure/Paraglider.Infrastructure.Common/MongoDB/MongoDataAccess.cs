@@ -1,23 +1,23 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using Paraglider.Infrastructure.Common.Abstractions;
+using Paraglider.Infrastructure.Common.Interfaces;
 using System.Linq.Expressions;
 
 namespace Paraglider.Infrastructure.Common.MongoDB;
 
 public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
-    where TEntity : class, IIdentified, new()
+    where TEntity : class, IIdentified<string>, new()
 {
     private readonly IMongoCollection<TEntity> _collection;
 
-    public MongoDataAccess(IMongoClient client, IMongoDbSettings settings, string collectionName)
+    public MongoDataAccess(IMongoClient client, IMongoDbSettings settings)
     {
         _collection = client
             .GetDatabase(settings.DatabaseName)
-            .GetCollection<TEntity>(collectionName);
+            .GetCollection<TEntity>(typeof(TEntity).Name);
     }
 
-    public async Task<List<object>> FindAsync(
+    public async Task<IEnumerable<TEntity>> FindAsync(
         Expression<Func<TEntity, bool>>? filter = null,
         Expression<Func<TEntity, object>>? sort = null,
         SortDirection sortDirection = SortDirection.Ascending,
@@ -39,16 +39,12 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
             .Limit(limit)
             .ToListAsync();
 
-        return entities
-            .Select(x => BsonTypeMapper.MapToDotNetValue(x.ToBsonDocument()))
-            .ToList();
+        return entities;
     }
 
-    public async Task<object?> FindByIdAsync(Guid id)
+    public async Task<TEntity?> FindByIdAsync(string id)
     {
-        var entity = await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
-        if (entity is null) return entity;
-        return BsonTypeMapper.MapToDotNetValue(entity?.ToBsonDocument());
+        return await _collection.Find(x => x.Id == id).SingleOrDefaultAsync();
     }
 
     public async Task<bool> IsExistAsync(Expression<Func<TEntity, bool>> selector)
@@ -59,6 +55,7 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
     public async Task<long> CountAsync(Expression<Func<TEntity, bool>>? filter = null)
     {
         filter = filter ??= _ => true;
+
         return await _collection
             .Find(Builders<TEntity>.Filter.Where(filter))
             .CountDocumentsAsync();
@@ -86,7 +83,20 @@ public abstract class MongoDataAccess<TEntity> : IMongoDataAccess<TEntity>
         return result.IsAcknowledged;
     }
 
-    public async Task RemoveAsync(Guid id)
+    public async Task<bool> PartialUpdateAsync<TField>(
+        Expression<Func<TEntity, bool>> filter,
+        Expression<Func<TEntity, TField>> update,
+        TField value)
+    {
+        var filterDefinition = Builders<TEntity>.Filter.Where(filter);
+        var updateDefinition = Builders<TEntity>.Update.Set(update, value);
+
+        var result = await _collection.UpdateOneAsync(filterDefinition, updateDefinition);
+
+        return result.IsAcknowledged;
+    }
+
+    public async Task RemoveAsync(string id)
     {
         await _collection.DeleteOneAsync(x => x.Id == id);
     }
