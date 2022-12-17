@@ -65,4 +65,12 @@ public class Component : IIdentified<string>
 
     [BsonElement("popularity")]
     public long Popularity { get; set; }
+
+    [BsonElement("rating")]
+    public double Rating
+    {
+        get => Reviews.Any() 
+            ? Reviews.Sum(x => x.Evaluation) / Reviews.Count
+            : 0.0;
+    }
 }

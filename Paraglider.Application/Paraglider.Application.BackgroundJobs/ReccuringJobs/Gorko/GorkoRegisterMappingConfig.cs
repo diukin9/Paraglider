@@ -31,7 +31,9 @@ public class GorkoRegisterMappingConfig : IRegister
             .Ignore(x => x.ManufactureYear!)
             .Ignore(x => x.MinRentLength!)
             .Ignore(x => x.UpdatedAt)
-            .Ignore(x => x.Status);
+            .Ignore(x => x.Status)
+            .Ignore(x => x.Rating)
+            .Ignore(x => x.Popularity);
 
         config.NewConfig<User, Component>()
             .Map(x => x.Id, y => $"{Enum.GetName(Source.Gorko)}:{y.Id}")
@@ -56,7 +58,9 @@ public class GorkoRegisterMappingConfig : IRegister
             .Ignore(x => x.Capacity!)
             .Ignore(x => x.Halls!)
             .Ignore(x => x.UpdatedAt)
-            .Ignore(x => x.Status);
+            .Ignore(x => x.Status)
+            .Ignore(x => x.Rating)
+            .Ignore(x => x.Popularity);
 
         config.NewConfig<Room, Hall>()
             .Map(x => x.Name, y => y.Name)

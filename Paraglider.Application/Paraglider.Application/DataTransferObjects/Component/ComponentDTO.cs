@@ -23,6 +23,10 @@ public class ComponentDTO : IDataTransferObject
 
     public List<ReviewDTO> Reviews { get; set; } = new List<ReviewDTO>();
 
+    public int ReviewCount => Reviews?.Count ?? 0;
+
+    public double Rating { get; set; }
+
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public AlbumDTO Album { get; set; } = null!;
 
