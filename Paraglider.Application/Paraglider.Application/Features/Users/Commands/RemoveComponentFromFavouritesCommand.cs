@@ -13,7 +13,8 @@ namespace Paraglider.Application.Features.Users.Commands;
 
 public class RemoveComponentFromFavouritesRequest : IRequest<OperationResult>
 {
-    [Required] public string ComponentId { get; set; } = null!;
+    [Required] 
+    public string ComponentId { get; set; } = null!;
 }
 
 public class RemoveComponentFromFavouritesCommandHandler 

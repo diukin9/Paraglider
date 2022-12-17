@@ -14,11 +14,20 @@ namespace Paraglider.Application.Features.Components.Queries;
 
 public class GetComponentsRequest : IRequest<OperationResult<IEnumerable<ComponentDTO>>>
 {
-    [Required, NotEmptyGuid] public Guid CategoryId { get; set; }
-    [Required, NotEmptyGuid] public Guid CityId { get; set; }
-    [Range(1, 100)] public int? PerPage { get; set; } = 15;
-    [NotNegative] public int? Page { get; set; } = 1;
-    [IsSortingKey(typeof(ComponentSorterKey))] public string? SortingKey { get; set; }
+    [Required, NotEmptyGuid] 
+    public Guid CategoryId { get; set; }
+
+    [Required, NotEmptyGuid] 
+    public Guid CityId { get; set; }
+
+    [Required, Range(1, 100)] 
+    public int? PerPage { get; set; } = 15;
+
+    [Required, NotNegative] 
+    public int? Page { get; set; } = 1;
+
+    [IsSortingKey(typeof(ComponentSorterKey))] 
+    public string? SortingKey { get; set; }
 }
 
 public class GetComponentsQueryHandler 

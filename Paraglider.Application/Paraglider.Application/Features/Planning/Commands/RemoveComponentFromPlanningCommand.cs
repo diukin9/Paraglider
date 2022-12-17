@@ -13,7 +13,8 @@ namespace Paraglider.Application.Features.Planning.Commands;
 
 public record RemoveComponentFromPlanningRequest: IRequest<OperationResult>
 {
-    [Required] public string ComponentId { get; set; } = null!;
+    [Required] 
+    public string ComponentId { get; set; } = null!;
 }
 
 public class RemoveComponentFromPlanningCommandHandler 

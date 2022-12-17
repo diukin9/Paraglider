@@ -15,8 +15,11 @@ namespace Paraglider.Application.Features.Authorization.Commands;
 
 public class ConfigureExternalAuthPropertiesRequest : IRequest<OperationResult<AuthenticationProperties>>
 {
-    [Required, IsEnumName(typeof(AuthProvider))] public string Provider { get; set; } = null!;
-    [Required] public string ReturnUrl { get; set; } = null!;
+    [Required, IsEnumName(typeof(AuthProvider))] 
+    public string Provider { get; set; } = null!;
+
+    [Required] 
+    public string ReturnUrl { get; set; } = null!;
 
     public ConfigureExternalAuthPropertiesRequest(string provider, string returnUrl)
     {

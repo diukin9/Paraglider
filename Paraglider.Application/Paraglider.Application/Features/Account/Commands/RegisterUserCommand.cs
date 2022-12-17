@@ -14,12 +14,23 @@ namespace Paraglider.Application.Features.Account.Commands;
 
 public class RegisterUserRequest : IRequest<OperationResult>
 {
-    [Required, EmailAddress] public string Email { get; set; }
-    [Required, MinLength(8)] public string Password { get; set; }
-    [Required] public string FirstName { get; set; }
-    [Required] public string Surname { get; set; }
-    [Phone] public string? PhoneNumber { get; set; }     //TODO сделать кастомный атрибут PhoneNumber
-    [Required, NotEmptyGuid] public Guid CityId { get; set; }
+    [Required, EmailAddress] 
+    public string Email { get; set; }
+
+    [Required, MinLength(8)] 
+    public string Password { get; set; }
+
+    [Required] 
+    public string FirstName { get; set; }
+
+    [Required] 
+    public string Surname { get; set; }
+
+    [Phone] 
+    public string? PhoneNumber { get; set; } //TODO сделать кастомный атрибут PhoneNumber
+
+    [Required, NotEmptyGuid] 
+    public Guid CityId { get; set; }
 
     public RegisterUserRequest(string email, string password, 
         string firstName, string surname, string? phoneNumber, Guid cityId)

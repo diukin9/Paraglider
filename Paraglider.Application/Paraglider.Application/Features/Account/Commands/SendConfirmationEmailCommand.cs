@@ -14,7 +14,8 @@ namespace Paraglider.Application.Features.Account.Commands;
 
 public class SendConfirmationEmailRequest : IRequest<OperationResult>
 {
-    [Required, EmailAddress] public string Email { get; set; }
+    [Required, EmailAddress] 
+    public string Email { get; set; }
 
     public SendConfirmationEmailRequest(string email)
     {

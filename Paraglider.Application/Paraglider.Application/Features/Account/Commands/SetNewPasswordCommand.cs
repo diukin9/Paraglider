@@ -13,10 +13,17 @@ namespace Paraglider.Application.Features.Account.Commands;
 
 public class SetNewPasswordRequest : IRequest<OperationResult>
 {
-    [Required, NotEmptyGuid] public Guid UserId { get; set; }
-    [Required] public string Token { get; set; } = null!;
-    [Required, MinLength(8)] public string Password { get; set; } = null!;
-    [Required, Compare(nameof(Password))] public string ConfirmPassword { get; set; } = null!;
+    [Required, NotEmptyGuid] 
+    public Guid UserId { get; set; }
+
+    [Required] 
+    public string Token { get; set; } = null!;
+
+    [Required, MinLength(8)] 
+    public string Password { get; set; } = null!;
+
+    [Required, Compare(nameof(Password))] 
+    public string ConfirmPassword { get; set; } = null!;
 }
 
 public class ResetPasswordCommandHandler : IRequestHandler<SetNewPasswordRequest, OperationResult>

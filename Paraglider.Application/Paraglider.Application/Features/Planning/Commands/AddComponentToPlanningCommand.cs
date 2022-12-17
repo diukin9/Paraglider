@@ -14,7 +14,8 @@ namespace Paraglider.Application.Features.Planning.Commands;
 
 public class AddComponentToPlanningRequest : IRequest<OperationResult>
 {
-    [Required] public string ComponentId { get; set; } = null!;
+    [Required] 
+    public string ComponentId { get; set; } = null!;
 }
 
 public class AddComponentToPlanningCommandHandler 
