@@ -62,4 +62,7 @@ public class Component : IIdentified<string>
 
     [BsonElement("status")] 
     public ComponentStatus Status { get; set; }
+
+    [BsonElement("popularity")]
+    public long Popularity { get; set; }
 }

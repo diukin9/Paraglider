@@ -21,15 +21,18 @@ public class AddComponentToPlanningRequest : IRequest<OperationResult>
 public class AddComponentToPlanningCommandHandler 
     : IRequestHandler<AddComponentToPlanningRequest, OperationResult>
 {
+    private readonly IComponentAdditionHistoryRepository _componentAdditionHistoryRepository;
     private readonly IUserRepository _userRepository;
     private readonly IMongoDataAccess<Component> _components;
     private readonly IHttpContextAccessor _accessor;
 
     public AddComponentToPlanningCommandHandler(
+        IComponentAdditionHistoryRepository componentAdditionHistoryRepository,
         IMongoDataAccess<Component> components,
         IUserRepository userRepository,
         IHttpContextAccessor accessor)
     {
+        _componentAdditionHistoryRepository = componentAdditionHistoryRepository;
         _components = components;
         _userRepository = userRepository;
         _accessor = accessor;
@@ -85,6 +88,15 @@ public class AddComponentToPlanningCommandHandler
         {
             await _userRepository.UpdateAsync(user);
             await _userRepository.SaveChangesAsync();
+
+            //добавляем в историю
+            await _componentAdditionHistoryRepository.AddAsync(new ComponentAdditionHistory()
+            {
+                UserId = user.Id,
+                ComponentId = component.Id
+            });
+            await _componentAdditionHistoryRepository.SaveChangesAsync();
+
             return operation.AddSuccess(Messages.ObjectUpdated(nameof(ApplicationUser)));
         }
         catch (Exception exception)

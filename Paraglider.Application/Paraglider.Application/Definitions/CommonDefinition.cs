@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.Infrastructure.Common.AppDefinition;
-using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Paraglider.Application.Definitions;
 
