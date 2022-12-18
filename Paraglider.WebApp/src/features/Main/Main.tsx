@@ -1,5 +1,6 @@
 import { Button } from "../../components/Buttons";
 import { PageTitle } from "../../components/Text";
+import Newlyweds from "./images/newlyweds.png";
 import {
   BgImage,
   ButtonContainer,
@@ -9,7 +10,6 @@ import {
   OrderedList,
   OrderedListItem,
 } from "./Main.styles";
-import Newlyweds from "./images/newlyweds.png";
 
 export const Main = () => {
   return (
@@ -32,8 +32,12 @@ export const Main = () => {
       </ListWrapper>
 
       <ButtonContainer>
-        <Button variant="default">Перейти к конфигуратору</Button>
-        <Button variant="outlined">Подробнее</Button>
+        <Button variant="default" onClick={() => null}>
+          Перейти к конфигуратору
+        </Button>
+        <Button variant="outlined" onClick={() => null}>
+          Подробнее
+        </Button>
       </ButtonContainer>
     </MainContainer>
   );

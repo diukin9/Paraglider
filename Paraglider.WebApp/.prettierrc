@@ -10,6 +10,7 @@
   "quoteProps": "as-needed",
   "requirePragma": false,
   "semi": true,
+  "endOfLine": "crlf",
   "singleAttributePerLine": false,
   "singleQuote": false,
   "tabWidth": 2,
