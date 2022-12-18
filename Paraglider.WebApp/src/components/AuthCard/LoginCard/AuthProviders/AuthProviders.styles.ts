@@ -13,6 +13,7 @@ export const AuthProvidersTitle = styled(SecondaryText)`
 
 export const AuthProvidersContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 30px;
 `;
 

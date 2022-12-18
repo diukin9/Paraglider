@@ -4,7 +4,7 @@ export const CardRoot = styled.div`
   position: relative;
   padding: 40px 36px;
   width: 430px;
-  height: 700px;
+  min-height: 700px;
   border-radius: 12px;
   background: #ffffff;
   box-shadow: 0px 4px 30px rgba(136, 135, 135, 0.15);
