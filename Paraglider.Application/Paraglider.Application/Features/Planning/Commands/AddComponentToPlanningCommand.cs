@@ -3,7 +3,6 @@ using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Attributes;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.MongoDB;
 using Paraglider.Infrastructure.Common.Response;
@@ -56,8 +55,8 @@ public class AddComponentToPlanningCommandHandler
         }
 
         //получаем текущего пользователя
-        var username = _accessor.HttpContext!.User.Identity!.Name;
-        var user = await _userRepository.FindByUsernameAsync(username!);
+        var identifier = _accessor.HttpContext!.Request.Headers.GetNameIdentifierFromBearerToken();
+        var user = await _userRepository.FindByNameIdentifierAsync(identifier!);
         if (user is null)
         {
             return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));

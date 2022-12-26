@@ -5,9 +5,11 @@ using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Data.EntityFrameworkCore;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.MongoDB;
+using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(1)]
 public class DatabasesDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)

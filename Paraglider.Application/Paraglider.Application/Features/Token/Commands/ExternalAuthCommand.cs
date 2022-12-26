@@ -8,11 +8,12 @@ using Paraglider.Infrastructure.Common.Response;
 using System.Security.Claims;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.Application.Features.Authorization.Commands;
+namespace Paraglider.Application.Features.Token.Commands;
 
 public record ExternalAuthRequest() : IRequest<OperationResult>;
 
-public class ExternalAuthCommandHandler : IRequestHandler<ExternalAuthRequest, OperationResult>
+public class ExternalAuthCommandHandler 
+    : IRequestHandler<ExternalAuthRequest, OperationResult>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;

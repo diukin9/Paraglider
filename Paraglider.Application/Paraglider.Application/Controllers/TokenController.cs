@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.Application.Features.Account.Commands;
-using Paraglider.Application.Features.Authorization.Commands;
+using Paraglider.Application.Features.Token.Commands;
 using Paraglider.Application.Features.Users.Queries;
 using Paraglider.Infrastructure.Common.Response;
 
@@ -10,32 +10,40 @@ namespace Paraglider.Application.Controllers;
 
 [ApiController]
 [ApiVersion("1.0")]
-public class AuthorizationController : Controller
+[Route("api/v{version:apiVersion}/token")]
+public class TokenController : Controller
 {
     private readonly IMediator _mediator;
 
-    public AuthorizationController(IMediator mediator)
+    public TokenController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     [AllowAnonymous]
-    [Route("basic-auth")]
-    public async Task<IActionResult> BasicAuthorization([FromBody] BasicAuthRequest request)
+    public async Task<IActionResult> CreateToken([FromBody] CreateTokenRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
-        return response.IsOk ? Ok(response) : BadRequest(response);
+        return response.IsOk ? Ok(response.GetDataObject()) : BadRequest(response);
     }
 
-    [HttpPost]
-    [Authorize]
-    [Route("logout")]
-    public async Task<IActionResult> Logout()
+    [HttpPost("refresh")]
+    [AllowAnonymous]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
     {
-        var response = await _mediator.Send(new LogoutRequest(), HttpContext.RequestAborted);
-        return response.IsOk ? Ok(response) : BadRequest(response);
+        var response = await _mediator.Send(request, HttpContext.RequestAborted);
+        return response.IsOk ? Ok(response.GetDataObject()) : BadRequest(response);
     }
+
+    [Authorize]
+    [HttpPost("revoke")]
+    public async Task<IActionResult> Revoke([FromBody] RevokeTokenRequest request)
+    {
+        var response = await _mediator.Send(request, HttpContext.RequestAborted);
+        return response.IsOk ? Ok(response.GetDataObject()) : BadRequest(response);
+    }
+
 
     [HttpGet]
     [AllowAnonymous]

@@ -5,9 +5,11 @@ using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Data.EntityFrameworkCore;
 using Paraglider.Data.MongoDB;
 using System.Reflection;
+using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(6)]
 public class MapsterDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)

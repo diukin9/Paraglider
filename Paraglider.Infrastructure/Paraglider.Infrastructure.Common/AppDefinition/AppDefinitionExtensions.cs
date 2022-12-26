@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Paraglider.Infrastructure.Common.Attributes;
+using System.Reflection;
 
 namespace Paraglider.Infrastructure.Common.AppDefinition;
 
@@ -23,6 +25,8 @@ public static class AppDefinitionExtensions
             definitions.AddRange(instances);
         }
 
+       definitions = (List<IAppDefinition>)OrderByCallingOrder(definitions);
+
         definitions.ForEach(app => app.ConfigureServices(source, builder.Configuration));
         source.AddSingleton(definitions as IReadOnlyCollection<IAppDefinition>);
     }
@@ -34,11 +38,23 @@ public static class AppDefinitionExtensions
     public static void UseDefinitions(this WebApplication source)
     {
         var definitions = source.Services.GetRequiredService<IReadOnlyCollection<IAppDefinition>>();
+
+        definitions = (IReadOnlyCollection<IAppDefinition>)OrderByCallingOrder(definitions);
+
         var environment = source.Services.GetRequiredService<IWebHostEnvironment>();
         foreach (var endpoint in definitions)
         {
             endpoint.ConfigureApplication(source, environment);
         }
+    }
+
+    private static IEnumerable<IAppDefinition> OrderByCallingOrder(IEnumerable<IAppDefinition> definitions)
+    {
+        return definitions
+            .OrderBy(x => (x
+                .GetType()
+                .GetCustomAttribute(typeof(CallingOrderAttribute), false) as CallingOrderAttribute)!.Index)
+            .ToList();
     }
 
 }

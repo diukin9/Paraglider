@@ -31,7 +31,15 @@ public class UserRepository : Repository<ApplicationUser>, IUserRepository
     public async Task<ApplicationUser?> FindByUsernameAsync(string username)
     {
         var user = await _context.Users.IncludeAll()
-            .Where(u => u.UserName == username)
+            .Where(u => string.Compare(u.UserName, username, StringComparison.OrdinalIgnoreCase) == 0)
+            .SingleOrDefaultAsync();
+        return user;
+    }
+
+    public async Task<ApplicationUser?> FindByEmailAsync(string email)
+    {
+        var user = await _context.Users.IncludeAll()
+            .Where(u => string.Compare(u.Email, email, StringComparison.OrdinalIgnoreCase) == 0)
             .SingleOrDefaultAsync();
         return user;
     }
@@ -49,5 +57,10 @@ public class UserRepository : Repository<ApplicationUser>, IUserRepository
         retrievedUser.City = city;
 
         return await _context.SaveChangesAsync(cancellationToken) > 0;
+    }
+
+    public async Task<ApplicationUser?> FindByNameIdentifierAsync(string nameIdentifier)
+    {
+        return await FindByUsernameAsync(nameIdentifier) ?? await FindByEmailAsync(nameIdentifier);
     }
 }

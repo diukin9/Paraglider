@@ -3,9 +3,11 @@ using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Clients.Gorko;
 using Paraglider.MailService.Models;
 using Paraglider.MailService;
+using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(11)]
 public class DependencyContainerDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)

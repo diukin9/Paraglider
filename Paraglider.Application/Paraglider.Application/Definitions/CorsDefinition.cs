@@ -1,7 +1,9 @@
 ﻿using Paraglider.Infrastructure.Common.AppDefinition;
+using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(3)]
 public class CorsDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)

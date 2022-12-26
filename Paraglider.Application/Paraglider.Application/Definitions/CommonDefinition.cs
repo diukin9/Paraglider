@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.Infrastructure.Common.AppDefinition;
+using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(12)]
 public class CommonDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)

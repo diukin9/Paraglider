@@ -11,9 +11,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.Application.Features.Authorization.Commands;
+namespace Paraglider.Application.Features.Token.Commands;
 
-public class ConfigureExternalAuthPropertiesRequest : IRequest<OperationResult<AuthenticationProperties>>
+public class ConfigureExternalAuthPropertiesRequest 
+    : IRequest<OperationResult<AuthenticationProperties>>
 {
     [Required, IsEnumName(typeof(AuthProvider))] 
     public string Provider { get; set; } = null!;
