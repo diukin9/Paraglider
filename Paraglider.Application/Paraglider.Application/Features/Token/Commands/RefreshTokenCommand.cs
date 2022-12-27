@@ -88,7 +88,7 @@ public class RefreshTokenCommandHandler
             key: _bearerSettings.Key,
             issuer: _bearerSettings.Issuer,
             audience: _bearerSettings.Audience,
-            expires: DateTime.UtcNow.AddTicks(_bearerSettings.AccessTokenLifetimeInTicks),
+            expires: DateTime.UtcNow.AddSeconds(_bearerSettings.AccessTokenLifetimeInSeconds),
             claims: principal.Claims.ToList());
 
         //сгенерируем новый refresh_token

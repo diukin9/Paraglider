@@ -78,12 +78,12 @@ public class CreateTokenCommandHandler
             key: _bearerSettings.Key,
             issuer: _bearerSettings.Issuer,
             audience: _bearerSettings.Audience,
-            expires: DateTime.UtcNow.AddTicks(_bearerSettings.AccessTokenLifetimeInTicks),
+            expires: DateTime.UtcNow.AddSeconds(_bearerSettings.AccessTokenLifetimeInSeconds),
             claims: claims);
 
         //сгенерируем refresh_token
         var refreshToken = TokenHelper.GenerateRefreshToken();
-        var expiryTime = DateTime.UtcNow.AddTicks(_bearerSettings.RefreshTokenLifetimeInTicks);
+        var expiryTime = DateTime.UtcNow.AddSeconds(_bearerSettings.RefreshTokenLifetimeInSeconds);
 
         //сохраним refresh_token внутри пользователя
         user.RefreshToken = refreshToken;

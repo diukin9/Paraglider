@@ -2,7 +2,6 @@
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using Paraglider.Application.DataTransferObjects;
 using Paraglider.Application.Extensions;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
@@ -12,16 +11,16 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Application.Features.Users.Queries;
 
-public record GetUserByExternalLoginInfoRequest : IRequest<OperationResult<UserDTO>>;
+public record CheckUserExistenceByExternalLoginInfoRequest : IRequest<OperationResult<bool>>;
 
-public class GetUserByExternalLoginInfoQueryHandler 
-    : IRequestHandler<GetUserByExternalLoginInfoRequest, OperationResult<UserDTO>>
+public class CheckUserExistenceByExternalLoginInfoQueryHandler 
+    : IRequestHandler<CheckUserExistenceByExternalLoginInfoRequest, OperationResult<bool>>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IMapper _mapper;
 
-    public GetUserByExternalLoginInfoQueryHandler(
+    public CheckUserExistenceByExternalLoginInfoQueryHandler(
         UserManager<ApplicationUser> userManager,
         IMapper mapper,
         SignInManager<ApplicationUser> signInManager)
@@ -31,11 +30,11 @@ public class GetUserByExternalLoginInfoQueryHandler
         _signInManager = signInManager;
     }
 
-    public async Task<OperationResult<UserDTO>> Handle(
-        GetUserByExternalLoginInfoRequest request, 
+    public async Task<OperationResult<bool>> Handle(
+        CheckUserExistenceByExternalLoginInfoRequest request, 
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<UserDTO>();
+        var operation = new OperationResult<bool>();
 
         //получаем ExternalLoginInfo
         var info = await _signInManager.GetExternalLoginInfoAsync();
@@ -53,12 +52,7 @@ public class GetUserByExternalLoginInfoQueryHandler
         }
 
         //получаем пользователя
-        var entity = await _userManager.FindByExternalLoginInfoAsync(provider, externalId);
-        if (entity is null)
-        {
-            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));
-        }
-
-        return operation.AddSuccess(string.Empty, _mapper.Map<UserDTO>(entity));
+        var user = await _userManager.FindByExternalLoginInfoAsync(provider, externalId);
+        return operation.AddSuccess(string.Empty, user is not null);
     }
 }

@@ -1,10 +1,11 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.Application.Features.Account.Commands;
 using Paraglider.Application.Features.Token.Commands;
 using Paraglider.Application.Features.Users.Queries;
-using Paraglider.Infrastructure.Common.Response;
+using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Application.Controllers;
 
@@ -20,79 +21,66 @@ public class TokenController : Controller
         _mediator = mediator;
     }
 
-    [HttpPost("create")]
-    [AllowAnonymous]
+    [HttpPost]
     public async Task<IActionResult> CreateToken([FromBody] CreateTokenRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response.GetDataObject()) : BadRequest(response);
     }
 
-    [HttpPost("refresh")]
-    [AllowAnonymous]
+    [HttpPut]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response.GetDataObject()) : BadRequest(response);
     }
 
-    [Authorize]
-    [HttpPost("revoke")]
-    public async Task<IActionResult> Revoke([FromBody] RevokeTokenRequest request)
+    [HttpDelete]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest request)
     {
         var response = await _mediator.Send(request, HttpContext.RequestAborted);
         return response.IsOk ? Ok(response.GetDataObject()) : BadRequest(response);
     }
 
-
-    [HttpGet]
-    [AllowAnonymous]
-    [Route("external-auth")]
-    public async Task<IActionResult> VerifyUserAuthentication(
-        [FromQuery] string provider, 
-        [FromQuery] string returnUrl)
+    [HttpGet("{scheme}")]
+    public async Task<IActionResult> GoToProviderLoginPage(
+        [FromRoute] string scheme, 
+        [FromQuery] string callback,
+        CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(
-            new ConfigureExternalAuthPropertiesRequest(provider, returnUrl),
-            HttpContext.RequestAborted);
+        var request = new ConfigureAuthPropertiesRequest(scheme, callback);
+        var response = await _mediator.Send(request, cancellationToken);
 
         if (!response.IsOk) return BadRequest(response);
         var properties = response.Metadata!.DataObject!;
-        return Challenge(properties, provider);
+
+        return Challenge(properties, scheme);
     }
 
-    [AllowAnonymous]
-    [Route("external-auth-handler")]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public async Task<IActionResult> ExternalAuthorization(
+    [Route($"/{ExternalAuthHandlerRelativePath}")]
+    public async Task<IActionResult> HandleAndTransferToken(
         [FromQuery] string remoteError, 
-        [FromQuery] string returnUrl)
+        [FromQuery] string callback,
+        CancellationToken cancellationToken)
     {
-        if (!string.IsNullOrEmpty(remoteError))
-        {
-            var operation = new OperationResult().AddError(remoteError);
-            return BadRequest(operation);
-        }
-      
-        var userResponse = await _mediator.Send(
-            new GetUserByExternalLoginInfoRequest(),
-            HttpContext.RequestAborted);
+        if (!string.IsNullOrEmpty(remoteError)) return BadRequest(remoteError);
+
+        var userRequest = new CheckUserExistenceByExternalLoginInfoRequest();
+        var userResponse = await _mediator.Send(userRequest, cancellationToken);
 
         if (!userResponse.IsOk)
         {
-            var createResponse = await _mediator.Send(
-                new CreateExternalUserRequest(),
-                HttpContext.RequestAborted);
-
+            var createUserRequest = new CreateExternalUserRequest();
+            var createResponse = await _mediator.Send(createUserRequest, cancellationToken);
             if (!createResponse.IsOk) return BadRequest(createResponse);
         }
 
-        var response = await _mediator.Send(
-            new ExternalAuthRequest(),
-            HttpContext.RequestAborted);
-
+        var request = new GetUrlForTokenTransferRequest() { Callback = callback };
+        var response = await _mediator.Send(request, cancellationToken);
         if (!response.IsOk) return BadRequest(response);
 
-        return Redirect(returnUrl);
+        return Redirect(response.GetDataObject()!);
     }
 }

@@ -13,36 +13,36 @@ using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Application.Features.Token.Commands;
 
-public class ConfigureExternalAuthPropertiesRequest 
+public class ConfigureAuthPropertiesRequest 
     : IRequest<OperationResult<AuthenticationProperties>>
 {
     [Required, IsEnumName(typeof(AuthProvider))] 
     public string Provider { get; set; } = null!;
 
     [Required] 
-    public string ReturnUrl { get; set; } = null!;
+    public string Callback { get; set; } = null!;
 
-    public ConfigureExternalAuthPropertiesRequest(string provider, string returnUrl)
+    public ConfigureAuthPropertiesRequest(string provider, string returnUrl)
     {
         Provider = provider;
-        ReturnUrl = returnUrl;
+        Callback = returnUrl;
     }
 }
 
-public class ConfigureExternalAuthPropertiesCommandHandler 
-    : IRequestHandler<ConfigureExternalAuthPropertiesRequest, 
+public class ConfigureAuthPropertiesCommandHandler 
+    : IRequestHandler<ConfigureAuthPropertiesRequest, 
         OperationResult<AuthenticationProperties>>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public ConfigureExternalAuthPropertiesCommandHandler(
+    public ConfigureAuthPropertiesCommandHandler(
         SignInManager<ApplicationUser> signInManager)
     {
         _signInManager = signInManager;
     }
 
     public Task<OperationResult<AuthenticationProperties>> Handle(
-        ConfigureExternalAuthPropertiesRequest request,
+        ConfigureAuthPropertiesRequest request,
         CancellationToken cancellationToken)
     {
         var operation = new OperationResult<AuthenticationProperties>();
@@ -52,8 +52,8 @@ public class ConfigureExternalAuthPropertiesCommandHandler
         if (!validation.IsValid()) return Task.FromResult(operation.AddError(validation));
 
         //конфигурируем authentication properties
-        request.ReturnUrl = WebUtility.UrlEncode(request.ReturnUrl);
-        var callbackUrl = $"{ExternalAuthHandlerRelativePath}?returnUrl={request.ReturnUrl}";
+        request.Callback = WebUtility.UrlEncode(request.Callback);
+        var callbackUrl = $"{ExternalAuthHandlerRelativePath}?callback={request.Callback}";
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, callbackUrl);
 
         return Task.FromResult(operation.AddSuccess(string.Empty, properties));
