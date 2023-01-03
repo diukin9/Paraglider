@@ -3,12 +3,16 @@ import { useState } from "react";
 import { LoginCard } from "./LoginCard";
 import { RegistrationCard } from "./RegistrationCard";
 
+interface Props {
+  onClose: () => void;
+}
+
 enum AuthStep {
   Login = "login",
   Registration = "registration",
 }
 
-export const AuthCard = () => {
+export const AuthCard = ({ onClose }: Props) => {
   const [authStep, setAuthStep] = useState(AuthStep.Login);
 
   const handleGoToRegistration = () => setAuthStep(AuthStep.Registration);

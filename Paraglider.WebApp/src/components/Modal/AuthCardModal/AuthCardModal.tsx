@@ -16,7 +16,7 @@ export const AuthCardModal = ({ onClose }: AuthCardModalProps) => {
     <ModalContainer>
       <ModalScrollContainer onClick={onClose}>
         <ModalContent onClick={handleScrollContainerClick}>
-          <AuthCard />
+          <AuthCard onClose={onClose} />
         </ModalContent>
       </ModalScrollContainer>
     </ModalContainer>

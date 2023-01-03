@@ -24,7 +24,12 @@ export const AccountInfo = ({ onGoBack }: AccountInfoProps) => {
       <GirlIcon />
 
       <ControlsGroup marginBottom={24}>
-        <Label>Ваше имя</Label>
+        <Label>Ваше Имя</Label>
+        <Input type="text" />
+      </ControlsGroup>
+
+      <ControlsGroup marginBottom={24}>
+        <Label>Фамилия</Label>
         <Input type="text" />
       </ControlsGroup>
 
