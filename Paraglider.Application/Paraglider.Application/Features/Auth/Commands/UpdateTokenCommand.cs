@@ -9,21 +9,23 @@ using Paraglider.Infrastructure.Common.Helpers;
 using Paraglider.Infrastructure.Common.Models;
 using Paraglider.Infrastructure.Common.Response;
 using System.ComponentModel.DataAnnotations;
-using static Paraglider.Infrastructure.Common.AppData;
+using System.Text.Json.Serialization;
 
-namespace Paraglider.Application.Features.Token.Commands;
+namespace Paraglider.Application.Features.Auth.Commands;
 
-public class RefreshTokenRequest : IRequest<OperationResult<Tokens>>
+public class RefreshTokenRequest : IRequest<OperationResult<Token>>
 {
     [Required]
-    public string AccessToken { get; set; } = null!;
+    [JsonPropertyName("expired_access_token")]
+    public string ExpiredAccessToken { get; set; } = null!;
 
     [Required]
+    [JsonPropertyName("refresh_token")]
     public string RefreshToken { get; set; } = null!;
 }
 
 public class RefreshTokenCommandHandler 
-    : IRequestHandler<RefreshTokenRequest, OperationResult<Tokens>>
+    : IRequestHandler<RefreshTokenRequest, OperationResult<Token>>
 {
     private readonly TokenValidationParameters _validationParameters;
     private readonly BearerSettings _bearerSettings;
@@ -42,11 +44,11 @@ public class RefreshTokenCommandHandler
         _userManager = userManager;
     }
 
-    public async Task<OperationResult<Tokens>> Handle(
+    public async Task<OperationResult<Token>> Handle(
         RefreshTokenRequest request, 
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<Tokens>();
+        var operation = new OperationResult<Token>();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
@@ -54,7 +56,7 @@ public class RefreshTokenCommandHandler
 
         //получим ClaimsPrincipal текущего пользователя через access_token
         var principal = TokenHelper.GetPrincipalFromExpiredToken(
-            accessToken: request.AccessToken, 
+            accessToken: request.ExpiredAccessToken, 
             validationParameters: _validationParameters);
 
         if (principal is null)
@@ -66,43 +68,45 @@ public class RefreshTokenCommandHandler
         var identifier = _accessor.HttpContext!.Request.Headers.GetNameIdentifierFromBearerToken();
         if (string.IsNullOrEmpty(identifier))
         {
-            return operation.AddError("Логин/почтовый ящик пользователя был пуст");
+            return operation.AddError("Не удалось аутентифицировать пользователя");
         }
 
         //получим через логин/почту пользователя
         var user = await _userManager.FindByNameIdentifierAsync(identifier!);
         if (user is null)
         {
-            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));
+            return operation.AddError("Не удалось аутентифицировать пользователя");
         }
 
         //проверим валидность refresh_token
-        if (user.RefreshToken != request.RefreshToken 
-            || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+        if (user.RefreshToken != request.RefreshToken) 
         {
             return operation.AddError("Неверный access_token или refresh_token");
         }
 
+        var now = DateTime.UtcNow;
+
+        //если refresh_token просрочился
+        if (user.RefreshTokenExpiryTime < DateTime.UtcNow)
+        {
+            return operation.AddError("У refresh_token истек срок действия");
+        }
+
         //сгенерируем новый access_token
+        var accessTokenExpiryTime = now.AddSeconds(_bearerSettings.AccessTokenLifetimeInSeconds);
         var newAccessToken = TokenHelper.GenerateAccessToken(
             key: _bearerSettings.Key,
             issuer: _bearerSettings.Issuer,
             audience: _bearerSettings.Audience,
-            expires: DateTime.UtcNow.AddSeconds(_bearerSettings.AccessTokenLifetimeInSeconds),
+            expires: accessTokenExpiryTime,
             claims: principal.Claims.ToList());
 
-        //сгенерируем новый refresh_token
-        var newRefreshToken = TokenHelper.GenerateRefreshToken();
-
-        //обновим refresh_token пользователя
-        user.RefreshToken = newRefreshToken;
-        await _userManager.UpdateAsync(user);
-
-        var token = new Infrastructure.Common.Models.Tokens()
+        var token = new Token()
         {
             AccessToken = newAccessToken,
-            RefreshToken = newRefreshToken,
-            Expiration = user.RefreshTokenExpiryTime
+            AccessTokenExpiryTime = accessTokenExpiryTime,
+            RefreshToken = user.RefreshToken,
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime
         };
 
         return operation.AddSuccess(string.Empty, token);

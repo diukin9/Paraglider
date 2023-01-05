@@ -1,7 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Paraglider.Infrastructure.Common.Models;
-
 public class Token
 {
     [JsonPropertyName("access_token")]

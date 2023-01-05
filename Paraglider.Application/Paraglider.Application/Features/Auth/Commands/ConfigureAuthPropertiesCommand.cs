@@ -5,13 +5,14 @@ using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Attributes;
+using Paraglider.Infrastructure.Common.Enums;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Response;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using static Paraglider.Infrastructure.Common.AppData;
 
-namespace Paraglider.Application.Features.Token.Commands;
+namespace Paraglider.Application.Features.Auth.Commands;
 
 public class ConfigureAuthPropertiesRequest 
     : IRequest<OperationResult<AuthenticationProperties>>
@@ -22,10 +23,14 @@ public class ConfigureAuthPropertiesRequest
     [Required] 
     public string Callback { get; set; } = null!;
 
-    public ConfigureAuthPropertiesRequest(string provider, string returnUrl)
+    [Required]
+    public AuthType AuthType { get; set; }
+
+    public ConfigureAuthPropertiesRequest(string provider, string returnUrl, AuthType authType)
     {
         Provider = provider;
         Callback = returnUrl;
+        AuthType = authType;
     }
 }
 
@@ -52,8 +57,10 @@ public class ConfigureAuthPropertiesCommandHandler
         if (!validation.IsValid()) return Task.FromResult(operation.AddError(validation));
 
         //конфигурируем authentication properties
-        request.Callback = WebUtility.UrlEncode(request.Callback);
-        var callbackUrl = $"{ExternalAuthHandlerRelativePath}?callback={request.Callback}";
+        var callbackUrl = $"{ExternalAuthHandlerRelativePath}" +
+            $"?callback={WebUtility.UrlEncode(request.Callback)}" +
+            $"&authType={(int)request.AuthType}";
+
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, callbackUrl);
 
         return Task.FromResult(operation.AddSuccess(string.Empty, properties));

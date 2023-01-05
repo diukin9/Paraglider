@@ -31,11 +31,6 @@ public class SwaggerDefinition : AppDefinition
 
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment environment)
     {
-        if (!app.Environment.IsDevelopment())
-        {
-            return;
-        }
-
         app.UseSwagger();
         app.UseSwaggerUI(settings =>
         {

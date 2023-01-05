@@ -4,6 +4,7 @@ using Paraglider.Application.Extensions;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
+using Paraglider.Infrastructure.Common.Enums;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Helpers;
 using Paraglider.Infrastructure.Common.Models;
@@ -13,22 +14,25 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 
-namespace Paraglider.Application.Features.Token.Commands;
+namespace Paraglider.Application.Features.Auth.Commands;
 
-public class GetUrlForTokenTransferRequest : IRequest<OperationResult<string>>
+public class ExternalAuthRequest : IRequest<OperationResult<string>>
 {
     [Required]
     public string Callback { get; set; } = null!;
+
+    [Required]
+    public AuthType AuthType { get; set; }
 }
 
-public class GetUrlForTokenTransferCommandHandler 
-    : IRequestHandler<GetUrlForTokenTransferRequest, OperationResult<string>>
+public class ExternalAuthCommandHandler 
+    : IRequestHandler<ExternalAuthRequest, OperationResult<string>>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly BearerSettings _bearerSettings;
 
-    public GetUrlForTokenTransferCommandHandler(
+    public ExternalAuthCommandHandler(
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager, 
         BearerSettings bearerSettings)
@@ -39,7 +43,7 @@ public class GetUrlForTokenTransferCommandHandler
     }
 
     public async Task<OperationResult<string>> Handle(
-        GetUrlForTokenTransferRequest request, 
+        ExternalAuthRequest request, 
         CancellationToken cancellationToken)
     {
         var operation = new OperationResult<string>();
@@ -50,11 +54,11 @@ public class GetUrlForTokenTransferCommandHandler
 
         //получаем ExternalLoginInfo
         var info = await _signInManager.GetExternalLoginInfoAsync();
-        if (info is null) return operation.AddError("ExternalLoginInfo was null");
+        if (info is null) return operation.AddError("Не удалось аутентифицировать пользователя");
 
         //получаем пользователя
         var user = await GetUserByExternalLoginInfoAsync(info);
-        if (user is null) return operation.AddError("User not found");
+        if (user is null) return operation.AddError("Не удалось аутентифицировать пользователя");
 
         //если у пользователя нет такого UserLoginInfo - создаем
         if (await _userManager.FindUserLoginInfoAsync(user, info.LoginProvider, info.ProviderKey) is null)
@@ -66,6 +70,31 @@ public class GetUrlForTokenTransferCommandHandler
             }
         }
 
+        return request.AuthType == AuthType.Cookie
+            ? await CookieAuthAsync(operation, info, request.Callback)
+            : await TokenAuthAsync(operation, user, request.Callback);
+    }
+
+    private async Task<OperationResult<string>> CookieAuthAsync(
+        OperationResult<string> operation,
+        ExternalLoginInfo info,
+        string callback)
+    {
+        var signInResult = await _signInManager.ExternalLoginSignInAsync(
+                info.LoginProvider,
+                info.ProviderKey,
+                true);
+
+        return signInResult.Succeeded
+            ? operation.AddSuccess("Пользователь успешно авторизован через внешнего провайдера", callback)
+            : operation.AddError("Ошибка при попытке авторизации");
+    }
+
+    private async Task<OperationResult<string>> TokenAuthAsync(
+        OperationResult<string> operation,
+        ApplicationUser user,
+        string callback)
+    {
         //если у пользователя не прокинут refresh_token - прокидываем
         if (user.RefreshToken is null) await AssignToUserRefreshTokenAsync(user);
 
@@ -74,12 +103,14 @@ public class GetUrlForTokenTransferCommandHandler
 
         //преобразуем callback
         var url = BuildCallback(
-            request.Callback,
+            callback,
             accessToken,
             user.RefreshToken!,
             user.RefreshTokenExpiryTime);
-        
-        return operation.AddSuccess(string.Empty, url);
+
+        return operation.AddSuccess(
+            message: "Пользователь успешно аутентифицирован через внешнего провайдера",
+            data: url);
     }
 
     private async Task<ApplicationUser?> GetUserByExternalLoginInfoAsync(ExternalLoginInfo info)

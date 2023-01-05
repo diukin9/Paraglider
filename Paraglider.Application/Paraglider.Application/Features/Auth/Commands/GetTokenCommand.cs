@@ -10,27 +10,29 @@ using Paraglider.Infrastructure.Common.Response;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using static Paraglider.Infrastructure.Common.AppData;
+using System.Text.Json.Serialization;
 
-namespace Paraglider.Application.Features.Token.Commands;
+namespace Paraglider.Application.Features.Auth.Commands;
 
-public class CreateTokenRequest : IRequest<OperationResult<Tokens>>
+public class GetTokenRequest : IRequest<OperationResult<Infrastructure.Common.Models.Token>>
 {
-    [Required] 
+    [Required]
+    [JsonPropertyName("login")]
     public string Login { get; set; } = null!;
 
     [Required]
+    [JsonPropertyName("password")]
     public string Password { get; set; } = null!;
 }
 
-public class CreateTokenCommandHandler 
-    : IRequestHandler<CreateTokenRequest, OperationResult<Tokens>>
+public class GetTokenCommandHandler 
+    : IRequestHandler<GetTokenRequest, OperationResult<Infrastructure.Common.Models.Token>>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly BearerSettings _bearerSettings;
 
-    public CreateTokenCommandHandler(
+    public GetTokenCommandHandler(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         BearerSettings bearerSettings)
@@ -40,11 +42,11 @@ public class CreateTokenCommandHandler
         _bearerSettings = bearerSettings;
     }
 
-    public async Task<OperationResult<Tokens>> Handle(
-        CreateTokenRequest request,
+    public async Task<OperationResult<Infrastructure.Common.Models.Token>> Handle(
+        GetTokenRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<Tokens>();
+        var operation = new OperationResult<Infrastructure.Common.Models.Token>();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
@@ -54,7 +56,7 @@ public class CreateTokenCommandHandler
         var user = await _userManager.FindByNameIdentifierAsync(request.Login);
         if (user is null)
         {
-            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));
+            return operation.AddError("Неверный логин или пароль");
         }
 
         var checkPasswordResult = await _signInManager
@@ -63,7 +65,7 @@ public class CreateTokenCommandHandler
         //проверяем, что передан верный пароль
         if (!checkPasswordResult.Succeeded)
         {
-            return operation.AddError("Wrong password");
+            return operation.AddError("Неверный логин или пароль");
         }
 
         //прокинем необходимые клеймы для будушей генерации токена
@@ -73,28 +75,36 @@ public class CreateTokenCommandHandler
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
+        var now = DateTime.UtcNow;
+
         //сгенерируем access_token
+        var accessTokenExpiryTime = now.AddSeconds(_bearerSettings.AccessTokenLifetimeInSeconds);
         var accessToken = TokenHelper.GenerateAccessToken(
             key: _bearerSettings.Key,
             issuer: _bearerSettings.Issuer,
             audience: _bearerSettings.Audience,
-            expires: DateTime.UtcNow.AddSeconds(_bearerSettings.AccessTokenLifetimeInSeconds),
+            expires: accessTokenExpiryTime,
             claims: claims);
 
-        //сгенерируем refresh_token
-        var refreshToken = TokenHelper.GenerateRefreshToken();
-        var expiryTime = DateTime.UtcNow.AddSeconds(_bearerSettings.RefreshTokenLifetimeInSeconds);
+        //если у пользователя нет refresh_token или он просрочен - создаем новый
+        if (user.RefreshToken is null || user.RefreshTokenExpiryTime < now)
+        {
+            //сгенерируем refresh_token
+            var refreshToken = TokenHelper.GenerateRefreshToken();
+            var refreshTokenExpiryTime = now.AddSeconds(_bearerSettings.RefreshTokenLifetimeInSeconds);
 
-        //сохраним refresh_token внутри пользователя
-        user.RefreshToken = refreshToken;
-        user.RefreshTokenExpiryTime = expiryTime;
-        await _userManager.UpdateAsync(user);
+            //сохраним refresh_token внутри пользователя
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = refreshTokenExpiryTime;
+            await _userManager.UpdateAsync(user);
+        }
 
-        var token = new Infrastructure.Common.Models.Tokens()
+        var token = new Infrastructure.Common.Models.Token()
         {
             AccessToken = accessToken,
-            RefreshToken = refreshToken,
-            Expiration = user.RefreshTokenExpiryTime,
+            AccessTokenExpiryTime = accessTokenExpiryTime,
+            RefreshToken = user.RefreshToken,
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime,
         };
 
         return operation.AddSuccess(string.Empty, token);

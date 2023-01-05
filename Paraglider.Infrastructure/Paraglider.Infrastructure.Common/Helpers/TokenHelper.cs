@@ -43,16 +43,23 @@ public static class TokenHelper
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var principal = tokenHandler.ValidateToken(
-            token: accessToken, 
-            validationParameters: validationParameters, 
-            validatedToken: out SecurityToken securityToken);
+        try
+        {
+            var principal = tokenHandler.ValidateToken(
+                token: accessToken,
+                validationParameters: validationParameters,
+                validatedToken: out SecurityToken securityToken);
 
-        var alg = SecurityAlgorithms.HmacSha256;
-        var strComparasion = StringComparison.InvariantCultureIgnoreCase;
+            var alg = SecurityAlgorithms.HmacSha256;
+            var strComparasion = StringComparison.InvariantCultureIgnoreCase;
 
-        return securityToken is not JwtSecurityToken jwtSecurityToken
-            || !jwtSecurityToken.Header.Alg.Equals(alg, strComparasion)
-                ? null : principal;
+            return securityToken is not JwtSecurityToken jwtSecurityToken
+                || !jwtSecurityToken.Header.Alg.Equals(alg, strComparasion)
+                    ? null : principal;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }
