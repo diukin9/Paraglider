@@ -5,6 +5,9 @@ namespace Paraglider.Domain.RDB.Entities;
 
 public class ApplicationUser : IdentityUser<Guid>, IAggregateRoot
 {
+    public string? RefreshToken { get; set; }
+    public DateTime RefreshTokenExpiryTime { get; set; }
+
     public string FirstName { get; set; } = null!;
 
     public string Surname { get; set; } = null!;

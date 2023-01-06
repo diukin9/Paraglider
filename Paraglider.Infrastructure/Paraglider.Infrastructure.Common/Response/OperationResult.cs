@@ -49,6 +49,11 @@ public class OperationResult<T>
         Metadata = new Metadata<T>(validation.ErrorMessage!, MetadataType.Error);
         return this;
     }
+
+    public T? GetDataObject() 
+    {
+        return Metadata!.DataObject;
+    }
 }
 
 public class OperationResult : OperationResult<None>

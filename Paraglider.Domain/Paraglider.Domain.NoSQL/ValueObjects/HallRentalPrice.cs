@@ -4,9 +4,9 @@ namespace Paraglider.Domain.NoSQL.ValueObjects;
 
 public class HallRentalPrice
 {
-    [BsonIgnoreIfNull, BsonElement("pricePerPerson")]
+    [BsonElement("pricePerPerson")]
     public decimal? PricePerPerson { get; set; }
 
-    [BsonIgnoreIfNull, BsonElement("rentalPrice")]
+    [BsonElement("rentalPrice")]
     public decimal? RentalPrice { get; set; }
 }

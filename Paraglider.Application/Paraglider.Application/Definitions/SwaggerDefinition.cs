@@ -1,12 +1,14 @@
 ﻿using Microsoft.OpenApi.Models;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.AppDefinition;
+using Paraglider.Infrastructure.Common.Attributes;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Reflection;
 using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(9)]
 public class SwaggerDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
@@ -29,11 +31,6 @@ public class SwaggerDefinition : AppDefinition
 
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment environment)
     {
-        if (!app.Environment.IsDevelopment())
-        {
-            return;
-        }
-
         app.UseSwagger();
         app.UseSwaggerUI(settings =>
         {

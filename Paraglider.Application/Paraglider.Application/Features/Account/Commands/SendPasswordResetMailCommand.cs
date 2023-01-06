@@ -14,7 +14,8 @@ namespace Paraglider.Application.Features.Account.Commands;
 
 public class SendPasswordResetMailRequest : IRequest<OperationResult>
 {
-    [Required, EmailAddress] public string Email { get; set; } = null!;
+    [Required, EmailAddress] 
+    public string Email { get; set; } = null!;
 }
 
 public class SendPasswordResetMailCommandHandler 

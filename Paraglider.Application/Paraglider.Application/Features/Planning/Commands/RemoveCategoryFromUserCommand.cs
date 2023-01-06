@@ -12,7 +12,8 @@ namespace Paraglider.Application.Features.Planning.Commands;
 
 public record RemoveCategoryFromUserRequest : IRequest<OperationResult>
 {
-    [Required, NotEmptyGuid] public Guid CategoryId { get; set; }
+    [Required, NotEmptyGuid] 
+    public Guid CategoryId { get; set; }
 }
 
 public class RemoveCategoryFromUserCommandHandler 

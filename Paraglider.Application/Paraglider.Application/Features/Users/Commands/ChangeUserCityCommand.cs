@@ -13,7 +13,8 @@ namespace Paraglider.Application.Features.Users.Commands;
 
 public class ChangeUserCityRequest : IRequest<OperationResult>
 {
-    [Required, NotEmptyGuid] public Guid CityId { get; set; }
+    [Required, NotEmptyGuid] 
+    public Guid CityId { get; set; }
 }
 
 public class ChangeUserCityCommandHandler 

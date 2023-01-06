@@ -24,7 +24,8 @@ public class UserFactory
             Planning = new Planning()
             {
                 Id = Guid.NewGuid()
-            }
+            },
+            SecurityStamp = Guid.NewGuid().ToString()
         };
 
         if (data.Provider.HasValue && !string.IsNullOrEmpty(data.ExternalId))

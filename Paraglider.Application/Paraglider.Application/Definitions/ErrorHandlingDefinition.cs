@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Paraglider.Infrastructure.Common.AppDefinition;
+using Paraglider.Infrastructure.Common.Attributes;
 using Serilog;
-using System.Text.Json;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(4)]
 public class ErrorHandlingDefinition : AppDefinition
 {
     public override void ConfigureApplication(WebApplication app, IWebHostEnvironment env)

@@ -47,6 +47,20 @@ public class GorkoClient
         return await FillWithReviewsAsync(request, perPage, page, cityId);
     }
 
+    public async Task<PagedResult<Car>?> GetCarsAsync(CarType carType,
+        int perPage = 10,
+        int page = 1,
+        long? cityId = null)
+    {
+        var request = BuildRequestFor()
+            .Cars
+            .WithType(carType)
+            .FilterBy(car => car.CityId, cityId)
+            .WithPaging(new PagingParameters(page, perPage));
+        var response = await request.GetResultAsync();
+        return response.IsSuccessful ? response.Value : default;
+    }
+
     private async Task<PagedResult<T>?> FillWithReviewsAsync<T>(
         IGorkoResource<T> request,
         int perPage,

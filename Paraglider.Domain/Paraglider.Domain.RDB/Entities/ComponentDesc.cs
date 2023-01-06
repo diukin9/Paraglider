@@ -7,7 +7,7 @@ namespace Paraglider.Domain.RDB.Entities;
 public class ComponentDesc : IIdentified<Guid>
 {
     public Guid Id { get; set; }
-    public ComponentStatus Status { get; set; } = ComponentStatus.PreSelection;
+    public AgreementStatus Status { get; set; } = AgreementStatus.PreSelection;
     public TimeInterval? TimeInterval { get; set; }
 
     public Guid PlanningComponentId { get; set; }

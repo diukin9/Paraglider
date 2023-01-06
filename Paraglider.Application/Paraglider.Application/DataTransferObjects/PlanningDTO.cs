@@ -3,7 +3,7 @@ using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Application.DataTransferObjects;
 
-public record PlanningDTO : IDataTransferObject
+public class PlanningDTO : IDataTransferObject
 {
     public DateOnly? WeddingDate { get; set; }
     public List<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();

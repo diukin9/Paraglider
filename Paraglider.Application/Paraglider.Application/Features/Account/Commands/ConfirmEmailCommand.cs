@@ -12,8 +12,11 @@ namespace Paraglider.Application.Features.Account.Commands;
 
 public class ConfirmEmailRequest : IRequest<OperationResult<string>>
 {
-    [Required, NotEmptyGuid] public Guid UserId { get; set; }
-    [Required] public string Token { get; set; } = null!;
+    [Required, NotEmptyGuid] 
+    public Guid UserId { get; set; }
+
+    [Required] 
+    public string Token { get; set; } = null!;
 }
 
 public class ConfirmEmailCommandHandler

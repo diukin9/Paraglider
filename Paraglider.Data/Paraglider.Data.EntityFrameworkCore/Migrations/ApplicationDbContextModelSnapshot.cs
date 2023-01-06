@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Paraglider.Data.EntityFrameworkCore;
 
 #nullable disable
 
@@ -16,7 +17,7 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -219,6 +220,12 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Property<Guid>("PlanningId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -278,6 +285,24 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cities");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ComponentAdditionHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ComponentId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ComponentAdditionHistory");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ComponentDesc", b =>
@@ -551,7 +576,7 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Paraglider.Domain.Common.ValueObjects.TimeInterval", "TimeInterval", b1 =>
+                    b.OwnsOne("Paraglider.Domain.RDB.ValueObjects.TimeInterval", "TimeInterval", b1 =>
                         {
                             b1.Property<Guid>("ComponentDescId")
                                 .HasColumnType("uuid");

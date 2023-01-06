@@ -13,7 +13,8 @@ public class Car : IHaveId
 
     public ICollection<CatalogMedia>? Media { get; set; }
 
-    [JsonProperty("params")] public CarParameters? Parameters { get; set; }
+    [JsonProperty("params")] 
+    public CarParameters? Parameters { get; set; }
 
     public ICollection<Contact>? Contacts { get; set; }
 

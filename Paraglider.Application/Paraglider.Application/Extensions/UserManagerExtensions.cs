@@ -34,4 +34,12 @@ public static class UserManagerExtensions
 
         return login;
     }
+
+    public static async Task<ApplicationUser?> FindByNameIdentifierAsync(
+        this UserManager<ApplicationUser> userManager,
+        string nameIdentifier)
+    {
+        return await userManager.FindByEmailAsync(nameIdentifier) 
+            ?? await userManager.FindByNameAsync(nameIdentifier);
+    }
 }

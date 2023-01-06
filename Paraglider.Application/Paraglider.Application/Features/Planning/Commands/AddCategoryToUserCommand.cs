@@ -12,7 +12,8 @@ namespace Paraglider.Application.Features.Planning.Commands;
 
 public class AddCategoryToUserRequest : IRequest<OperationResult>
 {
-    [Required, NotEmptyGuid] public Guid CategoryId { get; set; }
+    [Required, NotEmptyGuid] 
+    public Guid CategoryId { get; set; }
 }
 
 public class AddCategoryToUserCommandHandler 

@@ -1,13 +1,12 @@
 ﻿using Hangfire;
 using Hangfire.MemoryStorage;
 using Paraglider.Application.BackgroundJobs;
-using Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko;
-using Paraglider.Clients.Gorko;
-using Paraglider.Domain.Common.Enums;
 using Paraglider.Infrastructure.Common.AppDefinition;
+using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(5)]
 public class HangfireDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)

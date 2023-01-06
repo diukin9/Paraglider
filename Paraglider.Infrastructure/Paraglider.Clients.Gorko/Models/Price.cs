@@ -9,7 +9,9 @@ public class Price : IHaveId
     public string? Title { get; set; }
     public string? Description { get; set; }
 
-    [JsonProperty("value1")] public decimal? ValueFrom { get; set; }
+    [JsonProperty("value1")]
+    public decimal? ValueFrom { get; set; }
 
-    [JsonProperty("value2")] public decimal? ValueTo { get; set; }
+    [JsonProperty("value2")]
+    public decimal? ValueTo { get; set; }
 }

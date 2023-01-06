@@ -3,9 +3,11 @@ using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Clients.Gorko;
 using Paraglider.MailService.Models;
 using Paraglider.MailService;
+using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;
 
+[CallingOrder(11)]
 public class DependencyContainerDefinition : AppDefinition
 {
     public override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
@@ -14,7 +16,8 @@ public class DependencyContainerDefinition : AppDefinition
         services.AddAntiforgery(options => options.HeaderName = "X-CSRF-TOKEN");
 
         services.AddSingleton<GorkoClient>();
-        services.AddScoped<ImportComponentsFromGorkoReccuringJob>();
+        services.AddScoped<ImportComponentsFromGorkoRecurringJob>();
+        services.AddScoped<UpdateComponentPopularityDataRecurringJob>();
 
         var mailSettings = new MailSettings();
         configuration.Bind(nameof(MailSettings), mailSettings);

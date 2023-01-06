@@ -13,7 +13,8 @@ namespace Paraglider.Application.Features.Users.Commands;
 
 public class AddComponentToFavouritesRequest : IRequest<OperationResult>
 {
-    [Required] public string ComponentId { get; set; } = null!;
+    [Required] 
+    public string ComponentId { get; set; } = null!;
 }
 
 public class AddComponentToFavouritesCommandHandler 
@@ -51,8 +52,8 @@ public class AddComponentToFavouritesCommandHandler
         }
 
         //получаем текущего пользователя
-        var username = _accessor.HttpContext!.User.Identity!.Name;
-        var user = await _userRepository.FindByUsernameAsync(username!);
+        var identifier = _accessor.HttpContext!.Request.Headers.GetNameIdentifierFromBearerToken();
+        var user = await _userRepository.FindByNameIdentifierAsync(identifier!);
         if (user is null)
         {
             return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));

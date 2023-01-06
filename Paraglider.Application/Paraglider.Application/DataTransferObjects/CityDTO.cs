@@ -2,7 +2,7 @@
 
 namespace Paraglider.Application.DataTransferObjects;
 
-public record CityDTO : IDataTransferObject
+public class CityDTO : IDataTransferObject
 {
     public Guid Id { get; init; }
     public string Name { get; init; } = null!;

@@ -1,5 +1,6 @@
 ﻿using MapsterMapper;
 using MediatR;
+using MongoDB.Driver;
 using Paraglider.Application.DataTransferObjects;
 using Paraglider.Domain.NoSQL.Entities;
 using Paraglider.Infrastructure.Common;
@@ -14,10 +15,23 @@ namespace Paraglider.Application.Features.Components.Queries;
 
 public class GetComponentsRequest : IRequest<OperationResult<IEnumerable<ComponentDTO>>>
 {
-    [Required, NotEmptyGuid] public Guid CategoryId { get; set; } //TODO сделать верхнюю границу для пагинации
-    [NotNegative] public int? PerPage { get; set; } = 15;
-    [NotNegative] public int? Page { get; set; } = 1;
-    [IsSortingKey(typeof(ComponentSorterKey))] public string? SortingKey { get; set; }
+    [Required, NotEmptyGuid] 
+    public Guid CategoryId { get; set; }
+
+    [Required, NotEmptyGuid] 
+    public Guid CityId { get; set; }
+
+    [Required, Range(1, 100)] 
+    public int? PerPage { get; set; } = 15;
+
+    [Required, NotNegative] 
+    public int? Page { get; set; } = 1;
+
+    [Required, IsEnumName(typeof(ComponentSorterKey))]
+    public string SortingKey { get; set; } = null!;
+
+    [Required, IsEnumName(typeof(SortDirection))]
+    public string SortDirectionKey { get; set; } = null!;
 }
 
 public class GetComponentsQueryHandler 
@@ -47,8 +61,14 @@ public class GetComponentsQueryHandler
 
         //получаем компоненты
         var components = await _components.FindAsync(
-            filter: x => x.Category.Id == request.CategoryId,
-            // TODO доделать сортировку sort: x => ...
+            filter: x => x.Category.Id == request.CategoryId && x.City.Id == request.CityId,
+            sort: Enum.Parse(typeof(ComponentSorterKey), request.SortingKey) switch
+            {
+                ComponentSorterKey.Popularity => x => x.Popularity,
+                ComponentSorterKey.Rating => x => x.Rating,
+                _ => throw new ApplicationException()
+            },
+            sortDirection: (SortDirection)Enum.Parse(typeof(SortDirection), request.SortDirectionKey),
             skip: request.PerPage!.Value * request.Page!.Value - request.PerPage!.Value,
             limit: request.PerPage.Value);
 

@@ -1,9 +1,8 @@
-﻿using Paraglider.Application.DataTransferObjects;
-using Paraglider.Infrastructure.Common.Interfaces;
+﻿using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Application.DataTransferObjects;
 
-public record UserDTO : IDataTransferObject
+public class UserDTO : IDataTransferObject
 {
     public Guid Id { get; init; }
     public string FirstName { get; init; } = null!;
