@@ -26,6 +26,8 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: m35pn92x
       ME_CONFIG_MONGODB_URL: mongodb://root:m35pn92x@mongo:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: m35pn92x
   
   psql:
     image: postgres
@@ -49,7 +51,7 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=m35pn92x
 
   paraglider_app:
-    image: maxxlorge/paraglider:${TAG}
+    image: maxxlorge/paraglider:latest
     restart: always
     ports:
       - 5001:443

@@ -16,8 +16,6 @@ try
     var builder = WebApplication.CreateBuilder(args);
     builder.Host.UseSerilog();
 
-    builder.Configuration.AddJsonFile("secrets.json");
-    
     // adding definitions for application
     builder.Services.AddDefinitions(builder, typeof(Program));
     
