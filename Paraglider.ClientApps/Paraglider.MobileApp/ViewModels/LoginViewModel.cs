@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Paraglider.MobileApp.Pages;
 using Paraglider.MobileApp.Platforms;
@@ -10,8 +9,17 @@ namespace Paraglider.MobileApp.ViewModels;
 
 public partial class LoginViewModel : BaseViewModel
 {
-    public string Login { get; set; }
-    public string Password { get; set; }
+    [ObservableProperty]
+    private string login;
+
+    [ObservableProperty]
+    private string password;
+
+    [ObservableProperty]
+    private bool errorIsDisplayed;
+
+    [ObservableProperty]
+    private string errorMessage;
 
     private readonly StorageService storageService;
     private readonly NavigationService navigationService;
@@ -51,41 +59,29 @@ public partial class LoginViewModel : BaseViewModel
     {
         if (IsBusy) return;
 
+        IsBusy = true;
+
         var lastLoginDate = await storageService.GetLastLoginDateAsync();
 
-        if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(Password))
+        if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
         {
-            await Snackbar.Make(
-                message: "Необходимо заполнить все поля",
-                actionButtonText: "X",
-                duration: TimeSpan.FromSeconds(3),
-                visualOptions: new SnackbarOptions
-                {
-                    BackgroundColor = new Color(245, 245, 245),
-                    TextColor = new Color(58, 58, 58),
-                    CornerRadius = new CornerRadius(15)
-                }).Show();
-
+            ErrorMessage = "Необходимо заполнить все поля";
+            ErrorIsDisplayed = true;
+            IsBusy = false;
             return;
         }
 
-        IsBusy = true;
-
-        if (!await storageService.AddOrUpdateToken(Login, Password))
+        if (!await storageService.AddOrUpdateToken(login, password))
         {
-            await Snackbar.Make(
-                message: "Неверный логин или пароль",
-                actionButtonText: "X",
-                duration: TimeSpan.FromSeconds(3),
-                visualOptions: new SnackbarOptions
-                {
-                    BackgroundColor = new Color(245, 245, 245),
-                    TextColor = new Color(58, 58, 58),
-                    CornerRadius = new CornerRadius(15)
-                }).Show();
+            ErrorMessage = "Неверный логин или пароль";
+            ErrorIsDisplayed = true;
+            IsBusy = false;
+            return;
         }
         else
         {
+            ErrorIsDisplayed = false;
+
             if (lastLoginDate is null)
             {
                 await navigationService.GoToAsync<IntroPage>(true);

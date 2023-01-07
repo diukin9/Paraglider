@@ -193,6 +193,24 @@
 
             </VerticalStackLayout>
 
+            <VerticalStackLayout 
+                Grid.Row="6"
+                Grid.ColumnSpan="2"
+                VerticalOptions="CenterAndExpand"
+                HorizontalOptions="FillAndExpand"
+                Spacing="5"
+                IsVisible="{Binding ErrorIsDisplayed}" >
+                
+                <Image Source="warning_icon.svg" HorizontalOptions="CenterAndExpand" />
+
+                <Label Text="{Binding ErrorMessage}"
+                       HorizontalOptions="CenterAndExpand"
+                       FontFamily="geometria_medium"
+                       FontSize="14"
+                       TextColor="#DF7272" />
+
+            </VerticalStackLayout>
+
             <Button 
                 x:Name="Submit_btn" 
                 Grid.Row="7"
