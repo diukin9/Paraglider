@@ -1,6 +1,6 @@
-﻿using Serilog;
+﻿using Paraglider.Infrastructure.Common.AppDefinition;
+using Serilog;
 using Serilog.Events;
-using Paraglider.Infrastructure.Common.AppDefinition;
 
 try
 {
@@ -18,7 +18,7 @@ try
 
     // adding definitions for application
     builder.Services.AddDefinitions(builder, typeof(Program));
-
+    
     // create application
     var app = builder.Build();
 
