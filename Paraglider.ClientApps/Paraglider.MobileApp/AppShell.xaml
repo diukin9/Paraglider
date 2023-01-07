@@ -9,8 +9,5 @@
     Shell.NavBarIsVisible="false">
 
     <ShellContent ContentTemplate="{DataTemplate pages:LoadingPage}" Route="LoadingPage" />
-    <ShellContent ContentTemplate="{DataTemplate pages:LoginPage}" Route="LoginPage" />
-    <ShellContent ContentTemplate="{DataTemplate pages:ForgotPasswordPage}" Route="ForgotPasswordPage" />
-    <ShellContent ContentTemplate="{DataTemplate pages:RegistrationPage}" Route="RegistrationPage" />
-    
+
 </Shell>

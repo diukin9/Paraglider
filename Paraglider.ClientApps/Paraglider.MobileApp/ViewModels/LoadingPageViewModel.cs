@@ -6,19 +6,28 @@ namespace Paraglider.MobileApp.ViewModels;
 public class LoadingPageViewModel
 {
     private readonly StorageService storageService;
+    private readonly NavigationService navigationService;
 
-    public LoadingPageViewModel(StorageService storageService)
+    public LoadingPageViewModel(StorageService storageService, NavigationService navigationService)
     {
         this.storageService = storageService;
-        GoToNextPageAsync();
+        this.navigationService = navigationService;
+
+        GoToStartPageAsync();
     }
 
-    private async void GoToNextPageAsync()
+    private async void GoToStartPageAsync()
     {
         var token = await storageService.GetTokenAsync();
 
-        var page = token is null ? nameof(LoginPage) : nameof(MainPage);
-        await Shell.Current.GoToAsync($"//{page}");
+        if (token is null)
+        {
+            await navigationService.GoToAsync<LoginPage>();
+        }
+        else
+        {
+            await navigationService.GoToAsync<MainPage>();
+        }
     }
 
 }

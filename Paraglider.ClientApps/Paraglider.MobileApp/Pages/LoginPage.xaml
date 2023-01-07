@@ -7,7 +7,7 @@
     x:Class="Paraglider.MobileApp.Pages.LoginPage"            
     x:DataType="viewmodel:LoginViewModel"            
     Shell.FlyoutBehavior="Disabled"       
-    Shell.NavBarIsVisible="false">
+    NavigationPage.HasNavigationBar="False">
 
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior 

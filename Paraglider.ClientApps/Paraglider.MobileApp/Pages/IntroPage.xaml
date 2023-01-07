@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewmodels="clr-namespace:Paraglider.MobileApp.ViewModels"
+    xmlns:models="clr-namespace:Paraglider.MobileApp.Models"
+    x:Class="Paraglider.MobileApp.Pages.IntroPage"
+    x:DataType="viewmodels:IntroPageViewModel"
+    NavigationPage.HasNavigationBar="False">
+    <VerticalStackLayout
+        HorizontalOptions="CenterAndExpand"
+        VerticalOptions="CenterAndExpand">
+        <CarouselView 
+            x:Name="Carousel"
+            IsBounceEnabled="False"
+            IndicatorView="indicatorView"
+            Loop="True"
+            HorizontalOptions="CenterAndExpand" 
+            VerticalOptions="CenterAndExpand" 
+            ItemsSource="{Binding IntroScreens}"
+            IsSwipeEnabled="False"
+            Position="{Binding Position, Mode=TwoWay}"
+            PositionChangedCommand="{Binding PositionChangedCommand}">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="models:IntroScreen">
+                    <Grid RowDefinitions="*, Auto" RowSpacing="50">
+                        <Image Source="{Binding ImagePath}" Aspect="Center" Grid.Row="0" />
+                        <VerticalStackLayout Grid.Row="1" Margin="35, 0" Spacing="15">
+                            <Label 
+                                Text="{Binding Title}" 
+                                TextColor="#3A3A3A"
+                                FontFamily="geometria_bold"
+                                FontSize="20" 
+                                FontAttributes="Bold"/>
+                            <Label 
+                                Text="{Binding Description}"
+                                FontSize="16" 
+                                TextColor="#909090"
+                                FontFamily="geometria_light" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+        <HorizontalStackLayout 
+            Margin="0, 40"
+            HorizontalOptions="CenterAndExpand" 
+            VerticalOptions="CenterAndExpand">
+            <IndicatorView 
+                x:Name="indicatorView" 
+                VerticalOptions="Center"
+                IndicatorSize="10"
+                IndicatorColor="#CCCCCC"  
+                SelectedIndicatorColor="#FF8787" />
+        </HorizontalStackLayout>
+        <Button 
+            x:Name="Btn"
+            Text="{Binding BtnText, Mode=TwoWay}"
+            BackgroundColor="#FF8787"
+            FontSize="14"
+            FontFamily="geometria_bold"
+            FontAttributes="Bold"
+            Padding="75,15"
+            CornerRadius="20"
+            HorizontalOptions="CenterAndExpand"
+            Command="{Binding BtnClickedCommand}">
+            <Button.Shadow>
+                <Shadow Brush="Black" Offset="0, 30" Opacity="0.15" Radius="40" />
+            </Button.Shadow>
+        </Button>
+    </VerticalStackLayout>
+</ContentPage>
