@@ -1,4 +1,3 @@
-using CommunityToolkit.Maui.Behaviors;
 using Paraglider.MobileApp.ViewModels;
 
 namespace Paraglider.MobileApp.Pages;

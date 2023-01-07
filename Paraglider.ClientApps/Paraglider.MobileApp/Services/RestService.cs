@@ -32,7 +32,10 @@ public class RestService
         HttpContent httpContent = null,
         bool needAuth = false)
     {
-        if (string.IsNullOrEmpty(url) || method is null) throw new ArgumentException();
+        if (string.IsNullOrEmpty(url) || method is null)
+        {
+            throw new ArgumentException("Wrong parameters");
+        }
 
         var request = new HttpRequestMessage()
         {

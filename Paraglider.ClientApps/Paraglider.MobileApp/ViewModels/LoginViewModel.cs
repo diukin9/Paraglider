@@ -14,10 +14,12 @@ public partial class LoginViewModel : BaseViewModel
     public string Password { get; set; }
 
     private readonly StorageService storageService;
+    private readonly NavigationService navigationService;
 
-    public LoginViewModel(StorageService storageService)
+    public LoginViewModel(StorageService storageService, NavigationService navigationService)
     {
         this.storageService = storageService;
+        this.navigationService = navigationService;
     }
 
     [RelayCommand]
@@ -27,7 +29,7 @@ public partial class LoginViewModel : BaseViewModel
 
         IsBusy = true;
 
-        await Shell.Current.GoToAsync($"//{nameof(RegistrationPage)}");
+        await navigationService.GoToAsync<RegistrationPage>(true);
 
         IsBusy = false;
     }
@@ -39,7 +41,7 @@ public partial class LoginViewModel : BaseViewModel
 
         IsBusy = true;
 
-        await Shell.Current.GoToAsync($"//{nameof(ForgotPasswordPage)}");
+        await navigationService.GoToAsync<ForgotPasswordPage>(true);
 
         IsBusy = false;
     }
@@ -48,6 +50,8 @@ public partial class LoginViewModel : BaseViewModel
     private async Task Authorize()
     {
         if (IsBusy) return;
+
+        var lastLoginDate = await storageService.GetLastLoginDateAsync();
 
         if (string.IsNullOrEmpty(Login) || string.IsNullOrEmpty(Password))
         {
@@ -82,10 +86,14 @@ public partial class LoginViewModel : BaseViewModel
         }
         else
         {
-            var page = await storageService.GetLastLoginDateAsync() is null
-                ? nameof(WelcomePage) : nameof(MainPage);
-
-            await Shell.Current.GoToAsync($"//{page}");
+            if (lastLoginDate is null)
+            {
+                await navigationService.GoToAsync<IntroPage>(true);
+            }
+            else
+            {
+                await navigationService.GoToAsync<MainPage>(true);
+            }
         }
 
         IsBusy = false;

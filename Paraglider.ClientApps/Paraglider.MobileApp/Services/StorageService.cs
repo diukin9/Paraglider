@@ -94,7 +94,7 @@ public class StorageService
 
     private async Task<Token> GetTokenAsync(string login, string password)
     {
-        var url = new Uri($"{REST_URL}/auth/token");
+        var url = new Uri($"{REST_URL}/auth/mobile/token");
         var body = JsonSerializer.Serialize(new { login, password });
         var requestContent = new StringContent(body, Encoding.UTF8, "application/json");
 
@@ -116,7 +116,7 @@ public class StorageService
 
     private async Task<Token> UpdateTokenAsync(string expiredAccessToken, string refreshToken)
     {
-        var url = new Uri($"{REST_URL}/auth/token");
+        var url = new Uri($"{REST_URL}/auth/mobile/token");
         var body = JsonSerializer.Serialize(new 
         {
             expired_access_token = expiredAccessToken,
