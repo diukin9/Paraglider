@@ -6,13 +6,13 @@ namespace Paraglider.MobileApp.Services;
 public class RestService
 {
     private readonly HttpClient httpClient;
-    private readonly TokenService tokenService;
+    private readonly StorageService storageService;
     private readonly JsonSerializerOptions serializerOptions;
 
-    public RestService(HttpClient httpClient, TokenService tokenService)
+    public RestService(HttpClient httpClient, StorageService storageService)
     {
         this.httpClient = httpClient;
-        this.tokenService = tokenService;
+        this.storageService = storageService;
         serializerOptions = new JsonSerializerOptions();
     }
 
@@ -47,7 +47,7 @@ public class RestService
 
         if (needAuth)
         {
-            var access_token = await tokenService.GetTokenFromSecureStorageAsync();
+            var access_token = await storageService.GetTokenAsync();
             if (access_token is null) throw new UnauthorizedAccessException();
 
             var header = new AuthenticationHeaderValue("Bearer", access_token);

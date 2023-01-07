@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
 using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Infrastructure.Common.Attributes;
@@ -30,13 +30,11 @@ public class AuthDefinition : AppDefinition
         services.AddSingleton(tokenValidationParameters);
 
         services
-            .AddAuthorization()
-            .AddAuthentication(options => 
+            .AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme; ;
             })
+            .AddCookie()
             .AddJwtBearer(config =>
             {
                 config.TokenValidationParameters = tokenValidationParameters;
@@ -53,6 +51,8 @@ public class AuthDefinition : AppDefinition
                 config.ClientId = configuration["Authentication:Vkontakte:ClientId"]!;
                 config.ClientSecret = configuration["Authentication:Vkontakte:ClientSecret"]!;
             });
+            
+            services.AddAuthorization();
 
         var bearerSettings = new BearerSettings();
         configuration.Bind("Authentication:Bearer", bearerSettings);

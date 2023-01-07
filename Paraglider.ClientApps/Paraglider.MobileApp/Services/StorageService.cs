@@ -5,16 +5,23 @@ using static Paraglider.MobileApp.Constants;
 
 namespace Paraglider.MobileApp.Services;
 
-public class TokenService
+public class StorageService
 {
     private readonly HttpClient httpClient;
 
-    public TokenService(HttpClient httpClient)
+    public StorageService(HttpClient httpClient)
     {
         this.httpClient = httpClient;
     }
 
-    public async Task<string> GetTokenFromSecureStorageAsync()
+    public async Task<DateTime?> GetLastLoginDateAsync()
+    {
+        var value = await SecureStorage.GetAsync(LAST_LOGIN_DATE);
+        if (value is null) return null;
+        return DateTime.Parse(value);
+    }
+
+    public async Task<string> GetTokenAsync()
     {
         //получаем access_token из хранилища
         var accessToken = await SecureStorage.GetAsync(ACCESS_TOKEN_KEY);
@@ -65,7 +72,7 @@ public class TokenService
         return null;
     }
 
-    public async Task<bool> AddOrUpdateTokensInSecureStorage(string login, string password)
+    public async Task<bool> AddOrUpdateToken(string login, string password)
     {
         var token = await GetTokenAsync(login, password);
         if (token is null) return false;
@@ -80,12 +87,14 @@ public class TokenService
             key: ACCESS_TOKEN_EXPIRY_TIME_KEY,
             value: token.AccessTokenExpiryTime.ToString());
 
+        await SecureStorage.SetAsync(LAST_LOGIN_DATE, DateTime.UtcNow.ToString());
+
         return true;
     }
 
     private async Task<Token> GetTokenAsync(string login, string password)
     {
-        var url = new Uri($"{REST_URL}/token");
+        var url = new Uri($"{REST_URL}/auth/token");
         var body = JsonSerializer.Serialize(new { login, password });
         var requestContent = new StringContent(body, Encoding.UTF8, "application/json");
 
@@ -107,7 +116,7 @@ public class TokenService
 
     private async Task<Token> UpdateTokenAsync(string expiredAccessToken, string refreshToken)
     {
-        var url = new Uri($"{REST_URL}/token");
+        var url = new Uri($"{REST_URL}/auth/token");
         var body = JsonSerializer.Serialize(new 
         {
             expired_access_token = expiredAccessToken,
