@@ -103,7 +103,7 @@ public class ExternalAuthCommandHandler
 
         //преобразуем callback
         var url = BuildCallback(
-            callback,
+            $"{callback://}",
             accessToken,
             user.RefreshToken!,
             user.RefreshTokenExpiryTime);
