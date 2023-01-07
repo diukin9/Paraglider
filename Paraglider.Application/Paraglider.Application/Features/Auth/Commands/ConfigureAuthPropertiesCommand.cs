@@ -20,16 +20,18 @@ public class ConfigureAuthPropertiesRequest
     [Required, IsEnumName(typeof(AuthProvider))] 
     public string Provider { get; set; } = null!;
 
-    [Required] 
-    public string Callback { get; set; } = null!;
+    public string? Callback { get; set; } = null!;
 
     [Required]
     public AuthType AuthType { get; set; }
 
-    public ConfigureAuthPropertiesRequest(string provider, string returnUrl, AuthType authType)
+    public ConfigureAuthPropertiesRequest(
+        string provider, 
+        AuthType authType, 
+        string? callback = null)
     {
         Provider = provider;
-        Callback = returnUrl;
+        Callback = callback;
         AuthType = authType;
     }
 }
@@ -58,8 +60,12 @@ public class ConfigureAuthPropertiesCommandHandler
 
         //конфигурируем authentication properties
         var callbackUrl = $"{ExternalAuthHandlerRelativePath}" +
-            $"?callback={WebUtility.UrlEncode(request.Callback)}" +
-            $"&authType={(int)request.AuthType}";
+            $"?authType={(int)request.AuthType}";
+
+        if (request.AuthType == AuthType.Cookie)
+        {
+            callbackUrl += $"&callback={WebUtility.UrlEncode(request.Callback)}";
+        }
 
         var properties = _signInManager.ConfigureExternalAuthenticationProperties(request.Provider, callbackUrl);
 

@@ -95,8 +95,8 @@ public partial class LoginViewModel : BaseViewModel
     private async Task AuthorizeByExternalProvider(string provider)
     {
         var authToken = string.Empty;
-        var callbackUrl = new Uri($"{WebAuthenticationCallbackActivity.CALLBACK_SCHEME}");
-        var authUrl = new Uri($"{REST_URL}/auth/common/{provider}?callback={callbackUrl}&authType=1");
+        var callbackUrl = new Uri($"{WebAuthenticationCallbackActivity.CALLBACK_SCHEME}://");
+        var authUrl = new Uri($"{REST_URL}/auth/web/{provider}?callback=check");
 
         var response = await WebAuthenticator.AuthenticateAsync(authUrl, callbackUrl);
 
