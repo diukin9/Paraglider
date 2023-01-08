@@ -23,6 +23,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton(new HttpClient());
 
+        //pages
         builder.Services.AddSingleton<LoadingPage>();
         builder.Services.AddSingleton<IntroPage>();
         builder.Services.AddTransient<MainPage>();
@@ -30,13 +31,17 @@ public static class MauiProgram
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegistrationPage>();
 
+        //services
         builder.Services.AddSingleton<NavigationService>();
         builder.Services.AddSingleton<RestService>();
         builder.Services.AddTransient<StorageService>();
+        builder.Services.AddTransient<AccountService>();
 
+        //viewmodels
         builder.Services.AddTransient<LoginViewModel>();
-        builder.Services.AddTransient<IntroPageViewModel>();
-        builder.Services.AddTransient<LoadingPageViewModel>();
+        builder.Services.AddSingleton<IntroPageViewModel>();
+        builder.Services.AddSingleton<LoadingPageViewModel>();
+        builder.Services.AddTransient<ForgotPasswordViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();
