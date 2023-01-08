@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.IdentityModel.Tokens;
 using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Infrastructure.Common.Attributes;
 using Paraglider.Infrastructure.Common.Models;
-using System.Text;
 
 namespace Paraglider.Application.Definitions;
 
@@ -32,7 +32,7 @@ public class AuthDefinition : AppDefinition
         services
             .AddAuthentication(options =>
             {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme; ;
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             })
             .AddCookie()
             .AddJwtBearer(config =>
