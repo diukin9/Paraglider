@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
+using MediatR;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Domain.RDB.Entities;
@@ -8,8 +10,6 @@ using Paraglider.Infrastructure.Common.Attributes;
 using Paraglider.Infrastructure.Common.Enums;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Response;
-using System.ComponentModel.DataAnnotations;
-using System.Net;
 using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Application.Features.Auth.Commands;
@@ -59,8 +59,8 @@ public class ConfigureAuthPropertiesCommandHandler
         if (!validation.IsValid()) return Task.FromResult(operation.AddError(validation));
 
         //конфигурируем authentication properties
-        var callbackUrl = $"{ExternalAuthHandlerRelativePath}" +
-            $"?authType={(int)request.AuthType}";
+        var callbackUrl = $"{DomainUrl}{ExternalAuthHandlerRelativePath}" +
+                          $"?authType={(int)request.AuthType}";
 
         if (request.AuthType == AuthType.Cookie)
         {
