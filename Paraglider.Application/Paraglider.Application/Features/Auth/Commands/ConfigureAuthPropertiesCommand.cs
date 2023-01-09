@@ -59,7 +59,7 @@ public class ConfigureAuthPropertiesCommandHandler
         if (!validation.IsValid()) return Task.FromResult(operation.AddError(validation));
 
         //конфигурируем authentication properties
-        var callbackUrl = $"{DomainUrl}{ExternalAuthHandlerRelativePath}" +
+        var callbackUrl = $"{ExternalAuthHandlerRelativePath}" +
                           $"?authType={(int)request.AuthType}";
 
         if (request.AuthType == AuthType.Cookie)
