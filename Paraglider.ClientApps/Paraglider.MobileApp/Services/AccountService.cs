@@ -34,4 +34,24 @@ public class AccountService
             return false;
         }
     }
+
+    public async Task<bool> RegisterAsync(RegisterModel model)
+    {
+        var url = $"{API_URL}/account/register";
+        var body = JsonSerializer.Serialize(model);
+        var requestContent = new StringContent(body, Encoding.UTF8, "application/json");
+
+        try
+        {
+            var response = await httpClient.PostAsync(url, requestContent);
+            var content = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<ResponseTemplate>(content);
+            return result.IsOk;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error when trying to register a user: {ex.Message}");
+            return false;
+        }
+    }
 }

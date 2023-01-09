@@ -37,12 +37,14 @@ public static class MauiProgram
         //services
         builder.Services.AddTransient<StorageService>();
         builder.Services.AddTransient<AccountService>();
+        builder.Services.AddTransient<CityService>();
 
         //viewmodels
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddSingleton<IntroPageViewModel>();
         builder.Services.AddSingleton<LoadingPageViewModel>();
-        builder.Services.AddTransient<ForgotPasswordViewModel>();
+        builder.Services.AddTransient<ForgotPasswordViewModel>(); 
+        builder.Services.AddTransient<RegisterViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

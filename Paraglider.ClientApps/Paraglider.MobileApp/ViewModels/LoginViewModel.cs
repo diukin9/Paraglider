@@ -72,8 +72,6 @@ public partial class LoginViewModel : BaseViewModel
         }
         else
         {
-            ErrorIsDisplayed = false;
-
             if (lastLoginDate is null)
             {
                 await NavigationService.GoToIntroPageAsync(true);
@@ -103,8 +101,6 @@ public partial class LoginViewModel : BaseViewModel
         }
         else
         {
-            ErrorIsDisplayed = false;
-
             if (lastLoginDate is null)
             {
                 await NavigationService.GoToIntroPageAsync(true);

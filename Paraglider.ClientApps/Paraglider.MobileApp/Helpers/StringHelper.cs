@@ -9,4 +9,9 @@ public static class StringHelper
         if (string.IsNullOrEmpty(value)) return false;
         return MailAddress.TryCreate(value.Trim().ToLower(), out var result);
     }
+
+    public static bool IsNullOrEmpty(params string[] values)
+    {
+        return values.Any(x => IsNullOrEmpty(x));
+    }
 }
