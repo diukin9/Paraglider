@@ -14,6 +14,18 @@ public class ResponseTemplate<T>
     public bool IsOk { get; set; }
 }
 
+public class ResponseTemplate
+{
+    [JsonPropertyName("metadata")]
+    public Metadata<None> Metadata { get; set; }
+
+    [JsonPropertyName("exception")]
+    public Exception Exception { get; set; }
+
+    [JsonPropertyName("isOk")]
+    public bool IsOk { get; set; }
+}
+
 public class Metadata<T>
 {
     [JsonPropertyName("message")]
@@ -24,4 +36,9 @@ public class Metadata<T>
 
     [JsonPropertyName("dataObject")]
     public T DataObject { get; set; }
+}
+
+public class None
+{
+
 }

@@ -29,5 +29,4 @@ public class LoadingPageViewModel
             await navigationService.GoToAsync<MainPage>();
         }
     }
-
 }

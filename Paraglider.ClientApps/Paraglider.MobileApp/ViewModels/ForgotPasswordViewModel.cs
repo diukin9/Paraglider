@@ -63,7 +63,7 @@ public partial class ForgotPasswordViewModel : BaseViewModel
         var btn = (Button)grid.FindByName("submit_btn");
         var input = (VerticalStackLayout)grid.FindByName("input");
 
-        var emailIsSent = await accountService.TryResetPasswordAsync(email);
+        var emailIsSent = await accountService.TrySendEmailToResetPasswordAsync(email);
 
         LoaderIsDisplayed = false;
 

@@ -1,4 +1,5 @@
 ﻿using Paraglider.MobileApp.Models;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using static Paraglider.MobileApp.Constants;
@@ -7,25 +8,29 @@ namespace Paraglider.MobileApp.Services;
 
 public class AccountService
 {
-    private readonly RestService restService;
+    private readonly HttpClient httpClient;
 
-    public AccountService(RestService restService)
+    public AccountService(HttpClient httpClient)
     {
-        this.restService = restService;
+        this.httpClient = httpClient;
     }
 
-    public async Task<bool> TryResetPasswordAsync(string email)
+    public async Task<bool> TrySendEmailToResetPasswordAsync(string email)
     {
+        var url = $"{API_URL}/account/reset-password";
+        var body = JsonSerializer.Serialize(new { email });
+        var requestContent = new StringContent(body, Encoding.UTF8, "application/json");
+
         try
         {
-            var url = $"{REST_URL}/account/reset-password";
-            var body = JsonSerializer.Serialize(new { email });
-            var requestContent = new StringContent(body, Encoding.UTF8, "application/json");
-            var response = await restService.PostAsync<ResponseTemplate<string>>(url, requestContent, false);
-            return response.IsOk;
+            var response = await httpClient.PostAsync(url, requestContent);
+            var content = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<ResponseTemplate>(content);
+            return result.IsOk;
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine($"Failed to send password recovery email: {ex.Message}");
             return false;
         }
     }

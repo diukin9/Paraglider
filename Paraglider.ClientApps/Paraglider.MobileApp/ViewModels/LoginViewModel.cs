@@ -64,17 +64,17 @@ public partial class LoginViewModel : BaseViewModel
             return;
         }
 
-        if (!await storageService.AddOrUpdateToken(login, password))
-        {
+        var isSuccessful = await storageService.UpdateTokenAsync(login, password);
 
-            LoaderIsDisplayed = false;
+        LoaderIsDisplayed = false;
+
+        if (!isSuccessful)
+        {
             ErrorMessage = "Неверный логин или пароль";
             ErrorIsDisplayed = true;
-            return;
         }
         else
         {
-            LoaderIsDisplayed = false;
             ErrorIsDisplayed = false;
 
             if (lastLoginDate is null)
@@ -91,18 +91,31 @@ public partial class LoginViewModel : BaseViewModel
     [RelayCommand]
     private async Task AuthorizeByExternalProvider(string provider)
     {
-        await Task.Delay(500);
+        ErrorIsDisplayed = false;
+        LoaderIsDisplayed = true;
 
-        //var authToken = string.Empty;
-        //var callbackUrl = new Uri($"{WebAuthenticationCallbackActivity.CALLBACK_SCHEME}://");
-        //var authUrl = new Uri($"{REST_URL}/auth/web/{provider}?callback=check");
+        var lastLoginDate = await storageService.GetLastLoginDateAsync();
+        var isSuccessful = await storageService.UpdateTokenAsync(provider);
 
-        //var response = await WebAuthenticator.AuthenticateAsync(authUrl, callbackUrl);
+        LoaderIsDisplayed = false;
 
-        //if (response.Properties.TryGetValue("name", out var name) && !string.IsNullOrEmpty(name))
-        //    authToken += $"Name: {name}{Environment.NewLine}";
-        //if (response.Properties.TryGetValue("email", out var email) && !string.IsNullOrEmpty(email))
-        //    authToken += $"Email: {email}{Environment.NewLine}";
-        //authToken += response?.AccessToken ?? response?.IdToken;
+        if (!isSuccessful)
+        {
+            ErrorMessage = "Не удалось авторизоваться";
+            ErrorIsDisplayed = true;
+        }
+        else
+        {
+            ErrorIsDisplayed = false;
+
+            if (lastLoginDate is null)
+            {
+                await navigationService.GoToAsync<IntroPage>(true);
+            }
+            else
+            {
+                await navigationService.GoToAsync<MainPage>(true);
+            }
+        }
     }
 }
