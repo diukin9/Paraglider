@@ -55,24 +55,11 @@ public class ExternalAuthCommandHandler
 
         //получаем ExternalLoginInfo
         var info = await _signInManager.GetExternalLoginInfoAsync();
-        //if (info is null) return operation.AddError("Не удалось аутентифицировать пользователя");
-        if (info is null) return operation.AddError("External login info was null");
+        if (info is null) return operation.AddError("Не удалось аутентифицировать пользователя");
 
         //получаем пользователя
         var user = await GetUserByExternalLoginInfoAsync(info);
-        //if (user is null) return operation.AddError("Не удалось аутентифицировать пользователя");
-        if (user is null)
-        {
-            var data = new
-            {
-                NameIdentifier = info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier),
-                Email = info.Principal.Claims.GetByClaimType(ClaimTypes.Email),
-                Name = info.Principal.Claims.GetByClaimType(ClaimTypes.Name),
-                Surname = info.Principal.Claims.GetByClaimType(ClaimTypes.Surname),
-                Sid = info.Principal.Claims.GetByClaimType(ClaimTypes.Sid),
-            };
-            return operation.AddError($"Failed to identify user by ExternalLoginInfo\n{JsonSerializer.Serialize(data)}");
-        }
+        if (user is null) return operation.AddError("Не удалось аутентифицировать пользователя");
 
         //если у пользователя нет такого UserLoginInfo - создаем
         if (await _userManager.FindUserLoginInfoAsync(user, info.LoginProvider, info.ProviderKey) is null)
