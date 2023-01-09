@@ -26,10 +26,12 @@ export const AuthProviderBlockRoot = styled.a`
   gap: 8px;
 
   border-radius: 12px;
+  color: ${({ theme }) => theme.textColors.default};
   background: ${({ theme }) => theme.bgColors.white};
   box-shadow: 0px 2px 8px rgba(64, 64, 64, 0.1);
 
   cursor: pointer;
+  text-decoration: none;
   user-select: none;
 
   :hover {

@@ -1,6 +1,6 @@
 export enum AuthProvider {
-  Yandex = "0",
-  Vkontakte = "1",
+  Yandex = "Yandex",
+  Vkontakte = "Vkontakte",
 }
 
 export interface RegisterUserRequest {

@@ -4,7 +4,7 @@
   "scripts": {
     "start:client-app": "vite",
     "start:storybook": "storybook dev -p 6006",
-    "start:server-app": "dotnet run --project ..\\Paraglider.Application\\Paraglider.Application\\Paraglider.Application.csproj",
+    "start:server-app": "dotnet run --project ..\\..\\Paraglider.Application\\Paraglider.Application\\Paraglider.Application.csproj",
     "build:client-app": "vite build",
     "build:storybook": "storybook build",
     "preview": "vite preview",

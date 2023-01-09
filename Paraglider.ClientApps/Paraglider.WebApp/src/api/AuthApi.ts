@@ -3,18 +3,20 @@ import axios, { AxiosPromise } from "axios";
 import { BasicAuthRequest } from "../typings/server";
 
 export interface IAuthApi {
-  basicAuth: (data: BasicAuthRequest) => AxiosPromise<void>;
+  signIn: (data: BasicAuthRequest) => AxiosPromise<void>;
   logout: () => AxiosPromise<void>;
 }
 
 export class AuthApi implements IAuthApi {
-  public basicAuth(data: BasicAuthRequest) {
-    const url = `basic-auth`;
+  private readonly baseUrl = "api/v1/auth/web";
+
+  public signIn(data: BasicAuthRequest) {
+    const url = `${this.baseUrl}/sign-in`;
     return axios.post(url, data);
   }
 
   public logout() {
-    const url = `logout`;
+    const url = `${this.baseUrl}/logout`;
     return axios.post(url);
   }
 }

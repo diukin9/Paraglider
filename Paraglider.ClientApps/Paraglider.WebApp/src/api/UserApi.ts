@@ -11,7 +11,6 @@ export class UserApi implements IUserApi {
 
   public getUser() {
     const url = `${this.baseUrl}`;
-    console.log(axios.defaults);
-    return axios.get<User>(url);
+    return axios.get(url);
   }
 }

@@ -24,7 +24,7 @@ export const LoginCard = ({ onGoToRegistration }: Props) => {
 
   const handleLogin = async (data: BasicAuthRequest) => {
     try {
-      await authApi.basicAuth(data);
+      await authApi.signIn(data);
     } catch (e) {
       console.error(e);
     }

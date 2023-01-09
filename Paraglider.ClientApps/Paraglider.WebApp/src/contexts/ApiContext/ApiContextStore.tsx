@@ -13,6 +13,7 @@ export const ApiContextStore = ({ children }: PropsWithChildren) => {
 
   const setGlobalAxiosConfig = useCallback(() => {
     axios.defaults.baseURL = import.meta.env.VITE_API_PROXY_URL;
+    axios.defaults.withCredentials = true;
   }, []);
 
   useEffect(() => {
