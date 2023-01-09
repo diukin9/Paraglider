@@ -69,13 +69,7 @@ public partial class IntroPageViewModel : BaseViewModel
     [RelayCommand]
     private async Task OnBtnClickedAsync()
     {
-        if (IsBusy) return;
-
-        IsBusy = true;
-
         if (position < introScreens.Count - 1) Position++;
         else await navigationService.GoToAsync<MainPage>(true);
-
-        IsBusy = false;
     }
 }

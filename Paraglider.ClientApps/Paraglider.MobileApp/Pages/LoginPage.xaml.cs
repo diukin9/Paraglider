@@ -13,12 +13,6 @@ public partial class LoginPage : ContentPage
         BindingContext= viewModel;
     }
 
-    private void PasswordEntry_Completed(object sender, EventArgs e)
-    {
-        PasswordEntry.IsEnabled = false;
-        PasswordEntry.IsEnabled = true;
-    }
-
     private async void SignInViaYandexButton_Clicked(object sender, EventArgs e)
     {
         if (!signInViaYandexButton_IsAnimating)
@@ -39,5 +33,30 @@ public partial class LoginPage : ContentPage
             await SignInViaVkontakteButton.ScaleTo(1);
             signInViaVkontakteButton_IsAnimating = false;
         }
+    }
+
+    private void HideKeyboard(object sender, TappedEventArgs e)
+    {
+        EmailEntry.IsEnabled = false;
+        EmailEntry.IsEnabled = true;
+
+        PasswordEntry.IsEnabled = false;
+        PasswordEntry.IsEnabled = true;
+    }
+
+    private void HideKeyboard(object sender, EventArgs e)
+    {
+        PasswordEntry.IsEnabled = false;
+        PasswordEntry.IsEnabled = true;
+    }
+
+    private void EmailEntry_Focused(object sender, FocusEventArgs e)
+    {
+        EmailEntry.Text = string.Empty;
+    }
+
+    private void PasswordEntry_Focused(object sender, FocusEventArgs e)
+    {
+        PasswordEntry.Text = string.Empty;
     }
 }
