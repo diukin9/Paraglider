@@ -1,11 +1,10 @@
-﻿using System.Net.Sockets;
-using System.Net;
-
-namespace Paraglider.MobileApp;
+﻿namespace Paraglider.MobileApp;
 
 public static class Constants
 {
-    public static string REST_URL => "http://192.168.0.146:8099/api/v1";
+    public const string API_URL = "https://para-plan.ru/api/v1";
+
+    public const string LAST_LOGIN_DATE = "last_login_date";
 
     public const string REFRESH_TOKEN_KEY = "refresh_token";
     public const string REFRESH_TOKEN_EXPIRY_TIME_KEY = "refresh_token_expiry_time";

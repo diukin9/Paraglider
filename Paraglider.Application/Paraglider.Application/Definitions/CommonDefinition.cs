@@ -41,7 +41,7 @@ public class CommonDefinition : AppDefinition
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
         });
-
+        app.UseHsts();
         app.UseHttpsRedirection();
         app.MapDefaultControllerRoute();
     }

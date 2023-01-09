@@ -1,71 +1,118 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using Paraglider.MobileApp.Platforms;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Paraglider.MobileApp.Services;
-using static Paraglider.MobileApp.Constants;
 
 namespace Paraglider.MobileApp.ViewModels;
 
 public partial class LoginViewModel : BaseViewModel
 {
-    public string Login { get; set; }
-    public string Password { get; set; }
+    public bool AuthorizeCommandIsNotRunning => !AuthorizeCommand.IsRunning;
+    public bool AuthorizeByExternalProviderCommandIsNotRunning => !AuthorizeByExternalProviderCommand.IsRunning;
+    public bool GoToForgotPasswordPageCommandIsNotRunning => !GoToForgotPasswordPageCommand.IsRunning;
+    public bool GoToRegistrationPageCommandIsNotRunning => !GoToRegistrationPageCommand.IsRunning;
 
-    private readonly TokenService tokenService;
+    [ObservableProperty]
+    private string login;
 
-    public LoginViewModel(TokenService tokenService)
+    [ObservableProperty]
+    private string password;
+
+    [ObservableProperty]
+    private bool errorIsDisplayed;
+
+    [ObservableProperty]
+    private string errorMessage;
+
+    [ObservableProperty]
+    private bool loaderIsDisplayed;
+
+    private readonly StorageService storageService;
+
+    public LoginViewModel(StorageService storageService)
     {
-        this.tokenService = tokenService;
+        this.storageService = storageService;
+    }
+
+    [RelayCommand]
+    private async Task GoToRegistrationPageAsync()
+    {
+        await NavigationService.GoToRegistrationPageAsync(true);
+    }
+
+    [RelayCommand]
+    private async Task GoToForgotPasswordPageAsync()
+    {
+        await NavigationService.GoToForgotPasswordPageAsync(true);
     }
 
     [RelayCommand]
     private async Task Authorize()
     {
-        if (IsBusy) return;
+        ErrorIsDisplayed = false;
+        LoaderIsDisplayed = true;
 
-        IsBusy = true;
+        var lastLoginDate = await storageService.GetLastLoginDateAsync();
 
-        if (!await tokenService.AddOrUpdateTokensInSecureStorage(Login, Password))
+        if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
         {
-            await Shell.Current.DisplayAlert("Ошибка!", "Неверный логин или пароль", "Ок");
+            LoaderIsDisplayed = false;
+            ErrorMessage = "Необходимо заполнить все поля";
+            ErrorIsDisplayed = true;
+            return;
+        }
+
+        var isSuccessful = await storageService.UpdateTokenAsync(login, password);
+
+        LoaderIsDisplayed = false;
+
+        if (!isSuccessful)
+        {
+            ErrorMessage = "Неверный логин или пароль";
+            ErrorIsDisplayed = true;
         }
         else
         {
-            await Shell.Current.DisplayAlert("Оповещение", "Успешный вход", "Ок");
-        }
+            ErrorIsDisplayed = false;
 
-        IsBusy = false;
+            if (lastLoginDate is null)
+            {
+                await NavigationService.GoToIntroPageAsync(true);
+            }
+            else
+            {
+                await NavigationService.GoToMainPageAsync(true);
+            }
+        }
     }
 
     [RelayCommand]
     private async Task AuthorizeByExternalProvider(string provider)
     {
-        var authToken = string.Empty;
-        var callbackUrl = new Uri($"{WebAuthenticationCallbackActivity.CALLBACK_SCHEME}://");
-        var authUrl = new Uri($"{REST_URL}/token/{provider}?callbackUrl={callbackUrl}");
+        ErrorIsDisplayed = false;
+        LoaderIsDisplayed = true;
 
-        var response = await WebAuthenticator.AuthenticateAsync(authUrl, callbackUrl);
+        var lastLoginDate = await storageService.GetLastLoginDateAsync();
+        var isSuccessful = await storageService.UpdateTokenAsync(provider);
 
-        //if (response.Properties.TryGetValue("name", out var name) && !string.IsNullOrEmpty(name))
-        //    authToken += $"Name: {name}{Environment.NewLine}";
-        //if (response.Properties.TryGetValue("email", out var email) && !string.IsNullOrEmpty(email))
-        //    authToken += $"Email: {email}{Environment.NewLine}";
-        //authToken += response?.AccessToken ?? response?.IdToken;
-    }
+        LoaderIsDisplayed = false;
 
-    [RelayCommand]
-    private async Task CheckAuth()
-    {
-        if (IsBusy) return;
+        if (!isSuccessful)
+        {
+            ErrorMessage = "Не удалось авторизоваться";
+            ErrorIsDisplayed = true;
+        }
+        else
+        {
+            ErrorIsDisplayed = false;
 
-        IsBusy = true;
-
-        var token = await tokenService.GetTokenFromSecureStorageAsync();
-
-        await Shell.Current.DisplayAlert(
-            "Проверка авторизации",
-            token is null ? "Вы не авторизованы" : $"Ваш токен: {token}",
-            "Ок");
-
-        IsBusy = false;
+            if (lastLoginDate is null)
+            {
+                await NavigationService.GoToIntroPageAsync(true);
+            }
+            else
+            {
+                await NavigationService.GoToMainPageAsync(true);
+            }
+        }
     }
 }

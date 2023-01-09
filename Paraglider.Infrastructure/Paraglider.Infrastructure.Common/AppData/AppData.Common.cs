@@ -4,6 +4,7 @@ public static partial class AppData
 {
     public const string ServiceName = "Paraglider";
     public const string TypingsNamespace = "Paraglider.Web.Endpoints";
+    public const string MobileUrl = "paragliderapp://";
 
     public const string ExternalAuthHandlerRelativePath = "/external-auth-handler";
 
