@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace Paraglider.Application.Features.Auth.Commands;
 
@@ -60,7 +61,18 @@ public class ExternalAuthCommandHandler
         //получаем пользователя
         var user = await GetUserByExternalLoginInfoAsync(info);
         //if (user is null) return operation.AddError("Не удалось аутентифицировать пользователя");
-        if (user is null) return operation.AddError("Failed to identify user by ExternalLoginInfo");
+        if (user is null)
+        {
+            var data = new
+            {
+                NameIdentifier = info.Principal.Claims.GetByClaimType(ClaimTypes.NameIdentifier),
+                Email = info.Principal.Claims.GetByClaimType(ClaimTypes.Email),
+                Name = info.Principal.Claims.GetByClaimType(ClaimTypes.Name),
+                Surname = info.Principal.Claims.GetByClaimType(ClaimTypes.Surname),
+                Sid = info.Principal.Claims.GetByClaimType(ClaimTypes.Sid),
+            };
+            return operation.AddError($"Failed to identify user by ExternalLoginInfo\n{JsonSerializer.Serialize(data)}");
+        }
 
         //если у пользователя нет такого UserLoginInfo - создаем
         if (await _userManager.FindUserLoginInfoAsync(user, info.LoginProvider, info.ProviderKey) is null)
