@@ -93,9 +93,9 @@ public class AuthController : Controller
         if (authType == AuthType.Token) callback = MobileUrl;
 
         var userRequest = new CheckUserExistenceByExternalLoginInfoRequest();
-        var userResponse = await _mediator.Send(userRequest, cancellationToken);
+        var isExist = (await _mediator.Send(userRequest, cancellationToken)).GetDataObject();
 
-        if (!userResponse.IsOk)
+        if (!isExist)
         {
             var createUserRequest = new CreateExternalUserRequest();
             var createResponse = await _mediator.Send(createUserRequest, cancellationToken);
