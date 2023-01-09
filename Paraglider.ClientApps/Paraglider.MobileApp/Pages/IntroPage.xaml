@@ -5,8 +5,7 @@
     xmlns:viewmodels="clr-namespace:Paraglider.MobileApp.ViewModels"
     xmlns:models="clr-namespace:Paraglider.MobileApp.Models"
     x:Class="Paraglider.MobileApp.Pages.IntroPage"
-    x:DataType="viewmodels:IntroPageViewModel"
-    NavigationPage.HasNavigationBar="False">
+    x:DataType="viewmodels:IntroPageViewModel">
     <VerticalStackLayout
         HorizontalOptions="CenterAndExpand"
         VerticalOptions="CenterAndExpand">

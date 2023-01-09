@@ -2,6 +2,7 @@
 
 <network-security-config>
 	<domain-config cleartextTrafficPermitted="true">
-		<domain includeSubdomains="true">51.250.74.89</domain>
+		<domain includeSubdomains="true">para-plan.ru</domain>
+		<domain includeSubdomains="true">para-plan.online</domain>
 	</domain-config>
 </network-security-config>

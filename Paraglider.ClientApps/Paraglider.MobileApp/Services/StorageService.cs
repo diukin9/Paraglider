@@ -1,5 +1,6 @@
 ﻿using Paraglider.MobileApp.Platforms;
 using System.Diagnostics;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using static Paraglider.MobileApp.Constants;
@@ -160,7 +161,7 @@ public class StorageService
 
             response.Properties.TryGetValue("access_token", out var accessToken);
             response.Properties.TryGetValue("access_token_expires_at", out var accessTokenExpTime);
-            response.Properties.TryGetValue("refresh_Token", out var refreshToken);
+            response.Properties.TryGetValue("refresh_token", out var refreshToken);
             response.Properties.TryGetValue("refresh_token_expires_at", out var refreshTokenExpTime);
 
             if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(accessTokenExpTime)
@@ -171,10 +172,10 @@ public class StorageService
 
             return new Token
             {
-                AccessToken = accessToken,
-                RefreshToken = refreshTokenExpTime,
-                AccessTokenExpiryTime = DateTime.Parse(accessTokenExpTime),
-                RefreshTokenExpiryTime = DateTime.Parse(refreshTokenExpTime)
+                AccessToken = WebUtility.UrlDecode(accessToken),
+                RefreshToken = WebUtility.UrlDecode(refreshTokenExpTime),
+                AccessTokenExpiryTime = DateTime.Parse(WebUtility.UrlDecode(accessTokenExpTime)),
+                RefreshTokenExpiryTime = DateTime.Parse(WebUtility.UrlDecode(refreshTokenExpTime))
             };
         }
         catch (TaskCanceledException ex)

@@ -5,6 +5,7 @@ using Paraglider.MobileApp.ViewModels;
 using CommunityToolkit.Maui;
 
 namespace Paraglider.MobileApp;
+
 public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
@@ -25,14 +26,15 @@ public static class MauiProgram
 
         //pages
         builder.Services.AddSingleton<LoadingPage>();
-        builder.Services.AddSingleton<IntroPage>();
-        builder.Services.AddTransient<MainPage>();
+        builder.Services.AddTransient<CatalogPage>();
+        builder.Services.AddTransient<HomePage>();
+        builder.Services.AddTransient<IntroPage>();
         builder.Services.AddTransient<ForgotPasswordPage>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<RegistrationPage>();
+        builder.Services.AddTransient<PlanningPage>();
 
         //services
-        builder.Services.AddSingleton<NavigationService>();
         builder.Services.AddTransient<StorageService>();
         builder.Services.AddTransient<AccountService>();
 

@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Maui.Behaviors;
 using CommunityToolkit.Maui.Core;
-using Paraglider.MobileApp.Pages;
 
 namespace Paraglider.MobileApp;
 

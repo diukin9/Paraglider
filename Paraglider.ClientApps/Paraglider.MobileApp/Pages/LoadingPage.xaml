@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"  
-             x:Class="Paraglider.MobileApp.Pages.LoadingPage"
-             NavigationPage.HasNavigationBar="False">
+             x:Class="Paraglider.MobileApp.Pages.LoadingPage">
 
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior 

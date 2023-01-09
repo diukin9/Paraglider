@@ -18,9 +18,7 @@ public partial class IntroPageViewModel : BaseViewModel
     [ObservableProperty]
     private string btnText = "Далее";
 
-    private readonly NavigationService navigationService;
-
-    public IntroPageViewModel(NavigationService navigationService)
+    public IntroPageViewModel()
     {
         introScreens.Add(new IntroScreen()
         {
@@ -56,8 +54,6 @@ public partial class IntroPageViewModel : BaseViewModel
                 "свадьбы",
             ImagePath = "carousel_ready_plan.svg"
         });
-
-        this.navigationService = navigationService;
     }
 
     [RelayCommand]
@@ -69,7 +65,13 @@ public partial class IntroPageViewModel : BaseViewModel
     [RelayCommand]
     private async Task OnBtnClickedAsync()
     {
-        if (position < introScreens.Count - 1) Position++;
-        else await navigationService.GoToAsync<MainPage>(true);
+        if (position < introScreens.Count - 1)
+        {
+            Position++;
+        }
+        else
+        {
+            await NavigationService.GoToMainPageAsync(true);
+        }
     }
 }

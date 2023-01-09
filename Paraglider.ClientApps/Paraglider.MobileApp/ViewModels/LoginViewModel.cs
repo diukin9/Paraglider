@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Paraglider.MobileApp.Pages;
 using Paraglider.MobileApp.Services;
 
 namespace Paraglider.MobileApp.ViewModels;
@@ -28,24 +27,22 @@ public partial class LoginViewModel : BaseViewModel
     private bool loaderIsDisplayed;
 
     private readonly StorageService storageService;
-    private readonly NavigationService navigationService;
 
-    public LoginViewModel(StorageService storageService, NavigationService navigationService)
+    public LoginViewModel(StorageService storageService)
     {
         this.storageService = storageService;
-        this.navigationService = navigationService;
     }
 
     [RelayCommand]
     private async Task GoToRegistrationPageAsync()
     {
-        await navigationService.GoToAsync<RegistrationPage>(true);
+        await NavigationService.GoToRegistrationPageAsync(true);
     }
 
     [RelayCommand]
     private async Task GoToForgotPasswordPageAsync()
     {
-        await navigationService.GoToAsync<ForgotPasswordPage>(true);
+        await NavigationService.GoToForgotPasswordPageAsync(true);
     }
 
     [RelayCommand]
@@ -79,11 +76,11 @@ public partial class LoginViewModel : BaseViewModel
 
             if (lastLoginDate is null)
             {
-                await navigationService.GoToAsync<IntroPage>(true);
+                await NavigationService.GoToIntroPageAsync(true);
             }
             else
             {
-                await navigationService.GoToAsync<MainPage>(true);
+                await NavigationService.GoToMainPageAsync(true);
             }
         }
     }
@@ -110,11 +107,11 @@ public partial class LoginViewModel : BaseViewModel
 
             if (lastLoginDate is null)
             {
-                await navigationService.GoToAsync<IntroPage>(true);
+                await NavigationService.GoToIntroPageAsync(true);
             }
             else
             {
-                await navigationService.GoToAsync<MainPage>(true);
+                await NavigationService.GoToMainPageAsync(true);
             }
         }
     }

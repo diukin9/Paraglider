@@ -28,11 +28,9 @@ public partial class ForgotPasswordViewModel : BaseViewModel
     private int msgLabelRow = 3;
 
     private readonly AccountService accountService;
-    private readonly NavigationService navigationService;
 
-    public ForgotPasswordViewModel(NavigationService navigationService, AccountService accountService)
+    public ForgotPasswordViewModel(AccountService accountService)
     {
-        this.navigationService = navigationService;
         this.accountService = accountService;
     }
 
@@ -91,7 +89,7 @@ public partial class ForgotPasswordViewModel : BaseViewModel
     [RelayCommand]
     private async Task GoToPreviousPageAsync()
     {
-        await navigationService.GoBackAsync(true);
+        await NavigationService.GoToLoginPageAsync(true);
     }
 
     private static string GetDefaultImagePath()
@@ -139,10 +137,11 @@ public partial class ForgotPasswordViewModel : BaseViewModel
 
         formattedString.Spans.Add(new Span()
         {
-            Text = $" {email} ",
+            Text = $"\n{email}\n",
             FontSize = 16,
             TextColor = new Color(58, 58, 58),
-            FontFamily = "geometria_medium"
+            FontFamily = "geometria_medium",
+            
         });
 
         formattedString.Spans.Add(new Span()

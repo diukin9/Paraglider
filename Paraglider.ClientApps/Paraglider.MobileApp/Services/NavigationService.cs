@@ -1,35 +1,34 @@
 ﻿namespace Paraglider.MobileApp.Services;
 
-public class NavigationService
+public static class NavigationService
 {
-    readonly IServiceProvider _services;
-    protected INavigation Navigation => Application.Current.MainPage.Navigation;
-
-    public NavigationService(IServiceProvider services)
-    { 
-        _services = services;
+    public static async Task GoToMainPageAsync(bool withAnimation = false)
+    {
+        await Shell.Current.GoToAsync("//MainPage", withAnimation);
     }
 
-    public async Task GoToAsync<T>(bool withAnimation = false) where T : Page
+    public static async Task GoToRegistrationPageAsync(bool withAnimation = false)
     {
-        var page = ResolvePage<T>();
-
-        if (page is not null)
-        {
-            await Navigation.PushAsync(page, withAnimation);
-            return;
-        }
-
-        throw new InvalidOperationException($"Unable to resolve type {typeof(T).FullName}");
+        await Shell.Current.GoToAsync("//RegistrationPage", withAnimation);
     }
 
-    public async Task GoBackAsync(bool withAnimation = false)
+    public static async Task GoToLoginPageAsync(bool withAnimation = false)
     {
-        await Navigation.PopAsync(withAnimation);
+        await Shell.Current.GoToAsync("//LoginPage", withAnimation);
     }
 
-    private T ResolvePage<T>() where T : Page
+    public static async Task GoToIntroPageAsync(bool withAnimation = false)
     {
-        return _services.GetService<T>();
+        await Shell.Current.GoToAsync("//IntroPage", withAnimation);
+    }
+
+    public static async Task GoToForgotPasswordPageAsync(bool withAnimation = false)
+    {
+        await Shell.Current.GoToAsync("//ForgotPasswordPage", withAnimation);
+    }
+
+    public static async Task GoToLoadingPageAsync(bool withAnimation = false)
+    {
+        await Shell.Current.GoToAsync("//LoadingPage", withAnimation);
     }
 }

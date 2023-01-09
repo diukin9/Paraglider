@@ -6,9 +6,32 @@
     xmlns:local="clr-namespace:Paraglider.MobileApp.Pages"
     xmlns:pages="clr-namespace:Paraglider.MobileApp.Pages"
     Shell.FlyoutBehavior="Disabled"
-    Shell.NavBarIsVisible="false">
+    Shell.NavBarIsVisible="False">
 
-    
-    <ShellContent ContentTemplate="{DataTemplate pages:LoadingPage}" Route="LoadingPage" />
+    <TabBar Route="LoadingPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:LoadingPage}" />
+    </TabBar>
+
+    <TabBar Route="ForgotPasswordPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:ForgotPasswordPage}" />
+    </TabBar>
+
+    <TabBar Route="IntroPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:IntroPage}" />
+    </TabBar>
+
+    <TabBar Route="LoginPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:LoginPage}" />
+    </TabBar>
+
+    <TabBar Route="RegistrationPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:RegistrationPage}" />
+    </TabBar>
+
+    <TabBar Route="MainPage">
+        <ShellContent Icon="home_icon.svg" ContentTemplate="{DataTemplate local:HomePage}" />
+        <ShellContent Icon="catalog_icon.svg" ContentTemplate="{DataTemplate local:CatalogPage}" />
+        <ShellContent Icon="plan_icon.svg" ContentTemplate="{DataTemplate local:PlanningPage}" />
+    </TabBar>
 
 </Shell>

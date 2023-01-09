@@ -1,8 +1,8 @@
 namespace Paraglider.MobileApp.Pages;
 
-public partial class MainPage : ContentPage
+public partial class PlanningPage : ContentPage
 {
-	public MainPage()
+	public PlanningPage()
 	{
 		InitializeComponent();
 	}
