@@ -1,14 +1,17 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Paraglider.MobileApp.Pages;
-using Paraglider.MobileApp.Platforms;
 using Paraglider.MobileApp.Services;
-using static Paraglider.MobileApp.Constants;
 
 namespace Paraglider.MobileApp.ViewModels;
 
 public partial class LoginViewModel : BaseViewModel
 {
+    public bool AuthorizeCommandIsNotRunning => !AuthorizeCommand.IsRunning;
+    public bool AuthorizeByExternalProviderCommandIsNotRunning => !AuthorizeByExternalProviderCommand.IsRunning;
+    public bool GoToForgotPasswordPageCommandIsNotRunning => !GoToForgotPasswordPageCommand.IsRunning;
+    public bool GoToRegistrationPageCommandIsNotRunning => !GoToRegistrationPageCommand.IsRunning;
+
     [ObservableProperty]
     private string login;
 
@@ -20,6 +23,9 @@ public partial class LoginViewModel : BaseViewModel
 
     [ObservableProperty]
     private string errorMessage;
+
+    [ObservableProperty]
+    private bool loaderIsDisplayed;
 
     private readonly StorageService storageService;
     private readonly NavigationService navigationService;
@@ -33,53 +39,42 @@ public partial class LoginViewModel : BaseViewModel
     [RelayCommand]
     private async Task GoToRegistrationPageAsync()
     {
-        if (IsBusy) return;
-
-        IsBusy = true;
-
         await navigationService.GoToAsync<RegistrationPage>(true);
-
-        IsBusy = false;
     }
 
     [RelayCommand]
     private async Task GoToForgotPasswordPageAsync()
     {
-        if (IsBusy) return;
-
-        IsBusy = true;
-
         await navigationService.GoToAsync<ForgotPasswordPage>(true);
-
-        IsBusy = false;
     }
 
     [RelayCommand]
     private async Task Authorize()
     {
-        if (IsBusy) return;
-
-        IsBusy = true;
+        ErrorIsDisplayed = false;
+        LoaderIsDisplayed = true;
 
         var lastLoginDate = await storageService.GetLastLoginDateAsync();
 
         if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
         {
+            LoaderIsDisplayed = false;
             ErrorMessage = "Необходимо заполнить все поля";
             ErrorIsDisplayed = true;
-            IsBusy = false;
             return;
         }
 
-        if (!await storageService.UpdateTokenAsync(login, password))
+        if (!await storageService.AddOrUpdateToken(login, password))
         {
+
+            LoaderIsDisplayed = false;
             ErrorMessage = "Неверный логин или пароль";
             ErrorIsDisplayed = true;
-            IsBusy = false;
             return;
         }
         else
         {
+            LoaderIsDisplayed = false;
             ErrorIsDisplayed = false;
 
             if (lastLoginDate is null)
@@ -91,21 +86,20 @@ public partial class LoginViewModel : BaseViewModel
                 await navigationService.GoToAsync<MainPage>(true);
             }
         }
-
-        IsBusy = false;
     }
 
     [RelayCommand]
     private async Task AuthorizeByExternalProvider(string provider)
     {
-        var authToken = string.Empty;
-        var callbackUrl = new Uri($"{WebAuthenticationCallbackActivity.CALLBACK_SCHEME}://");
-        var authUrl = new Uri($"{API_URL}/auth/mobile/{provider}");
+        await Task.Delay(500);
 
-        var response = await WebAuthenticator.AuthenticateAsync(authUrl, callbackUrl);
+        //var authToken = string.Empty;
+        //var callbackUrl = new Uri($"{WebAuthenticationCallbackActivity.CALLBACK_SCHEME}://");
+        //var authUrl = new Uri($"{REST_URL}/auth/web/{provider}?callback=check");
 
-        response.Properties.TryGetValue("access_token", out var accessToken);
-        response.Properties.TryGetValue("refresh_token", out var refreshToken);
+        //var response = await WebAuthenticator.AuthenticateAsync(authUrl, callbackUrl);
+
+        //if (response.Properties.TryGetValue("name", out var name) && !string.IsNullOrEmpty(name))
         //    authToken += $"Name: {name}{Environment.NewLine}";
         //if (response.Properties.TryGetValue("email", out var email) && !string.IsNullOrEmpty(email))
         //    authToken += $"Email: {email}{Environment.NewLine}";

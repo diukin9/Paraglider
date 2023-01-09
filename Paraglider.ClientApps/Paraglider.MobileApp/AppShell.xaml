@@ -8,6 +8,7 @@
     Shell.FlyoutBehavior="Disabled"
     Shell.NavBarIsVisible="false">
 
+    
     <ShellContent ContentTemplate="{DataTemplate pages:LoadingPage}" Route="LoadingPage" />
 
 </Shell>
