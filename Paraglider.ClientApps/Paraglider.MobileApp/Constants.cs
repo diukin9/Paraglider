@@ -2,7 +2,7 @@
 
 public static class Constants
 {
-    public const string REST_URL = "http://51.250.74.89/api/v1";
+    public const string API_URL = "https://para-plan.ru/api/v1";
 
     public const string LAST_LOGIN_DATE = "last_login_date";
 

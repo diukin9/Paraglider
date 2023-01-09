@@ -1,142 +1,111 @@
-﻿using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
-using static Paraglider.MobileApp.Constants;
+﻿using static Paraglider.MobileApp.Constants;
 
 namespace Paraglider.MobileApp.Services;
 
 public class StorageService
 {
-    private readonly HttpClient httpClient;
+    private readonly AuthService authService;
 
-    public StorageService(HttpClient httpClient)
+    public StorageService(AuthService authService)
     {
-        this.httpClient = httpClient;
+        this.authService = authService;
     }
 
     public async Task<DateTime?> GetLastLoginDateAsync()
     {
         var value = await SecureStorage.GetAsync(LAST_LOGIN_DATE);
-        if (value is null) return null;
-        return DateTime.Parse(value);
+        return value is null ? null : DateTime.Parse(value);
     }
 
     public async Task<string> GetTokenAsync()
     {
-        //получаем access_token из хранилища
-        var accessToken = await SecureStorage.GetAsync(ACCESS_TOKEN_KEY);
-        
-        var isSuccessful = DateTime.TryParse(
-            await SecureStorage.GetAsync(ACCESS_TOKEN_EXPIRY_TIME_KEY),
-            out var accessTokenExpiryTime);
+        var accessToken = await GetAccessTokenAsync();
+        var accessTokenExpTime = await GetAccessTokenExpiryTimeAsync();
 
-        //если срок действия access_token не истек - возвращаем его
-        if (isSuccessful && DateTime.UtcNow < accessTokenExpiryTime)
+        if (accessToken != null && accessTokenExpTime.HasValue && DateTime.UtcNow < accessTokenExpTime)
         {
             return accessToken;
         }
 
-        //удаляем данные о истекшем access_token из хранилища
-        SecureStorage.Remove(ACCESS_TOKEN_KEY);
-        SecureStorage.Remove(ACCESS_TOKEN_EXPIRY_TIME_KEY);
+        ClearAccessTokenData();
 
-        //получаем refresh_token из хранилища
-        var refreshToken = await SecureStorage.GetAsync(REFRESH_TOKEN_KEY);
+        var refreshToken = await GetRefreshTokenAsync();
+        var refreshTokenExpTime = await GetRefreshTokenExpiryTimeAsync();
 
-        isSuccessful = DateTime.TryParse(
-            await SecureStorage.GetAsync(REFRESH_TOKEN_EXPIRY_TIME_KEY),
-            out var refreshTokenExpiryTime);
-
-        //если срок действия refresh_token не истек - получаем новый access_token
-        if (isSuccessful && DateTime.UtcNow < refreshTokenExpiryTime)
+        if (refreshToken != null && refreshTokenExpTime.HasValue && DateTime.UtcNow < refreshTokenExpTime)
         {
-            //получаем обновленный токен
-            var token = await UpdateTokenAsync(accessToken, refreshToken);
-
-            //сохраним его в безопасном хранилище
-            if (token is not null)
-            {
-                await SecureStorage.SetAsync(ACCESS_TOKEN_KEY, token.AccessToken);
-                await SecureStorage.SetAsync(
-                    key: ACCESS_TOKEN_EXPIRY_TIME_KEY,
-                    value: token.AccessTokenExpiryTime.ToString());
-            }
-
+            var token = await authService.UpdateTokenAsync(accessToken, refreshToken);
+            if (token is not null) await SetAccessTokenAsync(token);
             return token?.AccessToken;
         }
 
-        //удаляем данные о истекшем refresh_token из хранилища
-        SecureStorage.Remove(REFRESH_TOKEN_KEY);
-        SecureStorage.Remove(REFRESH_TOKEN_EXPIRY_TIME_KEY);
+        ClearRefreshTokenData();
 
         return null;
     }
 
-    public async Task<bool> AddOrUpdateToken(string login, string password)
+    public async Task<bool> UpdateTokenAsync(string login, string password)
     {
-        var token = await GetTokenAsync(login, password);
+        var token = await authService.GetTokenAsync(login, password);
         if (token is null) return false;
 
-        await SecureStorage.SetAsync(REFRESH_TOKEN_KEY, token.RefreshToken);
-        await SecureStorage.SetAsync(
-            key: REFRESH_TOKEN_EXPIRY_TIME_KEY,
-            value: token.RefreshTokenExpiryTime.ToString());
-
-        await SecureStorage.SetAsync(ACCESS_TOKEN_KEY, token.AccessToken);
-        await SecureStorage.SetAsync(
-            key: ACCESS_TOKEN_EXPIRY_TIME_KEY,
-            value: token.AccessTokenExpiryTime.ToString());
-
-        await SecureStorage.SetAsync(LAST_LOGIN_DATE, DateTime.UtcNow.ToString());
+        await SetRefreshTokenAsync(token);
+        await SetAccessTokenAsync(token);
+        await SetLastLoginDateAsync(DateTime.UtcNow);
 
         return true;
     }
 
-    private async Task<Token> GetTokenAsync(string login, string password)
+    private async Task<string> GetAccessTokenAsync()
     {
-        var url = new Uri($"{REST_URL}/auth/mobile/token");
-        var body = JsonSerializer.Serialize(new { login, password });
-        var requestContent = new StringContent(body, Encoding.UTF8, "application/json");
-
-        try
-        {
-            var response = await httpClient.PostAsync(url, requestContent);
-            var content = await response.Content.ReadAsStreamAsync();
-
-            var token = await JsonSerializer.DeserializeAsync<Token>(content);
-
-            return token?.RefreshToken is null || token?.AccessToken is null ? null : token;
-        }
-        catch(Exception ex)
-        {
-            Debug.WriteLine($"Unable to get token: {ex.Message}");
-            return null;
-        }     
+        return await SecureStorage.GetAsync(ACCESS_TOKEN_KEY);
     }
 
-    private async Task<Token> UpdateTokenAsync(string expiredAccessToken, string refreshToken)
+    private async Task<DateTime?> GetAccessTokenExpiryTimeAsync()
     {
-        var url = new Uri($"{REST_URL}/auth/mobile/token");
-        var body = JsonSerializer.Serialize(new 
-        {
-            expired_access_token = expiredAccessToken,
-            refresh_token = refreshToken
-        });
-        var requestContent = new StringContent(body, Encoding.UTF8, "application/json");
+        var value = await SecureStorage.GetAsync(ACCESS_TOKEN_EXPIRY_TIME_KEY);
+        var result = DateTime.TryParse(value, out var accessTokenExpiryTime);
+        return result ? accessTokenExpiryTime : null;
+    }
 
-        try
-        {
-            var response = await httpClient.PutAsync(url, requestContent);
-            var content = await response.Content.ReadAsStreamAsync();
+    private async Task<string> GetRefreshTokenAsync()
+    {
+        return await SecureStorage.GetAsync(REFRESH_TOKEN_KEY);
+    }
 
-            var token = await JsonSerializer.DeserializeAsync<Token>(content);
+    private async Task<DateTime?> GetRefreshTokenExpiryTimeAsync()
+    {
+        var value = await SecureStorage.GetAsync(REFRESH_TOKEN_EXPIRY_TIME_KEY);
+        var result = DateTime.TryParse(value, out var refreshTokenExpiryTime);
+        return result ? refreshTokenExpiryTime : null;
+    }
 
-            return token?.RefreshToken is null || token?.AccessToken is null ? null : token;
-        }
-        catch(Exception ex)
-        {
-            Debug.WriteLine($"Unable to update token: {ex.Message}");
-            return null;
-        }
+    private void ClearAccessTokenData()
+    {
+        SecureStorage.Remove(ACCESS_TOKEN_KEY);
+        SecureStorage.Remove(ACCESS_TOKEN_EXPIRY_TIME_KEY);
+    }
+
+    private void ClearRefreshTokenData()
+    {
+        SecureStorage.Remove(REFRESH_TOKEN_KEY);
+        SecureStorage.Remove(REFRESH_TOKEN_EXPIRY_TIME_KEY);
+    }
+
+    private async Task SetAccessTokenAsync(Token token)
+    {
+        await SecureStorage.SetAsync(ACCESS_TOKEN_KEY, token.AccessToken);
+        await SecureStorage.SetAsync(ACCESS_TOKEN_EXPIRY_TIME_KEY, $"{token.AccessTokenExpiryTime}");
+    }
+
+    private async Task SetRefreshTokenAsync(Token token)
+    {
+        await SecureStorage.SetAsync(REFRESH_TOKEN_KEY, token.RefreshToken);
+        await SecureStorage.SetAsync(REFRESH_TOKEN_EXPIRY_TIME_KEY, $"{token.RefreshTokenExpiryTime}");
+    }
+
+    private async Task SetLastLoginDateAsync(DateTime dateTime)
+    {
+        await SecureStorage.SetAsync(LAST_LOGIN_DATE, $"{dateTime}");
     }
 }

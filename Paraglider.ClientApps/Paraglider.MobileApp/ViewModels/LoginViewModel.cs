@@ -71,7 +71,7 @@ public partial class LoginViewModel : BaseViewModel
             return;
         }
 
-        if (!await storageService.AddOrUpdateToken(login, password))
+        if (!await storageService.UpdateTokenAsync(login, password))
         {
             ErrorMessage = "Неверный логин или пароль";
             ErrorIsDisplayed = true;
@@ -100,11 +100,12 @@ public partial class LoginViewModel : BaseViewModel
     {
         var authToken = string.Empty;
         var callbackUrl = new Uri($"{WebAuthenticationCallbackActivity.CALLBACK_SCHEME}://");
-        var authUrl = new Uri($"{REST_URL}/auth/web/{provider}?callback=check");
+        var authUrl = new Uri($"{API_URL}/auth/mobile/{provider}");
 
         var response = await WebAuthenticator.AuthenticateAsync(authUrl, callbackUrl);
 
-        //if (response.Properties.TryGetValue("name", out var name) && !string.IsNullOrEmpty(name))
+        response.Properties.TryGetValue("access_token", out var accessToken);
+        response.Properties.TryGetValue("refresh_token", out var refreshToken);
         //    authToken += $"Name: {name}{Environment.NewLine}";
         //if (response.Properties.TryGetValue("email", out var email) && !string.IsNullOrEmpty(email))
         //    authToken += $"Email: {email}{Environment.NewLine}";

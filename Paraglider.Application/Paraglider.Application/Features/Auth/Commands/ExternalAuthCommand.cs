@@ -13,7 +13,6 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
-using System.Text.Json;
 
 namespace Paraglider.Application.Features.Auth.Commands;
 
@@ -99,6 +98,7 @@ public class ExternalAuthCommandHandler
         //если у пользователя не прокинут refresh_token - прокидываем
         if (user.RefreshToken is null) await AssignToUserRefreshTokenAsync(user);
 
+        var accessTokenExpiryTime = DateTime.UtcNow.AddSeconds(_bearerSettings.AccessTokenLifetimeInSeconds);
         //получим access_token
         var accessToken = GetAccessToken(user);
 
@@ -106,6 +106,7 @@ public class ExternalAuthCommandHandler
         var url = BuildCallback(
             $"{callback://}",
             accessToken,
+            accessTokenExpiryTime,
             user.RefreshToken!,
             user.RefreshTokenExpiryTime);
 
@@ -158,8 +159,9 @@ public class ExternalAuthCommandHandler
     private static string BuildCallback(
         string callback,
         string accessToken,
+        DateTime accessTokenExpiryTime,
         string refreshToken,
-        DateTime expiryTime)
+        DateTime refreshTokenExpiryTime)
     {
         if (string.IsNullOrEmpty(callback)) throw new ArgumentException();
 
@@ -168,8 +170,9 @@ public class ExternalAuthCommandHandler
         var parameters = new Dictionary<string, string>
         {
             { "access_token", accessToken },
+            { "access_token_expires_at", accessTokenExpiryTime.ToString("dd.MM.yyyy HH:mm:ss") },
             { "refresh_token", refreshToken },
-            { "expires_in", expiryTime.ToString("dd.MM.yyyy HH:mm:ss") }
+            { "refresh_token_expires_at", refreshTokenExpiryTime.ToString("dd.MM.yyyy HH:mm:ss") }
         };
 
         var urlParameters = string.Join("&", parameters
