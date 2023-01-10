@@ -1,10 +1,11 @@
 import React from "react";
 
-import { AccountApi, AuthApi, IApi, UserApi } from "../../api";
+import { AccountApi, AuthApi, CitiesApi, IApi, UserApi } from "../../api";
 
 const defaultValue: IApi = {
   accountApi: new AccountApi(),
   authApi: new AuthApi(),
+  citiesApi: new CitiesApi(),
   userApi: new UserApi(),
 };
 

@@ -23,6 +23,29 @@ export const Input = styled.input<CommonControlsProps>`
   }
 `;
 
+export const SelectRoot = styled.select<CommonControlsProps>`
+  outline: none;
+  border: none;
+
+  display: block;
+  width: ${({ width }) => width || "100%"};
+  padding: 10px 0;
+
+  font-size: 16px;
+  line-height: 24px;
+
+  border-bottom: 2px solid ${({ theme }) => theme.bgColors.gray};
+  background-color: transparent;
+
+  cursor: pointer;
+
+  :focus {
+    border-color: ${({ theme }) => theme.bgColors.primary};
+  }
+`;
+
+export const Option = styled.option``;
+
 export const Label = styled.label`
   display: block;
 

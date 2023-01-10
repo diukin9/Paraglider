@@ -2,6 +2,7 @@ import axios from "axios";
 
 import { AccountApi } from "./AccountApi";
 import { AuthApi } from "./AuthApi";
+import { CitiesApi } from "./CitiesApi";
 import { UserApi } from "./UserApi";
 
 export const axiosClient = axios.create({
@@ -12,5 +13,6 @@ export const axiosClient = axios.create({
 export interface IApi {
   accountApi: AccountApi;
   authApi: AuthApi;
+  citiesApi: CitiesApi;
   userApi: UserApi;
 }
