@@ -44,5 +44,8 @@ public class CommonDefinition : AppDefinition
         app.UseHsts();
         app.UseHttpsRedirection();
         app.MapDefaultControllerRoute();
+
+        app.UseStaticFiles();
+        app.MapFallbackToFile("index.html");
     }
 }

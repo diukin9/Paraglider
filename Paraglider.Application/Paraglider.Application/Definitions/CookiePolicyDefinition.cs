@@ -11,7 +11,11 @@ public class CookiePolicyDefinition : AppDefinition
         // Add this before any other middleware that might write cookies
         app.UseCookiePolicy(new CookiePolicyOptions()
         {
-            MinimumSameSitePolicy = SameSiteMode.Lax
+            OnAppendCookie = options =>
+            {
+                options.CookieOptions.SameSite = SameSiteMode.None;
+                options.CookieOptions.Secure = true;
+            }
         });
     }
 }

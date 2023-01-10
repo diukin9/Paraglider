@@ -20,6 +20,6 @@ public class CityController : ControllerBase
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetCitiesQuery(), cancellationToken);
-        return response.IsOk ? Ok(response.Metadata) : BadRequest(response.Metadata);
+        return response.IsOk ? Ok(response) : BadRequest(response);
     }
 }

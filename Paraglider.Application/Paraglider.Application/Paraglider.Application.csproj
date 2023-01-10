@@ -19,13 +19,12 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="wwwroot\**"/>
-        <Content Remove="wwwroot\**"/>
         <Content Include="..\..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-        <EmbeddedResource Remove="wwwroot\**"/>
-        <None Remove="wwwroot\**"/>
+        <Content Update="wwwroot\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
   <ItemGroup>
