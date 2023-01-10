@@ -4,12 +4,16 @@ import { User } from "../../typings/server";
 
 export interface IUserState {
   user?: User;
-  setUser: (user?: User) => void;
+  fetchUser: () => Promise<void>;
+  setUser: (user: User | undefined) => void;
 }
 
 const defaultState: IUserState = {
+  fetchUser: () => {
+    throw new Error("Default UserContext state: function fetchUser");
+  },
   setUser: () => {
-    throw new Error("Default context state: function setUser");
+    throw new Error("Default UserContext state: function setUser");
   },
 };
 

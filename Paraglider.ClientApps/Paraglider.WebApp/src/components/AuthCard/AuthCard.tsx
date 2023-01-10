@@ -21,7 +21,7 @@ export const AuthCard = ({ onClose }: Props) => {
 
   switch (authStep) {
     case AuthStep.Login:
-      return <LoginCard onGoToRegistration={handleGoToRegistration} />;
+      return <LoginCard onGoToRegistration={handleGoToRegistration} onClose={onClose} />;
 
     case AuthStep.Registration:
       return <RegistrationCard onGoToLogin={handleGoToLogin} />;

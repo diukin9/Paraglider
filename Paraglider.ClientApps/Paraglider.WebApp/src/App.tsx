@@ -7,11 +7,11 @@ import { GlobalStyle, theme } from "./styles/theme";
 
 export const App = () => {
   return (
-    <ContextStore>
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <ContextStore>
         <RouterProvider router={router} />
         <GlobalStyle />
-      </ThemeProvider>
-    </ContextStore>
+      </ContextStore>
+    </ThemeProvider>
   );
 };

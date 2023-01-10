@@ -7,12 +7,12 @@ interface DefaultButtonProps {
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
 }
 
-interface ButtonProps extends DefaultButtonProps {
-  onClick?: () => void;
+export interface ButtonProps extends PropsWithChildren<DefaultButtonProps> {
+  onClick: () => void;
   variant?: ButtonVariant;
 }
 
-export const Button = (props: PropsWithChildren<ButtonProps>) => {
+export const Button = (props: ButtonProps) => {
   const { children, onClick, type = "button", variant = "default" } = props;
 
   return (

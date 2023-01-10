@@ -9,13 +9,19 @@ export const UserContextStore = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<User>();
 
   const fetchUser = useCallback(async () => {
-    const response = await userApi.getUser();
-    setUser(response.data);
+    try {
+      const response = await userApi.getUser();
+      setUser(response.data);
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
 
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
 
-  return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, fetchUser, setUser }}>{children}</UserContext.Provider>
+  );
 };

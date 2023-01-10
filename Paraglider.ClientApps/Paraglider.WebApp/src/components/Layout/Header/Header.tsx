@@ -1,12 +1,26 @@
+import { useContext } from "react";
+
 import Logo from "/images/paraglider-logo.svg";
 
-import { useOpening } from "../../../hooks/useOpening";
+import { ApiContext } from "../../../contexts";
+import { AuthModalContext } from "../../../contexts/AuthModalContext";
+import { UserContext } from "../../../contexts/UserContext";
 import { Button } from "../../Buttons";
-import { AuthCardModal } from "../../Modal/AuthCardModal";
 import { DefaultContentWrapper, HeaderRoot, HeaderWrapper } from "./Header.styles";
 
 export const Header = () => {
-  const authCardModal = useOpening();
+  const { authApi } = useContext(ApiContext);
+  const { user, setUser } = useContext(UserContext);
+  const authModal = useContext(AuthModalContext);
+
+  const handleLogout = async () => {
+    try {
+      await authApi.logout();
+      setUser(undefined);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <>
@@ -14,12 +28,21 @@ export const Header = () => {
         <HeaderWrapper>
           <DefaultContentWrapper>
             <img src={Logo} alt="Логотип ПараПлан" />
-            <Button onClick={authCardModal.open}>Войти</Button>
+
+            <div>
+              {user ? (
+                <Button variant="outlined" onClick={handleLogout}>
+                  Выйти
+                </Button>
+              ) : (
+                <Button variant="default" onClick={authModal.open}>
+                  Войти
+                </Button>
+              )}
+            </div>
           </DefaultContentWrapper>
         </HeaderWrapper>
       </HeaderRoot>
-
-      {authCardModal.isOpen && <AuthCardModal onClose={authCardModal.close} />}
     </>
   );
 };

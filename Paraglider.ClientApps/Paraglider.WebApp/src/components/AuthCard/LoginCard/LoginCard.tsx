@@ -2,6 +2,7 @@ import { Formik } from "formik";
 import { useContext } from "react";
 
 import { ApiContext } from "../../../contexts";
+import { UserContext } from "../../../contexts/UserContext";
 import { BasicAuthRequest } from "../../../typings/server";
 import { Button } from "../../Buttons";
 import { ControlsGroup, Input, Label } from "../../FormControls";
@@ -12,10 +13,12 @@ import { ButtonWrapper, LoginCardTitle } from "./LoginCard.styles";
 
 interface Props {
   onGoToRegistration: () => void;
+  onClose: () => void;
 }
 
-export const LoginCard = ({ onGoToRegistration }: Props) => {
+export const LoginCard = ({ onGoToRegistration, onClose }: Props) => {
   const { authApi } = useContext(ApiContext);
+  const { fetchUser } = useContext(UserContext);
 
   const defaultBasicAuthData: BasicAuthRequest = {
     login: "",
@@ -25,6 +28,8 @@ export const LoginCard = ({ onGoToRegistration }: Props) => {
   const handleLogin = async (data: BasicAuthRequest) => {
     try {
       await authApi.signIn(data);
+      await fetchUser();
+      onClose();
     } catch (e) {
       console.error(e);
     }

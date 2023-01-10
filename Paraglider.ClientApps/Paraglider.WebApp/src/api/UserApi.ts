@@ -1,6 +1,7 @@
-import axios, { AxiosPromise } from "axios";
+import { AxiosPromise } from "axios";
 
 import { User } from "../typings/server";
+import { axiosClient } from "./Api";
 
 export interface IUserApi {
   getUser: () => AxiosPromise<User>;
@@ -11,6 +12,6 @@ export class UserApi implements IUserApi {
 
   public getUser() {
     const url = `${this.baseUrl}`;
-    return axios.get(url);
+    return axiosClient.get<User>(url);
   }
 }

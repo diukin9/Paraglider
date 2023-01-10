@@ -31,7 +31,7 @@ export const getButtonStyles = (variant: ButtonVariant) => {
 
         color: ${({ theme }) => theme.textColors.primary};
         border: 2px solid ${({ theme }) => theme.bgColors.primary};
-        background-color: ${({ theme }) => theme.bgColors.light};
+        background-color: inherit;
 
         :hover {
           box-shadow: 0px 12px 20px -8px rgba(255, 135, 135, 0.85);

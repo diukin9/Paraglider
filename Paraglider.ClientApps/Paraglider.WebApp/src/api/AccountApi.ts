@@ -1,9 +1,10 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosPromise } from "axios";
 
 import { RegisterUserRequest } from "../typings/server";
+import { axiosClient } from "./Api";
 
 export interface IAccountAPi {
-  register: (data: RegisterUserRequest) => Promise<AxiosResponse<null, null>>;
+  register: (data: RegisterUserRequest) => AxiosPromise<void>;
 }
 
 export class AccountApi implements IAccountAPi {
@@ -11,6 +12,6 @@ export class AccountApi implements IAccountAPi {
 
   public register(data: RegisterUserRequest) {
     const url = `${this.baseUrl}/register`;
-    return axios.post(url, data);
+    return axiosClient.post(url, data);
   }
 }
