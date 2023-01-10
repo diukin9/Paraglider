@@ -4,7 +4,7 @@ using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class ComponentDesc : IIdentified<Guid>
+public class ComponentDesc : IIdentified
 {
     public Guid Id { get; set; }
     public AgreementStatus Status { get; set; } = AgreementStatus.PreSelection;

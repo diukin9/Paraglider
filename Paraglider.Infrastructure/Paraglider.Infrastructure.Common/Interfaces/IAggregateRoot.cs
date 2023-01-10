@@ -1,6 +1,6 @@
 ﻿namespace Paraglider.Infrastructure.Common.Interfaces;
 
-public interface IAggregateRoot : IIdentified<Guid>
+public interface IAggregateRoot : IIdentified
 {
 
 }

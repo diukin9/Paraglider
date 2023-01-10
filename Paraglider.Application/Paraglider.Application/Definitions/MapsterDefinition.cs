@@ -3,7 +3,6 @@ using MapsterMapper;
 using Paraglider.Application.BackgroundJobs.ReccuringJobs.Abstractions;
 using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Data.EntityFrameworkCore;
-using Paraglider.Data.MongoDB;
 using System.Reflection;
 using Paraglider.Infrastructure.Common.Attributes;
 

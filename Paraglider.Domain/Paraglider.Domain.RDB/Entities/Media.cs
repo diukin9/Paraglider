@@ -3,9 +3,11 @@ using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class ExternalCityKey : IIdentified
+public class Media : IIdentified
 {
     public Guid Id { get; set; }
-    public Source Source { get; set; }
-    public string Key { get; set; } = null!;
+
+    public MediaType Type { get; set; }
+
+    public string Url { get; set; } = null!;
 }

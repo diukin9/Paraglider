@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Paraglider.Domain.Common.Enums;
-using Paraglider.Domain.NoSQL.Entities;
+using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
 
 namespace Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko.Validators;
 

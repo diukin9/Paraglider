@@ -2,7 +2,7 @@
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class PlanningComponent : IIdentified<Guid>
+public class PlanningComponent : IIdentified
 {
     public Guid Id { get; set; }
     public string ComponentId { get; set; } = null!;

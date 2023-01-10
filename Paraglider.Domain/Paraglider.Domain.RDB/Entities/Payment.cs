@@ -3,7 +3,7 @@ using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class Payment : IIdentified<Guid>
+public class Payment : IIdentified
 {
     public Guid Id { get; set; }
     public DateOnly Date { get; set; }

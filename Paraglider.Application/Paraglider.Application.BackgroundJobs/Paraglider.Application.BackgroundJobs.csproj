@@ -33,7 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Paraglider.Data\Paraglider.Data.EntityFrameworkCore\Paraglider.Data.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\..\Paraglider.Domain\Paraglider.Domain.NoSQL\Paraglider.Domain.NoSQL.csproj" />
     <ProjectReference Include="..\..\Paraglider.Infrastructure\Paraglider.Clients.Gorko\Paraglider.Clients.Gorko.csproj" />
   </ItemGroup>
 

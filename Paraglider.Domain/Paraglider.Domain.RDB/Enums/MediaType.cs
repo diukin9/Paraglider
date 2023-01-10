@@ -1,4 +1,4 @@
-﻿namespace Paraglider.Domain.NoSQL.Enums;
+﻿namespace Paraglider.Domain.RDB.Enums;
 
 public enum MediaType
 {

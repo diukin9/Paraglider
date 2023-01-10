@@ -1,11 +1,11 @@
 ﻿using Mapster;
-using Paraglider.Clients.Gorko.Models;
-using Paraglider.Domain.Common.Enums;
-using Paraglider.Domain.NoSQL.Entities;
-using Paraglider.Domain.NoSQL.Enums;
-using Paraglider.Domain.NoSQL.ValueObjects;
+using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
+using Paraglider.Domain.RDB.ValueObjects;
 using Paraglider.Infrastructure.Common.Extensions;
+using GorkoModels = Paraglider.Clients.Gorko.Models;
 using static Paraglider.Infrastructure.Common.AppData;
+using static Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko.GorkoStaticData;
 
 namespace Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko;
 
@@ -13,7 +13,7 @@ public class GorkoRegisterMappingConfig : IRegister
 {
     public void Register(TypeAdapterConfig config)
     {
-        config.NewConfig<Restaurant, Component>()
+        config.NewConfig<GorkoModels.Restaurant, Component>()
             .Map(x => x.Id, y => $"{Enum.GetName(Source.Gorko)}:{y.Id}")
             .Map(x => x.ExternalId, y => y.Id)
             .Map(x => x.Name, y => y.Name)
@@ -35,7 +35,7 @@ public class GorkoRegisterMappingConfig : IRegister
             .Ignore(x => x.Rating)
             .Ignore(x => x.Popularity);
 
-        config.NewConfig<User, Component>()
+        config.NewConfig<GorkoModels.User, Component>()
             .Map(x => x.Id, y => $"{Enum.GetName(Source.Gorko)}:{y.Id}")
             .Map(x => x.Album, y => y.CatalogMedia)
             .Map(x => x.AvatarUrl, y => y.AvatarUrl)
@@ -62,7 +62,7 @@ public class GorkoRegisterMappingConfig : IRegister
             .Ignore(x => x.Rating)
             .Ignore(x => x.Popularity);
 
-        config.NewConfig<Room, Hall>()
+        config.NewConfig<GorkoModels.Room, Hall>()
             .Map(x => x.Name, y => y.Name)
             .Map(x => x.Album, y => y.Media)
             .Map(x => x.Description, y => y.Parameters != null
@@ -102,16 +102,16 @@ public class GorkoRegisterMappingConfig : IRegister
                     : null
                 : null);
 
-        config.NewConfig<ICollection<CatalogMedia>, Album>()
+        config.NewConfig<ICollection<GorkoModels.CatalogMedia>, Album>()
             .Map(x => x.Media, y => y.Select(z => new Media
             {
-                Type = GorkoStaticData.Video == z.Type
+                Type = Video == z.Type
                     ? MediaType.Video
                     : MediaType.Image,
                 Url = z.OriginalUrl!
             }));
 
-        config.NewConfig<Clients.Gorko.Models.Review, Domain.NoSQL.ValueObjects.Review>()
+        config.NewConfig<GorkoModels.Review, Review>()
             .Map(x => x.Author, y => string.IsNullOrEmpty(y.UserName) 
                 ? DefaultUserName
                 : y.UserName)
@@ -121,33 +121,22 @@ public class GorkoRegisterMappingConfig : IRegister
                 ? y.Marks.Sum(x => x.Rating) / y.Marks.Count
                 : 0);
 
-        config.NewConfig<ICollection<Contact>, Contacts>()
-            .Map(x => x.Emails, y => 
-                y.Where(x => x.Key == GorkoStaticData.Email)
-                .Select(x => x.Value)
-                .ToList())
-            .Map(x => x.PhoneNumbers, y =>
-                y.Where(x => x.Key == GorkoStaticData.PhoneNumber && !string.IsNullOrEmpty(x.Value))
-                .Select(x => x.Value!.ToPhoneNumberOrDefault())
-                .Where(x => !string.IsNullOrEmpty(x))
-                .ToList())
-            .Map(x => x.Messengers, y => y.
-                Where(x => !string.IsNullOrEmpty(x.Value) 
-                    && (x.Key == GorkoStaticData.Telegram || x.Key == GorkoStaticData.WhatsApp))
-                .ToList());
+        config.NewConfig<ICollection<GorkoModels.Contact>, ICollection<Contact>>()
+            .Map(x => x, y => new List<Contact>()
+                .Concat(
+                    y.Where(z => !string.IsNullOrEmpty(z.Value) 
+                    && (z.Key == Email || z.Key == Telegram || z.Key == WhatsApp))
+                    .Select(z => new Contact() { Key = z.Key!, Value = z.Value! })
+                    .ToList())
+                .Concat(
+                    y.Where(z => z.Key == PhoneNumber && !string.IsNullOrEmpty(z.Value))
+                    .Select(z => new Contact() { Key = z.Key!, Value = z.Value!.ToPhoneNumberOrDefault()! })
+                    .ToList()));
 
-        config.NewConfig<Domain.RDB.Entities.Category, Domain.NoSQL.ValueObjects.Category>()
-            .Map(x => x.Id, y => y.Id)
-            .Map(x => x.Name, y => y.Name);
-
-        config.NewConfig<Domain.RDB.Entities.City, Domain.NoSQL.ValueObjects.City>()
-            .Map(x => x.Id, y => y.Id)
-            .Map(x => x.Name, y => y.Name);
-
-        config.NewConfig<Clients.Gorko.Models.Price, Service>()
+        config.NewConfig<GorkoModels.Price, Service>()
             .Map(x => x.Name, y => y.Title)
             .Map(x => x.Description, y => y.Description)
-            .Map(x => x.Price, y => new Domain.NoSQL.ValueObjects.Price
+            .Map(x => x.Price, y => new Price
             {
                 Min = y.ValueFrom,
                 Max = y.ValueTo

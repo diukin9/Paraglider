@@ -1,6 +1,6 @@
 ﻿namespace Paraglider.Infrastructure.Common.Interfaces;
 
-public interface IIdentified<T>
+public interface IIdentified
 {
-    public T Id { get; set; }
+    public Guid Id { get; set; }
 }

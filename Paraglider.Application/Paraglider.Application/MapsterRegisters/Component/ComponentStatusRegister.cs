@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using Paraglider.Application.DataTransferObjects;
-using Paraglider.Domain.NoSQL.Enums;
+using Paraglider.Domain.RDB.Enums;
 
 namespace Paraglider.Application.MapsterRegisters;
 

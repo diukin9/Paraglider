@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Paraglider.Domain.RDB.Entities;
 
 [Table("AspNetExternalAuthInfo")]
-public class ExternalAuthInfo : IIdentified<Guid>
+public class ExternalAuthInfo : IIdentified
 {
     public Guid Id { get; set; }
     public string ExternalId { get; set; } = null!;

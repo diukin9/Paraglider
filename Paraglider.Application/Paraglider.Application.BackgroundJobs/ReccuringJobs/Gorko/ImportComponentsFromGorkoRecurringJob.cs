@@ -6,15 +6,13 @@ using Newtonsoft.Json;
 using Paraglider.Application.BackgroundJobs.ReccuringJobs.Abstractions;
 using Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko.Validators;
 using Paraglider.Clients.Gorko;
-using Paraglider.Clients.Gorko.Models;
 using Paraglider.Clients.Gorko.Models.Abstractions;
-using Paraglider.Clients.Gorko.Models.Enums;
-using Paraglider.Data.EntityFrameworkCore;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
-using Paraglider.Domain.Common.Enums;
-using Paraglider.Domain.NoSQL.Entities;
-using Paraglider.Infrastructure.Common.MongoDB;
+using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
 using System.Data;
+using GorkoEnums = Paraglider.Clients.Gorko.Models.Enums;
+using GorkoModels = Paraglider.Clients.Gorko.Models;
 
 namespace Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko;
 
@@ -23,10 +21,9 @@ public class ImportComponentsFromGorkoRecurringJob
 {
     private const int PER_PAGE = 20;
 
-    private readonly IMongoDataAccess<Component> _components;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ICityRepository _cityRepository;
-    private readonly ApplicationDbContext _context;
+    private readonly IComponentRepository _componentRepository;
     private readonly GorkoClient _gorkoClient;
     private readonly IMapper _mapper;
 
@@ -35,17 +32,15 @@ public class ImportComponentsFromGorkoRecurringJob
 
     public ImportComponentsFromGorkoRecurringJob(
         GorkoClient gorkoClient,
+        IComponentRepository componentRepository,
         ICityRepository cityRepository,
         ICategoryRepository categoryRepository,
-        IMongoDataAccess<Component> components,
-        ApplicationDbContext context,
         IMapper mapper)
     {
         _gorkoClient = gorkoClient;
+        _componentRepository = componentRepository;
         _categoryRepository = categoryRepository;
         _cityRepository = cityRepository;
-        _components = components;
-        _context = context;
         _mapper = mapper;
     }
 
@@ -79,9 +74,9 @@ public class ImportComponentsFromGorkoRecurringJob
             yield return restaurant;
         }
 
-        foreach (var role in Enum.GetValues(typeof(UserRole)))
+        foreach (var role in Enum.GetValues(typeof(GorkoEnums.UserRole)))
         {
-            await foreach (var user in GetUsersAsync((UserRole)role, cityId))
+            await foreach (var user in GetUsersAsync((GorkoEnums.UserRole)role, cityId))
             {
                 yield return user;
             }
@@ -94,7 +89,7 @@ public class ImportComponentsFromGorkoRecurringJob
 
         var pagedResult = await _gorkoClient.GetRestaurantsAsync(perPage, page, cityId);
 
-        if (pagedResult is null) LogInvalidResponse(nameof(Restaurant), page, perPage);
+        if (pagedResult is null) LogInvalidResponse(nameof(GorkoModels.Restaurant), page, perPage);
 
         if (!IsDifferentHash(pagedResult!)) yield break;
 
@@ -114,7 +109,7 @@ public class ImportComponentsFromGorkoRecurringJob
         }
     }
 
-    private async IAsyncEnumerable<Component> GetUsersAsync(UserRole role, long cityId, int perPage = PER_PAGE, int page = 1)
+    private async IAsyncEnumerable<Component> GetUsersAsync(GorkoEnums.UserRole role, long cityId, int perPage = PER_PAGE, int page = 1)
     {
         if (page < 1 || perPage < 1) throw new ArgumentException();
 
@@ -140,7 +135,7 @@ public class ImportComponentsFromGorkoRecurringJob
         }
     }
 
-    private async IAsyncEnumerable<City> GetCitiesAsync(int perPage = PER_PAGE, int page = 1)
+    private async IAsyncEnumerable<GorkoModels.City> GetCitiesAsync(int perPage = PER_PAGE, int page = 1)
     {
         if (page < 1 || perPage < 1) throw new ArgumentException();
 
@@ -148,13 +143,13 @@ public class ImportComponentsFromGorkoRecurringJob
 
         var pagedResult = await _gorkoClient.GetCitiesAsync(perPage, page);
 
-        if (pagedResult is null) LogInvalidResponse(nameof(City), page, perPage);
+        if (pagedResult is null) LogInvalidResponse(nameof(GorkoModels.City), page, perPage);
 
         if (!IsDifferentHash(pagedResult!)) yield break;
 
         var collection = pagedResult?.Items
             .Where(x => x.Id.HasValue && keys.Any(y => y == x.Id.Value.ToString()))
-            .ToList() ?? new List<City>();
+            .ToList() ?? new List<GorkoModels.City>();
 
         foreach (var item in collection) yield return item;
 
@@ -172,8 +167,8 @@ public class ImportComponentsFromGorkoRecurringJob
             var category = await _categoryRepository.FindByKeyAsync(Source.Gorko, categoryKey!);
             var city = await _cityRepository.FindByKeyAsync(Source.Gorko, cityKey!);
 
-            component.Category = _mapper.Map<Domain.NoSQL.ValueObjects.Category>(category!);
-            component.City = _mapper.Map<Domain.NoSQL.ValueObjects.City>(city!);
+            component.Category = _mapper.Map<Category>(category!);
+            component.City = _mapper.Map<City>(city!);
 
             return await RestoreNecessaryData(component);
         }
@@ -186,10 +181,10 @@ public class ImportComponentsFromGorkoRecurringJob
 
     private async Task<Component> RestoreNecessaryData(Component component)
     {
-        var local = await _components.FindByIdAsync(component.Id);
+        var local = await _componentRepository.FindByIdAsync(component.Id);
 
         component.Status = local is null
-            ? Domain.NoSQL.Enums.ComponentStatus.Announced
+            ? ComponentStatus.Announced
             : local.Status;
 
         component.Popularity = local?.Popularity ?? default;
@@ -199,7 +194,7 @@ public class ImportComponentsFromGorkoRecurringJob
 
     private async Task SelectAndExecuteAction(Component component)
     {
-        if (component.Status == Domain.NoSQL.Enums.ComponentStatus.Announced)
+        if (component.Status == ComponentStatus.Announced)
         {
             await CreateComponentAsync(component);
         }
@@ -212,26 +207,33 @@ public class ImportComponentsFromGorkoRecurringJob
     private async Task CreateComponentAsync(Component component)
     {
         component.UpdatedAt = DateTime.Now;
-        component.Status = Domain.NoSQL.Enums.ComponentStatus.Available;
+        component.Status = ComponentStatus.Available;
         var logMessage = $"[{DateTime.Now:HH:mm:ss}] COMPONENT WITH ID '{component.Id}' WAS CREATED";
-        await InvokeActionAsync(_components.AddAsync, component, logMessage);
+        await InvokeActionAsync(_componentRepository.AddAsync, component, logMessage);
     }
 
     private async Task UpdateComponentAsync(Component component)
     {
         component.UpdatedAt = DateTime.Now;
         var logMessage = $"[{DateTime.Now:HH:mm:ss}] COMPONENT WITH ID '{component.Id}' WAS UPDATED";
-        await InvokeActionAsync(_components.UpdateAsync, component, logMessage);
+        await InvokeActionAsync(_componentRepository.UpdateAsync, component, logMessage);
     }
 
     private async Task ArchiveExpiredComponents(DateTime frontier)
     {
         try
-        {
-            await _components.PartialUpdateAsync(
-                x => x.Provider == Source.Gorko.ToString() && x.UpdatedAt < frontier,
-                x => x.Status,
-                Domain.NoSQL.Enums.ComponentStatus.Archived);
+        { 
+            var components = await _componentRepository
+                .FindAsync(x => x.Provider == Source.Gorko.ToString() 
+                    && x.UpdatedAt < frontier);
+
+            foreach (var component in components)
+            {
+                component.Status = ComponentStatus.Archived;
+                await _componentRepository.UpdateAsync(component);
+            }
+
+            await _componentRepository.SaveChangesAsync();
         }
         catch (Exception exception)
         {
@@ -244,6 +246,7 @@ public class ImportComponentsFromGorkoRecurringJob
         try
         {
             await action.Invoke(item);
+            await _componentRepository.SaveChangesAsync();
             _logger.LogInformation(message);
         }
         catch (Exception exception)
@@ -258,7 +261,7 @@ public class ImportComponentsFromGorkoRecurringJob
 
     private long _lastOperationHash;
 
-    private bool IsDifferentHash<T>(PagedResult<T> pagedResult) where T : IHaveId
+    private bool IsDifferentHash<T>(GorkoModels.PagedResult<T> pagedResult) where T : IHaveId
     {
         var hash = GetOperationHash(pagedResult);
 
@@ -271,7 +274,7 @@ public class ImportComponentsFromGorkoRecurringJob
         return !isEquals;
     }
 
-    private static long GetOperationHash<T>(PagedResult<T> pagedResult) where T : IHaveId
+    private static long GetOperationHash<T>(GorkoModels.PagedResult<T> pagedResult) where T : IHaveId
     {
         if (pagedResult?.Items is null) throw new ArgumentException();
         return pagedResult.Items.Select(x => x.Id.GetHashCode() * 24).Sum();
@@ -281,7 +284,7 @@ public class ImportComponentsFromGorkoRecurringJob
 
     #region logging
 
-    private void LogIdenticalHash<T>(PagedResult<T> pagedResult)
+    private void LogIdenticalHash<T>(GorkoModels.PagedResult<T> pagedResult)
     {
         if (pagedResult?.Meta?.Page is null) throw new ArgumentException();
 

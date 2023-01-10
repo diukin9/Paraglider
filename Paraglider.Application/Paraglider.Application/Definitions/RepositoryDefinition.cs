@@ -1,6 +1,5 @@
 ﻿using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Data.EntityFrameworkCore;
-using Paraglider.Data.MongoDB;
 using Paraglider.Infrastructure.Common.Extensions;
 using System.Reflection;
 using Paraglider.Infrastructure.Common.Attributes;

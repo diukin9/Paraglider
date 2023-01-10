@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using Paraglider.Application.DataTransferObjects;
-using Paraglider.Domain.NoSQL.ValueObjects;
+using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.Application.MapsterRegisters
 {

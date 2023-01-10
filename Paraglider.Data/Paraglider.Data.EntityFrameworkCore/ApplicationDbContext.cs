@@ -26,13 +26,32 @@ public class ApplicationDbContext : DbContextBase
 
     public DbSet<Payment> Payments { get; set; } = null!;
 
+    public DbSet<Component> Components { get; set; } = null!;
+
+    public DbSet<Album> Albums { get; set; }
+
+    public DbSet<Media> Media { get; set; }
+
+    public DbSet<Contact> Contacts { get; set; } = null!;
+
+    public DbSet<Review> Reviews { get; set; } = null!;
+
+    public DbSet<Service> Services { get; set; } = null!;
+
+    public DbSet<Hall> Halls { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfiguration(new ApplicationUserConfiguration());
         builder.ApplyConfiguration(new ExternalAuthInfoConfiguration());
 
-        builder.ApplyConfiguration(new PlanningConfiguration());
+        builder.ApplyConfiguration(new ComponentConfiguration());
+        builder.ApplyConfiguration(new HallConfiguration());
+        builder.ApplyConfiguration(new ServiceConfiguration());
         builder.ApplyConfiguration(new ComponentDescConfiguration());
+        builder.ApplyConfiguration(new AlbumConfiguration());
+
+        builder.ApplyConfiguration(new PlanningConfiguration());
         builder.ApplyConfiguration(new PlanningComponentConfiguration());
 
         base.OnModelCreating(builder);

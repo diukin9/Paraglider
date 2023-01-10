@@ -19,13 +19,13 @@
   </PropertyGroup>
 
     <ItemGroup>
-        <Compile Remove="wwwroot\**"/>
-        <Content Remove="wwwroot\**"/>
+        <Compile Remove="wwwroot\**" />
+        <Content Remove="wwwroot\**" />
         <Content Include="..\..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
-        <EmbeddedResource Remove="wwwroot\**"/>
-        <None Remove="wwwroot\**"/>
+        <EmbeddedResource Remove="wwwroot\**" />
+        <None Remove="wwwroot\**" />
     </ItemGroup>
 
   <ItemGroup>
@@ -45,7 +45,7 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0"/>
+      <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
       <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
       <PackageReference Include="System.Collections" Version="4.3.0" />
@@ -59,7 +59,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Paraglider.Data\Paraglider.Data.EntityFrameworkCore\Paraglider.Data.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\..\Paraglider.Data\Paraglider.Data.MongoDB\Paraglider.Data.MongoDB.csproj" />
     <ProjectReference Include="..\..\Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj" />
     <ProjectReference Include="..\..\Paraglider.Infrastructure\Paraglider.MailService\Paraglider.MailService.csproj" />
     <ProjectReference Include="..\Paraglider.Application.BackgroundJobs\Paraglider.Application.BackgroundJobs.csproj" />

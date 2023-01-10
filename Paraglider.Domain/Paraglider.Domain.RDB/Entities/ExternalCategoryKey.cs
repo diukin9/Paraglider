@@ -1,8 +1,9 @@
-﻿using Paraglider.Domain.Common.Enums;
+﻿using Paraglider.Domain.RDB.Enums;
+using Paraglider.Infrastructure.Common.Interfaces;
 
 namespace Paraglider.Domain.RDB.Entities;
 
-public class ExternalCategoryKey
+public class ExternalCategoryKey : IIdentified
 {
     public Guid Id { get; set; }
     public Source Source { get; set; }
