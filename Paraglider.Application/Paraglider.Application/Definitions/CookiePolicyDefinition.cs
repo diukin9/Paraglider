@@ -11,8 +11,12 @@ public class CookiePolicyDefinition : AppDefinition
         // Add this before any other middleware that might write cookies
         app.UseCookiePolicy(new CookiePolicyOptions()
         {
-            MinimumSameSitePolicy = SameSiteMode.None,
-            OnAppendCookie = options => options.CookieOptions.SameSite = SameSiteMode.None
+            OnAppendCookie = options =>
+            {
+                options.CookieOptions.SameSite =
+                    options.CookieName == ".AspNetCore.Identity.Application"
+                        ? SameSiteMode.None : SameSiteMode.Lax;
+            }
         });
     }
 }
