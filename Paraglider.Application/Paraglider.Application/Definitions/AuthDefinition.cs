@@ -45,11 +45,19 @@ public class AuthDefinition : AppDefinition
             {
                 config.ClientId = configuration["Authentication:Yandex:ClientId"]!;
                 config.ClientSecret = configuration["Authentication:Yandex:ClientSecret"]!;
+                config.CorrelationCookie = new CookieBuilder
+                {
+                    SameSite = SameSiteMode.Lax
+                };
             })
             .AddVkontakte(config =>
             {
                 config.ClientId = configuration["Authentication:Vkontakte:ClientId"]!;
                 config.ClientSecret = configuration["Authentication:Vkontakte:ClientSecret"]!;
+                config.CorrelationCookie = new CookieBuilder
+                {
+                    SameSite = SameSiteMode.Lax
+                };
             });
             
             services.AddAuthorization();
