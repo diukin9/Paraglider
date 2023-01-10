@@ -31,7 +31,7 @@ public class UserRepository : Repository<ApplicationUser>, IUserRepository
     public async Task<ApplicationUser?> FindByUsernameAsync(string username)
     {
         var user = await _context.Users.IncludeAll()
-            .Where(u => string.Compare(u.UserName, username, StringComparison.OrdinalIgnoreCase) == 0)
+            .Where(u => u.UserName == username)
             .SingleOrDefaultAsync();
         return user;
     }
