@@ -13,9 +13,8 @@ public class CookiePolicyDefinition : AppDefinition
         {
             OnAppendCookie = options =>
             {
-                options.CookieOptions.SameSite =
-                    options.CookieName == ".AspNetCore.Identity.Application"
-                        ? SameSiteMode.None : SameSiteMode.Lax;
+                options.CookieOptions.SameSite = SameSiteMode.None;
+                options.CookieOptions.Secure = true;
             }
         });
     }

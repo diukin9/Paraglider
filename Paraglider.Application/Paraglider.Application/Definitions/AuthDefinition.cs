@@ -43,23 +43,13 @@ public class AuthDefinition : AppDefinition
             })
             .AddYandex(config =>
             {
-                config.CorrelationCookie = new CookieBuilder() { SameSite = SameSiteMode.Lax };
                 config.ClientId = configuration["Authentication:Yandex:ClientId"]!;
                 config.ClientSecret = configuration["Authentication:Yandex:ClientSecret"]!;
-                config.CorrelationCookie = new CookieBuilder
-                {
-                    SameSite = SameSiteMode.Lax
-                };
             })
             .AddVkontakte(config =>
             {
-                config.CorrelationCookie = new CookieBuilder() { SameSite = SameSiteMode.Lax };
                 config.ClientId = configuration["Authentication:Vkontakte:ClientId"]!;
                 config.ClientSecret = configuration["Authentication:Vkontakte:ClientSecret"]!;
-                config.CorrelationCookie = new CookieBuilder
-                {
-                    SameSite = SameSiteMode.Lax
-                };
             });
             
             services.AddAuthorization();
