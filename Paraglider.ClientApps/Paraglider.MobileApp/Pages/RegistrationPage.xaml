@@ -85,6 +85,7 @@
         </HorizontalStackLayout>
 
         <HorizontalStackLayout 
+            x:Name="GoBack"
             Grid.Row="0" Grid.ColumnSpan="2" 
             Margin="35, 0" 
             Spacing="10" 
@@ -119,7 +120,7 @@
         <Image 
             Grid.Row="2" 
             Grid.ColumnSpan="2"
-            Source="registration_default.svg"
+            Source="{Binding ImagePath}"
             Aspect="Center"
             Margin="35, 0" />
 
@@ -138,7 +139,7 @@
 
             <Entry 
                 x:Name="EmailEntry"
-                Text="{Binding City, Mode=TwoWay}"
+                Text="{Binding Email, Mode=TwoWay}"
                 ReturnType="Next"
                 toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference PasswordEntry}"
                 FontFamily="geometria_medium"
@@ -149,6 +150,7 @@
         </VerticalStackLayout>
 
         <VerticalStackLayout 
+            x:Name="FirstNameInput"
             Grid.Row="3" Grid.ColumnSpan="2" 
             Margin="35, 0"
             IsVisible="{Binding Switched}"
@@ -192,6 +194,7 @@
                 Text="{Binding Password, Mode=TwoWay}"
                 toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference PasswordConfirmationEntry}"
                 FontFamily="geometria_medium"
+                IsPassword="True"
                 FontSize="16"
                 TextColor="#3A3A3A"
                 Focused="PasswordEntry_Focused" />
@@ -199,6 +202,7 @@
         </VerticalStackLayout>
 
         <VerticalStackLayout 
+            x:Name="SurnameInput"
             Grid.Row="4" Grid.ColumnSpan="2" 
             Margin="35, 0" 
             IsVisible="{Binding Switched}"
@@ -216,6 +220,7 @@
                 ReturnType="Next"
                 Text="{Binding Surname, Mode=TwoWay}"
                 toolkit:SetFocusOnEntryCompletedBehavior.NextElement="{x:Reference CityEntry}"
+                Unfocused="HideKeyboard"
                 FontFamily="geometria_medium"
                 FontSize="16"
                 TextColor="#3A3A3A"
@@ -240,6 +245,7 @@
                 x:Name="PasswordConfirmationEntry"
                 ReturnType="Done"
                 Text="{Binding PasswordConfirmation, Mode=TwoWay}"
+                IsPassword="True"
                 Completed="HideKeyboard"
                 FontFamily="geometria_medium"
                 FontSize="16"
@@ -249,6 +255,7 @@
         </VerticalStackLayout>
 
         <VerticalStackLayout 
+            x:Name="CityInput"
             Grid.Row="5" Grid.ColumnSpan="2" 
             Margin="35, 0" 
             IsVisible="{Binding Switched}" 
@@ -267,9 +274,17 @@
                 FontSize="16"
                 TextColor="#3A3A3A"
                 SelectedItem="{Binding City}"
-                ItemsSource="{Binding Cities} " />
+                ItemsSource="{Binding Cities}" />
 
         </VerticalStackLayout>
+
+        <Label 
+            x:Name="MessageWhenEmailIsSent"
+            IsVisible="False"   
+            Grid.Row="3" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2"
+            VerticalOptions="Center" HorizontalOptions="Center"
+            HorizontalTextAlignment="Center">
+        </Label>
 
         <VerticalStackLayout
             Grid.Row="6" Grid.ColumnSpan="2"
@@ -298,7 +313,7 @@
             IsVisible="{Binding LoaderIsDisplayed}"/>
 
         <Button
-            x:Name="btn"
+            x:Name="Btn"
             Grid.Row="7" Grid.ColumnSpan="2"
             FontSize="18"
             FontFamily="geometria_bold"
@@ -307,7 +322,9 @@
             BackgroundColor="#FF8787"
             Margin="0, 5"
             Text="Продолжить"
-            HorizontalOptions="Center">
+            HorizontalOptions="Center"
+            Command="{Binding ButtonClickedCommand}"
+            CommandParameter="{Binding Source={Reference grid}}">
             <Button.Shadow>
                 <Shadow Brush="Black" Offset="0, 30" Opacity="0.15" Radius="40" />
             </Button.Shadow>

@@ -12,6 +12,6 @@ public static class StringHelper
 
     public static bool IsNullOrEmpty(params string[] values)
     {
-        return values.Any(x => IsNullOrEmpty(x));
+        return values.Any(string.IsNullOrEmpty);
     }
 }

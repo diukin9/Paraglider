@@ -1,4 +1,5 @@
-﻿using Paraglider.MobileApp.Models;
+﻿using Paraglider.MobileApp.Infrastructure.Exceptions;
+using Paraglider.MobileApp.Models;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
@@ -37,6 +38,7 @@ public class AccountService
 
     public async Task<bool> RegisterAsync(RegisterModel model)
     {
+        ResponseTemplate result;
         var url = $"{API_URL}/account/register";
         var body = JsonSerializer.Serialize(model);
         var requestContent = new StringContent(body, Encoding.UTF8, "application/json");
@@ -45,13 +47,19 @@ public class AccountService
         {
             var response = await httpClient.PostAsync(url, requestContent);
             var content = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<ResponseTemplate>(content);
-            return result.IsOk;
+            result = await JsonSerializer.DeserializeAsync<ResponseTemplate>(content);
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error when trying to register a user: {ex.Message}");
             return false;
         }
+
+        if (!result.IsOk && (result?.Metadata.Message.Contains("уже существует") ?? false))
+        {
+            throw new DuplicateException();
+        }
+
+        return result.IsOk;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Paraglider.MobileApp.Helpers;
+using Paraglider.MobileApp.Infrastructure.Exceptions;
 using Paraglider.MobileApp.Models;
 using Paraglider.MobileApp.Services;
 using System.Collections.ObjectModel;
@@ -9,6 +10,9 @@ namespace Paraglider.MobileApp.ViewModels;
 
 public partial class RegisterViewModel : BaseViewModel
 {
+    [ObservableProperty]
+    private string imagePath = GetDefaultImagePath();
+
     [ObservableProperty]
     private bool switched;
 
@@ -40,10 +44,10 @@ public partial class RegisterViewModel : BaseViewModel
     private string surname;
 
     [ObservableProperty]
-    private string city;
+    private City city;
 
     [ObservableProperty]
-    private ObservableCollection<City> cities = new();
+    private ObservableCollection<City> cities;
 
     private readonly AccountService accountService;
     private readonly CityService cityService;
@@ -67,7 +71,7 @@ public partial class RegisterViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task OnButtonClicked()
+    private async Task OnButtonClicked(Grid grid)
     {
         ErrorIsDisplayed = false;
         LoaderIsDisplayed = true;
@@ -76,33 +80,25 @@ public partial class RegisterViewModel : BaseViewModel
         {
             if (StringHelper.IsNullOrEmpty(email, password, passwordConfirmation))
             {
-                LoaderIsDisplayed = true;
-                ErrorMessage = "Необходимо заполнить все поля";
-                ErrorIsDisplayed = true;
+                ShowWarning("Необходимо заполнить все поля");
                 return;
             }
 
             if (!StringHelper.IsEmail(email))
             {
-                LoaderIsDisplayed = false;
-                ErrorMessage = "Неверный формат почтового ящика";
-                ErrorIsDisplayed = true;
+                ShowWarning("Неверный формат почтового ящика");
                 return;
             }
 
             if (password.Length < 8)
             {
-                LoaderIsDisplayed = false;
-                ErrorMessage = "Пароль должен содержать минимум 8 символов";
-                ErrorIsDisplayed = true;
+                ShowWarning("Минимальная длина пароля - 8 символов");
                 return;
             }
 
             if (password != passwordConfirmation)
             {
-                LoaderIsDisplayed = false;
-                ErrorMessage = "Пароли не совпадают";
-                ErrorIsDisplayed = true;
+                ShowWarning("Пароли не совпадают");
                 return;
             }
 
@@ -112,15 +108,11 @@ public partial class RegisterViewModel : BaseViewModel
         }
         else
         {
-            if (StringHelper.IsNullOrEmpty(firstName, surname))
+            if (StringHelper.IsNullOrEmpty(firstName, surname) || city is null)
             {
-                LoaderIsDisplayed = true;
-                ErrorMessage = "Необходимо заполнить все поля";
-                ErrorIsDisplayed = true;
+                ShowWarning("Необходимо заполнить все поля");
                 return;
             }
-
-            //проверяем, что город выбран
 
             var model = new RegisterModel
             {
@@ -128,21 +120,48 @@ public partial class RegisterViewModel : BaseViewModel
                 Surname = surname,
                 Email = email,
                 Password = password,
-                CityId = Guid.Parse(city)
+                CityId = city.Id
             };
 
-            var isSuccessful = await accountService.RegisterAsync(model);
+            bool isSuccessful;
 
-            LoaderIsDisplayed = false;
-
-            if (isSuccessful) 
+            try 
             {
-                ErrorMessage = "Не удалось зарегистрироваться";
-                ErrorIsDisplayed = true;
+                isSuccessful = await accountService.RegisterAsync(model);
+            }
+            catch(DuplicateException)
+            {
+                ShowWarning("Пользователь с таким email уже существует");
+                return;
+            }
+
+            if (!isSuccessful)
+            {
+                ShowWarning("Не удалось зарегистрироваться");
             }
             else
             {
-                //TODO на вашу почту отправлено письмо...
+                var goBack = (HorizontalStackLayout)grid.FindByName("GoBack");
+                var firstNameInput = (VerticalStackLayout)grid.FindByName("FirstNameInput");
+                var surnameInput = (VerticalStackLayout)grid.FindByName("SurnameInput");
+                var cityInput = (VerticalStackLayout)grid.FindByName("CityInput");
+                var btn = (Button)grid.FindByName("Btn");
+                var label = (Label)grid.FindByName("MessageWhenEmailIsSent");
+
+                LoaderIsDisplayed = false;
+
+                goBack.IsVisible = false;
+                firstNameInput.IsVisible = false;
+                surnameInput.IsVisible = false;
+                cityInput.IsVisible = false;
+
+                label.FormattedText = GenerateFormattedStringWhenEmailIsSent();
+                label.IsVisible = true;
+
+                btn.Text = "Ок";
+                btn.Command = GoToLoginPageCommand;
+
+                ImagePath = GetImagePathWhenEmailIsSent();
             }
         }
     }
@@ -157,5 +176,55 @@ public partial class RegisterViewModel : BaseViewModel
     {
         Switched = notSwitched;
         NotSwitched = !switched;
+    }
+
+    private void ShowWarning(string message)
+    {
+        LoaderIsDisplayed = false;
+        ErrorMessage = message;
+        ErrorIsDisplayed = true;
+    }
+
+    private static string GetDefaultImagePath()
+    {
+        return "registration_default.svg";
+    }
+
+    private static string GetImagePathWhenEmailIsSent()
+    {
+        return "registration_email_is_sent.svg";
+    }
+
+    private FormattedString GenerateFormattedStringWhenEmailIsSent()
+    {
+        var formattedString = new FormattedString();
+
+        formattedString.Spans.Add(new Span()
+        {
+            Text = "На вашу электронную почту",
+            FontSize = 16,
+            TextColor = new Color(144, 144, 144),
+            FontFamily = "geometria_medium"
+        });
+
+        formattedString.Spans.Add(new Span()
+        {
+            Text = $"\n{email}\n",
+            FontSize = 16,
+            TextColor = new Color(58, 58, 58),
+            FontFamily = "geometria_medium",
+
+        });
+
+        formattedString.Spans.Add(new Span()
+        {
+            Text = "было отправлено письмо с ссылкой " +
+                   "для подтверждения почтового ящика",
+            FontSize = 16,
+            TextColor = new Color(144, 144, 144),
+            FontFamily = "geometria_medium"
+        });
+
+        return formattedString;
     }
 }

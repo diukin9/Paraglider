@@ -1,4 +1,5 @@
 using Paraglider.MobileApp.ViewModels;
+using System.ComponentModel;
 
 namespace Paraglider.MobileApp.Pages;
 
@@ -8,6 +9,12 @@ public partial class RegistrationPage : ContentPage
 	{
 		InitializeComponent();
         BindingContext = viewModel;
+    }
+
+
+    private void HideKeyboard(object sender, FocusEventArgs e)
+    {
+        HideKeyboard();
     }
 
     private void HideKeyboard(object sender, TappedEventArgs e)
