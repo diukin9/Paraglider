@@ -1,5 +1,5 @@
 import { RegisterUserRequest } from "../../../typings/server";
 
-export interface RegistrationFrom extends RegisterUserRequest {
+export interface RegistrationForm extends RegisterUserRequest {
   repeatPassword: string;
 }

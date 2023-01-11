@@ -38,7 +38,9 @@ export const LoginCard = ({ onGoToRegistration, onClose }: Props) => {
   return (
     <CardRoot>
       <TopRightImage src={Circles} />
+
       <LoginCardTitle>Вход</LoginCardTitle>
+
       <AuthProviders />
 
       <Formik initialValues={defaultBasicAuthData} onSubmit={handleLogin}>

@@ -1,3 +1,4 @@
+import { useFormikContext } from "formik";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { ApiContext } from "../../../../contexts";
@@ -8,6 +9,7 @@ import { ControlsGroup, Input, Label } from "../../../FormControls";
 import { Select } from "../../../FormControls";
 import { CardBackButtonWrapper, CardRoot, CardTitle, TopRightImage } from "../../AuthCard.styles";
 import { GirlIcon } from "../GirlIcon";
+import { RegistrationForm } from "../RegistrationCard.helpers";
 import { ButtonWrapper } from "./AccountInfo.styles";
 import Circles from "./images/circles.svg";
 
@@ -16,6 +18,7 @@ interface AccountInfoProps {
 }
 
 export const AccountInfo = ({ onGoBack }: AccountInfoProps) => {
+  const { values, handleChange, handleSubmit } = useFormikContext<RegistrationForm>();
   const { citiesApi } = useContext(ApiContext);
   const [cities, setCities] = useState<City[]>([]);
 
@@ -46,21 +49,29 @@ export const AccountInfo = ({ onGoBack }: AccountInfoProps) => {
 
       <ControlsGroup marginBottom={24}>
         <Label>Имя</Label>
-        <Input type="text" />
+        <Input name="firstName" type="text" value={values.firstName} onChange={handleChange} />
       </ControlsGroup>
 
       <ControlsGroup marginBottom={24}>
         <Label>Фамилия</Label>
-        <Input type="text" />
+        <Input name="surname" type="text" value={values.surname} onChange={handleChange} />
       </ControlsGroup>
 
       <ControlsGroup>
         <Label>Город</Label>
-        <Select<City> nameKey="name" valueKey="id" items={cities} onChange={() => null} />
+        <Select<City>
+          name="cityId"
+          nameKey="name"
+          valueKey="id"
+          items={cities}
+          value={values.cityId}
+          onChange={handleChange}
+          placeholder="Выберите город"
+        />
       </ControlsGroup>
 
       <ButtonWrapper>
-        <Button variant="default" onClick={() => null}>
+        <Button variant="default" onClick={handleSubmit}>
           Завершить
         </Button>
       </ButtonWrapper>
