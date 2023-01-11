@@ -1,18 +1,25 @@
 import styled from "styled-components";
 
 export const HeaderRoot = styled.header`
-  padding: 0 ${({ theme }) => theme.layout.padding};
+  position: sticky;
+  height: ${({ theme }) => theme.layout.header.height};
+  top: 0;
+  left: 0;
+  right: 0;
   background-color: ${({ theme }) => theme.bgColors.white};
-  z-index: 1000;
+  z-index: 100;
 `;
 
 export const HeaderWrapper = styled.div`
-  width: ${({ theme }) => theme.layout.maxWidth};
+  position: relative;
+  padding: 0 ${({ theme }) => theme.layout.padding};
   margin: 0 auto;
+  width: ${({ theme }) => theme.layout.maxWidth};
+  height: inherit;
 `;
 
 export const DefaultContentWrapper = styled.div`
-  height: 110px;
+  height: inherit;
   display: flex;
   justify-content: space-between;
   align-items: center;

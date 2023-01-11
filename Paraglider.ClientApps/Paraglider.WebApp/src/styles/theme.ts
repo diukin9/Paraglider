@@ -17,6 +17,9 @@ export const GlobalStyle = createGlobalStyle`
 
 export const theme = {
   layout: {
+    header: {
+      height: "110px",
+    },
     padding: "20px",
     maxWidth: "1290px",
   },
@@ -24,9 +27,11 @@ export const theme = {
     white: "#FFFFFF",
     light: "#FFFEF6",
     primary: "#FF8787",
+    gray: "#909090",
   },
   textColors: {
     default: "#3A3A3A",
+    secondary: "#909090",
     light: "#FFFEF6",
     primary: "#FF8787",
   },

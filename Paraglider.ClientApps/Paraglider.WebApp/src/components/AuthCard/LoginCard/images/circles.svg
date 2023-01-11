@@ -1,0 +1,22 @@
+<svg
+  width="173"
+  height="186"
+  viewBox="0 0 173 186"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <circle
+    cx="215.474"
+    cy="85.4743"
+    r="100"
+    transform="rotate(105 215.474 85.4743)"
+    fill="#DF7272"
+  />
+  <circle
+    cx="100"
+    cy="-28"
+    r="100"
+    transform="rotate(90 100 -28)"
+    fill="#FF8787"
+  />
+</svg>

@@ -1,18 +1,20 @@
 import { Button } from "../../components/Buttons";
+import { AuthButton } from "../../components/Buttons/AuthButton";
 import { PageTitle } from "../../components/Text";
+import Newlyweds from "./images/newlyweds.png";
 import {
   BgImage,
   ButtonContainer,
   ListTitle,
   ListWrapper,
+  MainContainer,
   OrderedList,
   OrderedListItem,
 } from "./Main.styles";
-import Newlyweds from "./images/newlyweds.png";
 
 export const Main = () => {
   return (
-    <>
+    <MainContainer>
       <BgImage src={Newlyweds} alt="" />
 
       <PageTitle marginBottom={24}>
@@ -31,9 +33,13 @@ export const Main = () => {
       </ListWrapper>
 
       <ButtonContainer>
-        <Button variant="default">Перейти к конфигуратору</Button>
-        <Button variant="outlined">Подробнее</Button>
+        <AuthButton variant="default" onClick={() => null}>
+          Перейти к конфигуратору
+        </AuthButton>
+        <Button variant="outlined" onClick={() => null}>
+          Подробнее
+        </Button>
       </ButtonContainer>
-    </>
+    </MainContainer>
   );
 };
