@@ -1,80 +1,85 @@
 ﻿using MapsterMapper;
 using MediatR;
-using MongoDB.Driver;
 using Paraglider.Application.DataTransferObjects;
-using Paraglider.Domain.NoSQL.Entities;
+using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Attributes;
 using Paraglider.Infrastructure.Common.Enums;
 using Paraglider.Infrastructure.Common.Extensions;
-using Paraglider.Infrastructure.Common.MongoDB;
 using Paraglider.Infrastructure.Common.Response;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Components.Queries;
 
-public class GetComponentsRequest : IRequest<OperationResult<IEnumerable<ComponentDTO>>>
+public class GetComponentsRequest : IRequest<InternalOperation<IEnumerable<ComponentDTO>>>
 {
-    [Required, NotEmptyGuid] 
+    [Required]
+    [JsonPropertyName("category_id")]
     public Guid CategoryId { get; set; }
 
-    [Required, NotEmptyGuid] 
+    [Required]
+    [JsonPropertyName("city_id")]
     public Guid CityId { get; set; }
 
-    [Required, Range(1, 100)] 
+    [Required, Range(1, 100)]
+    [JsonPropertyName("per_page")]
     public int? PerPage { get; set; } = 15;
 
-    [Required, NotNegative] 
+    [Required, NotNegative]
+    [JsonPropertyName("page")]
     public int? Page { get; set; } = 1;
 
     [Required, IsEnumName(typeof(ComponentSorterKey))]
+    [JsonPropertyName("sorting_key")]
     public string SortingKey { get; set; } = null!;
 
-    [Required, IsEnumName(typeof(SortDirection))]
-    public string SortDirectionKey { get; set; } = null!;
+    [Required]
+    [JsonPropertyName("descending")]
+    public bool Descending { get; set; } = false;
 }
 
-public class GetComponentsQueryHandler 
-    : IRequestHandler<GetComponentsRequest, 
-        OperationResult<IEnumerable<ComponentDTO>>>
+public class GetComponentsQueryHandler
+    : IRequestHandler<GetComponentsRequest,
+        InternalOperation<IEnumerable<ComponentDTO>>>
 {
-    private readonly IMongoDataAccess<Component> _components;
     private readonly IMapper _mapper;
+    private readonly IComponentRepository _componentRepository;
 
     public GetComponentsQueryHandler(
-        IMongoDataAccess<Component> components,
+        IComponentRepository componentRepository,
         IMapper mapper)
     {
-        _components = components;
+        _componentRepository = componentRepository;
         _mapper = mapper;
     }
 
-    public async Task<OperationResult<IEnumerable<ComponentDTO>>> Handle(
-        GetComponentsRequest request, 
+    public async Task<InternalOperation<IEnumerable<ComponentDTO>>> Handle(
+        GetComponentsRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<IEnumerable<ComponentDTO>>();
+        var operation = new InternalOperation<IEnumerable<ComponentDTO>>();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
         if (!validation.IsValid()) return operation.AddError(validation);
 
         //получаем компоненты
-        var components = await _components.FindAsync(
+        var components = await _componentRepository.FindAsync(
             filter: x => x.Category.Id == request.CategoryId && x.City.Id == request.CityId,
-            sort: Enum.Parse(typeof(ComponentSorterKey), request.SortingKey) switch
+            orderBy: Enum.Parse(typeof(ComponentSorterKey), request.SortingKey) switch
             {
                 ComponentSorterKey.Popularity => x => x.Popularity,
                 ComponentSorterKey.Rating => x => x.Rating,
                 _ => throw new ApplicationException()
             },
-            sortDirection: (SortDirection)Enum.Parse(typeof(SortDirection), request.SortDirectionKey),
+            isAscending: !request.Descending,
             skip: request.PerPage!.Value * request.Page!.Value - request.PerPage!.Value,
             limit: request.PerPage.Value);
 
         var model = _mapper.Map<IEnumerable<ComponentDTO>>(components);
 
-        return operation.AddSuccess(string.Empty, model);
+        return operation.AddSuccess(model);
     }
 }
 

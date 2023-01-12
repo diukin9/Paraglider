@@ -7,11 +7,15 @@ public static class QueueTasks
 {
     public static void Run()
     {
-        RecurringJob.AddOrUpdate<ImportComponentsFromGorkoRecurringJob>(
+        RecurringJob.AddOrUpdate<ImportComponentsRecurringJob>(
             methodCall: service => service.RunAsync(),
             cronExpression: "* 0 * * *");
 
         RecurringJob.AddOrUpdate<UpdateComponentPopularityDataRecurringJob>(
+            methodCall: service => service.RunAsync(),
+            cronExpression: "0 * * * *");
+
+        RecurringJob.AddOrUpdate<RemoveExpiredAndUnusedComponentsReccuringJob>(
             methodCall: service => service.RunAsync(),
             cronExpression: "0 * * * *");
     }

@@ -9,11 +9,13 @@ using Paraglider.Infrastructure.Common.Helpers;
 using Paraglider.Infrastructure.Common.Models;
 using Paraglider.Infrastructure.Common.Response;
 using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Auth.Commands;
 
-public class RefreshTokenRequest : IRequest<OperationResult<Token>>
+public class RefreshTokenRequest : IRequest<InternalOperation<Token>>
 {
     [Required]
     [JsonPropertyName("expired_access_token")]
@@ -25,7 +27,7 @@ public class RefreshTokenRequest : IRequest<OperationResult<Token>>
 }
 
 public class RefreshTokenCommandHandler 
-    : IRequestHandler<RefreshTokenRequest, OperationResult<Token>>
+    : IRequestHandler<RefreshTokenRequest, InternalOperation<Token>>
 {
     private readonly TokenValidationParameters _validationParameters;
     private readonly BearerSettings _bearerSettings;
@@ -44,11 +46,11 @@ public class RefreshTokenCommandHandler
         _userManager = userManager;
     }
 
-    public async Task<OperationResult<Token>> Handle(
+    public async Task<InternalOperation<Token>> Handle(
         RefreshTokenRequest request, 
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<Token>();
+        var operation = new InternalOperation<Token>();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
@@ -59,23 +61,20 @@ public class RefreshTokenCommandHandler
             accessToken: request.ExpiredAccessToken, 
             validationParameters: _validationParameters);
 
-        if (principal is null)
-        {
-            return operation.AddError("Неверный access_token или refresh_token");
-        }
+        if (principal is null) return operation.AddError("Неверный access_token или refresh_token");
 
         //вытащим логин/почту пользователя из токена
-        var identifier = _accessor.HttpContext!.Request.Headers.GetNameIdentifierFromBearerToken();
+        var identifier = principal!.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(identifier))
         {
-            return operation.AddError("Не удалось аутентифицировать пользователя");
+            return operation.AddError("Не удалось идентифицировать пользователя");
         }
 
         //получим через логин/почту пользователя
         var user = await _userManager.FindByNameIdentifierAsync(identifier!);
         if (user is null)
         {
-            return operation.AddError("Не удалось аутентифицировать пользователя");
+            return operation.AddError("Не удалось идентифицировать пользователя");
         }
 
         //проверим валидность refresh_token
@@ -99,16 +98,16 @@ public class RefreshTokenCommandHandler
             issuer: _bearerSettings.Issuer,
             audience: _bearerSettings.Audience,
             expires: accessTokenExpiryTime,
-            claims: principal.Claims.ToList());
+            claims: principal!.Claims.ToList());
 
         var token = new Token()
         {
             AccessToken = newAccessToken,
             AccessTokenExpiryTime = accessTokenExpiryTime,
             RefreshToken = user.RefreshToken,
-            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime!.Value
         };
 
-        return operation.AddSuccess(string.Empty, token);
+        return operation.AddSuccess(token);
     }
 }

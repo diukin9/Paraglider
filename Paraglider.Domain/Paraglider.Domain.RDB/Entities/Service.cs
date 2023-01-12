@@ -1,5 +1,6 @@
 ﻿using Paraglider.Domain.RDB.ValueObjects;
 using Paraglider.Infrastructure.Common.Interfaces;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Paraglider.Domain.RDB.Entities;
 

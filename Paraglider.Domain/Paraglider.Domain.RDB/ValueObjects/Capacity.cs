@@ -1,4 +1,6 @@
-﻿namespace Paraglider.Domain.RDB.ValueObjects;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Paraglider.Domain.RDB.ValueObjects;
 
 public class Capacity
 {

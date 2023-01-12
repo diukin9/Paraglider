@@ -1,43 +1,42 @@
-﻿using MongoDB.Driver;
-using Paraglider.Application.BackgroundJobs.ReccuringJobs.Abstractions;
+﻿using Paraglider.Application.BackgroundJobs.ReccuringJobs.Abstractions;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
-using Paraglider.Domain.NoSQL.Entities;
-using Paraglider.Infrastructure.Common.MongoDB;
 
 namespace Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko;
 
-public class UpdateComponentPopularityDataRecurringJob
-    : BaseReccuringJob<UpdateComponentPopularityDataRecurringJob>
+public class UpdateComponentPopularityDataRecurringJob : IReccuringJob
 {
-    private readonly IComponentAdditionHistoryRepository _repository;
-    private readonly IMongoDataAccess<Component> _components;
+    private readonly IComponentAddHistoryRepository _historyRepository;
+    private readonly IComponentRepository _componentRepository;
 
     public UpdateComponentPopularityDataRecurringJob(
-        IComponentAdditionHistoryRepository repository,
-        IMongoDataAccess<Component> components)
+        IComponentAddHistoryRepository historyRepository,
+        IComponentRepository componentRepository)
     {
-        _repository = repository;
-        _components = components;
+        _historyRepository = historyRepository;
+        _componentRepository = componentRepository;
+        
     }
 
-    public override async Task RunAsync()
+    public async Task RunAsync()
     {
         var perPage = 100;
-        var iterationCount = await _components.CountAsync() / perPage + 1;
+        var iterationCount = await _componentRepository.CountAsync() / perPage + 1;
 
         for (var index = 0; index < iterationCount; index++)
         {
-            var components = await _components.FindAsync(
+            var components = await _componentRepository.FindAsync(
                 filter: _ => true,
-                sort: x => x.Id,
-                sortDirection: SortDirection.Ascending,
+                orderBy: x => x.Id,
+                isAscending: true,
                 skip: index * perPage, 
                 limit: perPage);
 
             foreach (var component in components)
             {
-                component.Popularity = await _repository.CountAsync(component.Id);
-                await _components.UpdateAsync(component);
+                component.Popularity = await _historyRepository
+                    .CountAsync(x => x.ComponentId == component.Id);
+
+                await _componentRepository.UpdateAsync(component);
             }
         }
     }

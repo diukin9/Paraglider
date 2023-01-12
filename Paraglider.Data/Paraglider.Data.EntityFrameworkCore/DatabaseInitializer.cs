@@ -35,98 +35,98 @@ public static class DatabaseInitializer
             new Category()
             {
                 Name = "Банкетные залы",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "restaurant" },
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "loft" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "restaurant" },
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "loft" }
                 }
             },
             new Category()
             {
                 Name = "Видеографы",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "video" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "video" }
                 }
             },
             new Category()
             {
                 Name = "Фотографы",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "photo" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "photo" }
                 }
             },
             new Category()
             {
                 Name = "Ведущие",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "tamada" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "tamada" }
                 }
             },
             new Category()
             {
                 Name = "Оформители",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "decorator" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "decorator" }
                 }
             },
             new Category()
             {
                 Name = "Службы кейтеринга",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "catering" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "catering" }
                 }
             },
             new Category()
             {
                 Name = "Выездные регистраторы",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "ceremony" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "ceremony" }
                 }
             },
             new Category()
             {
                 Name = "Диджеи",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "dj" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "dj" }
                 }
             },
             new Category()
             {
                 Name = "Кондитеры",
-                Keys = new List<ExternalCategoryKey>()
+                Keys = new List<ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "cake" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "cake" }
                 }
             },
             new Category()
             {
                 Name = "Фотостудии",
-                Keys = new List <ExternalCategoryKey>()
+                Keys = new List <ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "photostudio" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "photostudio" }
                 }
             },
             new Category()
             {
                 Name = "Лимузины",
-                Keys = new List <ExternalCategoryKey>()
+                Keys = new List <ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "" }
                 }
             },
             new Category()
             {
                 Name = "Свадебные стилисты",
-                Keys = new List <ExternalCategoryKey>()
+                Keys = new List <ExtCategoryKey>()
                 {
-                    new ExternalCategoryKey() { Source = Source.Gorko, Key = "style" }
+                    new ExtCategoryKey() { Source = Source.Gorko, Key = "style" }
                 }
             },
             new Category() { Name = "Другое" }

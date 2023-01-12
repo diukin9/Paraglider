@@ -14,7 +14,7 @@ public static class UserManagerExtensions
     {
         var user =  await userManager.Users
             .Where(x => x.ExternalAuthInfo
-                .Any(y => y.ExternalId == externalId && y.ExternalProvider == provider))
+                .Any(y => y.ExternalId == externalId && y.Provider == provider))
             .SingleOrDefaultAsync();
 
         return user;

@@ -5,10 +5,13 @@ using Paraglider.Infrastructure.Common.Response;
 using Paraglider.Infrastructure.Common;
 using System.ComponentModel.DataAnnotations;
 using Paraglider.Infrastructure.Common.Extensions;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Paraglider.Infrastructure.Common.Helpers;
 
 namespace Paraglider.Application.Features.Auth.Commands;
 
-public class CookieAuthRequest : IRequest<OperationResult>
+public class CookieAuthRequest : IRequest<InternalOperation>
 {
     [Required]
     public string Login { get; set; } = null!;
@@ -17,24 +20,27 @@ public class CookieAuthRequest : IRequest<OperationResult>
     public string Password { get; set; } = null!;
 }
 
-public class CookieAuthCommandHandler : IRequestHandler<CookieAuthRequest, OperationResult>
+public class CookieAuthCommandHandler : IRequestHandler<CookieAuthRequest, InternalOperation>
 {
+    private readonly IHttpContextAccessor _accessor;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
     public CookieAuthCommandHandler(
         SignInManager<ApplicationUser> signInManager,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        IHttpContextAccessor accessor)
     {
         _signInManager = signInManager;
         _userManager = userManager;
+        _accessor = accessor;
     }
 
-    public async Task<OperationResult> Handle(
+    public async Task<InternalOperation> Handle(
         CookieAuthRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new InternalOperation();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
@@ -51,13 +57,20 @@ public class CookieAuthCommandHandler : IRequestHandler<CookieAuthRequest, Opera
 
         //пытаемся авторизовать
         var signInResult = await _signInManager
-            .PasswordSignInAsync(user, request.Password, true, false);
+            .CheckPasswordSignInAsync(user, request.Password, false);
 
-        if (!signInResult.Succeeded)
-        {
-            return operation.AddError("Неверный логин или пароль");
-        }
+        if (!signInResult.Succeeded) return operation.AddError("Неверный логин или пароль");
 
-        return operation.AddSuccess("Пользователь успешно авторизован");
+        await _accessor.HttpContext!.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            ClaimsPrincipalHelper.CreateByUser<ApplicationUser, Guid>(user),
+            new AuthenticationProperties
+            {
+                IsPersistent = true,
+                AllowRefresh = true,
+                ExpiresUtc = DateTime.UtcNow.AddDays(14)
+            });
+
+        return operation.AddSuccess();
     }
 }

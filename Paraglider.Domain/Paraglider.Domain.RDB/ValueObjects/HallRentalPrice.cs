@@ -1,6 +1,8 @@
-﻿namespace Paraglider.Domain.RDB.ValueObjects;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-public class HallRentalPrice
+namespace Paraglider.Domain.RDB.ValueObjects;
+
+public class HallPrice
 {
     public decimal? PricePerPerson { get; set; }
 

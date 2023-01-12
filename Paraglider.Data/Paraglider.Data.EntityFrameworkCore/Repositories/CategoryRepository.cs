@@ -18,22 +18,28 @@ public class CategoryRepository : Repository<Category>, ICategoryRepository
 
     public override async Task<IEnumerable<Category>> FindAsync(Expression<Func<Category, bool>> selector)
     {
-        return await _context.Categories.IncludeAll()
+        var categories = await _context.Categories.IncludeAll()
             .Where(selector)
             .ToListAsync();
+
+        return categories;
     }
 
     public override async Task<Category?> FindByIdAsync(Guid id)
     {
-        return await _context.Categories.IncludeAll()
+        var category = await _context.Categories.IncludeAll()
             .Where(x => x.Id == id)
             .SingleOrDefaultAsync();
+
+        return category;
     }
 
     public async Task<Category?> FindByKeyAsync(Source source, string key)
     {
-        return await _context.Categories.IncludeAll()
+        var categories = await _context.Categories.IncludeAll()
             .Where(x => x.Keys.Any(y => y.Source == source && y.Key == key))
             .SingleOrDefaultAsync();
+
+        return categories;
     }
 }

@@ -25,6 +25,8 @@ public class HangfireDefinition : AppDefinition
                 .UseMemoryStorage(options));
 
             services.AddHangfireServer();
+
+            services.RegisterServicesForHangfireTasks();
         }
     }
 

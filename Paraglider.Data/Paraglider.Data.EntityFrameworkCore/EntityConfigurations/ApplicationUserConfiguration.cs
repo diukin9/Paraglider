@@ -9,12 +9,14 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
         builder
-            .HasOne(x => x.Planning)
-            .WithOne();
+            .HasMany(x => x.Favourites)
+            .WithMany()
+            .UsingEntity(x => x.ToTable("UserFavourites"));
 
         builder
-            .HasMany(x => x.Favourites)
-            .WithOne(x => x.User)
+            .HasOne(x => x.Planning)
+            .WithOne()
+            .HasForeignKey<Planning>(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder

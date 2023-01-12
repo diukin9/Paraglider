@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Data.EntityFrameworkCore;
+using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;

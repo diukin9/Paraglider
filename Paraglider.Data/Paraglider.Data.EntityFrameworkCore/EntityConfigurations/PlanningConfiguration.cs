@@ -15,6 +15,18 @@ public class PlanningConfiguration : IEntityTypeConfiguration<Planning>
 
         builder
             .HasMany(x => x.PlanningComponents)
-            .WithOne(x => x.Planning);
+            .WithOne();
+    }
+}
+
+public class PlanningComponentConfiguration : IEntityTypeConfiguration<PlanningComponent>
+{
+    public void Configure(EntityTypeBuilder<PlanningComponent> builder)
+    {
+        builder
+            .HasOne(x => x.ComponentDesc)
+            .WithOne(x => x.PlanningComponent)
+            .HasForeignKey<ComponentDesc>()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

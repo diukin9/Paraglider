@@ -1,18 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
 using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.Data.EntityFrameworkCore;
 
-public class ApplicationDbContext : DbContextBase
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-    public DbSet<ExternalAuthInfo> ExternalAuthInfo { get; set; } = null!;
+    public DbSet<ExtlAuthInfo> ExternalAuthInfo { get; set; } = null!;
 
     public DbSet<City> Cities { get; set; } = null!;
-
-    public DbSet<UserComponent> UserComponents { get; set; }
 
     public DbSet<Planning> Plannings { get; set; } = null!;
 
@@ -22,7 +22,7 @@ public class ApplicationDbContext : DbContextBase
 
     public DbSet<ComponentDesc> ComponentDescs { get; set; } = null!; 
 
-    public DbSet<ComponentAdditionHistory> ComponentAdditionHistory { get; set; } = null!;
+    public DbSet<ComponentAddHistory> ComponentAdditionHistory { get; set; } = null!;
 
     public DbSet<Payment> Payments { get; set; } = null!;
 
@@ -42,7 +42,11 @@ public class ApplicationDbContext : DbContextBase
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.ApplyConfiguration(new CategoryConfiguration());
+        builder.ApplyConfiguration(new CityConfiguration());
+
         builder.ApplyConfiguration(new ApplicationUserConfiguration());
+
         builder.ApplyConfiguration(new ExternalAuthInfoConfiguration());
 
         builder.ApplyConfiguration(new ComponentConfiguration());

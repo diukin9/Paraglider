@@ -8,23 +8,19 @@ using Paraglider.Infrastructure.Common.Response;
 using Paraglider.MailService;
 using Paraglider.MailService.Models;
 using System.ComponentModel.DataAnnotations;
-using static Paraglider.Infrastructure.Common.AppData;
+using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Account.Commands;
 
-public class SendConfirmationEmailRequest : IRequest<OperationResult>
+public class SendConfirmationEmailRequest : IRequest<InternalOperation>
 {
-    [Required, EmailAddress] 
-    public string Email { get; set; }
-
-    public SendConfirmationEmailRequest(string email)
-    {
-        Email = email;
-    }
+    [Required, EmailAddress]
+    [JsonPropertyName("email")]
+    public string Email { get; set; } = null!;
 }
 
 public class SendConfirmationEmailCommandHandler
-    : IRequestHandler<SendConfirmationEmailRequest, OperationResult>
+    : IRequestHandler<SendConfirmationEmailRequest, InternalOperation>
 {
     private readonly IMailService mailService;
     private readonly IHttpContextAccessor httpContextAccessor;
@@ -42,19 +38,18 @@ public class SendConfirmationEmailCommandHandler
         this.linkGenerator = linkGenerator;
     }
 
-    public async Task<OperationResult> Handle(
+    public async Task<InternalOperation> Handle(
         SendConfirmationEmailRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new InternalOperation();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
         if (!validation.IsValid()) return operation.AddError(validation);
 
         var user = await userManager.FindByEmailAsync(request.Email);
-        if (user is null)
-            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ApplicationUser)));
+        if (user is null) return operation.AddError("Пользователь не найден");
 
         var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
@@ -65,16 +60,18 @@ public class SendConfirmationEmailCommandHandler
             new { userId = user.Id, token });
 
         if (confirmationLink == null)
+        {
             return operation.AddError("Не удалось сгенерировать ссылку для подтверждения email");
+        }
 
         if (user.Email == null)
-            return operation.AddError(ExceptionMessages.ValueNullOrEmpty(nameof(user.Email)));
+        {
+            return operation.AddError("К аккаунту не привязан почтовый ящик");
+        }
 
         var mailMessage = MailMessage.MailConfirmation(user.Email, confirmationLink);
-
         await mailService.SendAsync(mailMessage, cancellationToken);
 
-        var message = $"Инструкция для подтверждения почтового ящика отправлена по адресу: '{user.Email}'";
-        return operation.AddSuccess(message);
+        return operation.AddSuccess();
     }
 }

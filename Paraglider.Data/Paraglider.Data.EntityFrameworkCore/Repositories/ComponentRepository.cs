@@ -1,4 +1,5 @@
-﻿using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common.Repository;
 using System.Linq.Expressions;
@@ -14,13 +15,43 @@ public class ComponentRepository : Repository<Component>, IComponentRepository
         _context = context;
     }
 
-    public override Task<IEnumerable<Component>> FindAsync(Expression<Func<Component, bool>> selector)
+    public override async Task<IEnumerable<Component>> FindAsync(
+        Expression<Func<Component, bool>> selector)
     {
-        throw new NotImplementedException();
+        var components = await _context.Components.IncludeAll()
+            .Where(selector)
+            .ToListAsync();
+
+        return components;
     }
 
-    public override Task<Component?> FindByIdAsync(Guid id)
+    public override async Task<Component?> FindByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var component = await _context.Components.IncludeAll()
+            .Where(x => x.Id == id)
+            .SingleOrDefaultAsync();
+
+        return component;
+    }
+
+    public async Task<List<Component>> FindAsync(
+        Expression<Func<Component, bool>> filter,
+        Expression<Func<Component, object>> orderBy,
+        bool isAscending = true,
+        int? skip = null,
+        int? limit = null)
+    {
+        IQueryable<Component> query = _context.Components
+            .IncludeAll()
+            .Where(filter);
+
+        query = isAscending
+            ? query.OrderBy(orderBy)
+            : query.OrderByDescending(orderBy);
+
+        if (skip is not null) query = query.Skip(skip.Value);
+        if (limit is not null) query = query.Take(limit.Value);
+
+        return await query.ToListAsync();
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.Application.Features.Account.Commands;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Response;
+using ActionResult = Paraglider.Infrastructure.Common.Helpers.ActionResult;
 
 namespace Paraglider.Application.Controllers;
 
@@ -22,20 +22,18 @@ public class AccountController : ControllerBase
     [HttpPost]
     [AllowAnonymous]
     [Route("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterUserRequest request,
-    CancellationToken cancellationToken)
+    public async Task<IActionResult> Register(
+        [FromBody] RegisterUserRequest request,
+        CancellationToken cancellationToken)
     {
         var registerResponse = await _mediator.Send(request, cancellationToken);
-        if (!registerResponse.IsOk) return BadRequest(registerResponse);
+        if (!registerResponse.IsOk) return ActionResult.Create(registerResponse);
 
-        var sendConfirmMailResponse = await _mediator.Send(
-            new SendConfirmationEmailRequest(request.Email),
+        var sendEmailResponse = await _mediator.Send(
+            new SendConfirmationEmailRequest() { Email = request.Email },
             cancellationToken);
 
-        if (!sendConfirmMailResponse.IsOk) return BadRequest(sendConfirmMailResponse);
-
-        var message = $"{registerResponse.Metadata!.Message} {sendConfirmMailResponse.Metadata!.Message}";
-        return Ok(new OperationResult().AddSuccess(message));
+        return ActionResult.Create(sendEmailResponse);
     }
 
     [HttpGet]
@@ -43,11 +41,11 @@ public class AccountController : ControllerBase
     [Route("/[controller]/[action]")]
     [ApiExplorerSettings(IgnoreApi = true)]
     public async Task<IActionResult> ConfirmEmail(
-        [FromQuery] ConfirmEmailRequest confirmEmailCommand,
+        [FromQuery] ConfirmEmailRequest request,
         CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(confirmEmailCommand, cancellationToken);
-        if (!response.IsOk) return BadRequest(response);
+        var response = await _mediator.Send(request, cancellationToken);
+        if (!response.IsOk) return ActionResult.Create(response);
         return Redirect(AppData.RedirectOnSuccessfulMailConfirmation);
     }
 
@@ -55,25 +53,21 @@ public class AccountController : ControllerBase
     [AllowAnonymous]
     [Route("reset-password")]
     public async Task<IActionResult> ResetPassword(
-        [FromBody] SendPasswordResetMailRequest command,
+        [FromBody] SendPasswordResetMailRequest request,
         CancellationToken cancellationToken)
     {
-        var passwordResetMailResult = await _mediator.Send(command, cancellationToken);
-        if (!passwordResetMailResult.IsOk)
-            return BadRequest(passwordResetMailResult);
-
-        return Ok(passwordResetMailResult);
+        var response = await _mediator.Send(request, cancellationToken);
+        return ActionResult.Create(response);
     }
 
     [HttpPost]
     [AllowAnonymous]
     [Route("reset-password-handler")]
     public async Task<IActionResult> ResetPasswordHandler(
-        [FromBody] SetNewPasswordRequest setNewPasswordCommand,
+        [FromBody] SetNewPasswordRequest request,
         CancellationToken cancellationToken)
     {
-        var resetPasswordResult = await _mediator.Send(setNewPasswordCommand, cancellationToken);
-        if (!resetPasswordResult.IsOk) return BadRequest(resetPasswordResult);
-        return Ok(resetPasswordResult);
+        var response = await _mediator.Send(request, cancellationToken);
+        return ActionResult.Create(response);
     }
 }

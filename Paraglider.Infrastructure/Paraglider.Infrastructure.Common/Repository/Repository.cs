@@ -65,4 +65,14 @@ public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity :
     {
         await _context.SaveChangesAsync();
     }
+
+    public async Task<int> CountAsync()
+    {
+        return await _context.Set<TEntity>().CountAsync();
+    }
+
+    public async Task<int> CountAsync(Expression<Func<TEntity, bool>> filter)
+    {
+        return await _context.Set<TEntity>().Where(filter).CountAsync();
+    }
 }

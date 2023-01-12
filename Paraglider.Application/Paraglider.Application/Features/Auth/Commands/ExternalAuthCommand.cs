@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Application.Extensions;
 using Paraglider.Domain.RDB.Entities;
@@ -13,40 +15,46 @@ using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
+using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Auth.Commands;
 
-public class ExternalAuthRequest : IRequest<OperationResult<string>>
+public class ExternalAuthRequest : IRequest<InternalOperation<string>>
 {
     [Required]
+    [JsonPropertyName("callback_url")]
     public string Callback { get; set; } = null!;
 
     [Required]
-    public AuthType AuthType { get; set; }
+    [JsonPropertyName("auth_scheme")]
+    public AuthScheme Scheme { get; set; }
 }
 
 public class ExternalAuthCommandHandler 
-    : IRequestHandler<ExternalAuthRequest, OperationResult<string>>
+    : IRequestHandler<ExternalAuthRequest, InternalOperation<string>>
 {
+    private readonly IHttpContextAccessor _accessor;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly BearerSettings _bearerSettings;
 
     public ExternalAuthCommandHandler(
+        IHttpContextAccessor accessor,
         SignInManager<ApplicationUser> signInManager,
         UserManager<ApplicationUser> userManager, 
         BearerSettings bearerSettings)
     {
+        _accessor = accessor;
         _signInManager = signInManager;
         _userManager = userManager;
         _bearerSettings = bearerSettings;
     }
 
-    public async Task<OperationResult<string>> Handle(
+    public async Task<InternalOperation<string>> Handle(
         ExternalAuthRequest request, 
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<string>();
+        var operation = new InternalOperation<string>();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
@@ -54,11 +62,11 @@ public class ExternalAuthCommandHandler
 
         //получаем ExternalLoginInfo
         var info = await _signInManager.GetExternalLoginInfoAsync();
-        if (info is null) return operation.AddError("Не удалось аутентифицировать пользователя");
+        if (info is null) return operation.AddError("Не удалось получить данные пользователя");
 
         //получаем пользователя
         var user = await GetUserByExternalLoginInfoAsync(info);
-        if (user is null) return operation.AddError("Не удалось аутентифицировать пользователя");
+        if (user is null) return operation.AddError("Пользователь не найден");
 
         //если у пользователя нет такого UserLoginInfo - создаем
         if (await _userManager.FindUserLoginInfoAsync(user, info.LoginProvider, info.ProviderKey) is null)
@@ -70,28 +78,39 @@ public class ExternalAuthCommandHandler
             }
         }
 
-        return request.AuthType == AuthType.Cookie
-            ? await CookieAuthAsync(operation, info, request.Callback)
+        return request.Scheme == AuthScheme.Cookie
+            ? await CookieAuthAsync(operation, info, user, request.Callback)
             : await TokenAuthAsync(operation, user, request.Callback);
     }
 
-    private async Task<OperationResult<string>> CookieAuthAsync(
-        OperationResult<string> operation,
+    private async Task<InternalOperation<string>> CookieAuthAsync(
+        InternalOperation<string> operation,
         ExternalLoginInfo info,
+        ApplicationUser user,
         string callback)
     {
         var signInResult = await _signInManager.ExternalLoginSignInAsync(
-                info.LoginProvider,
-                info.ProviderKey,
-                true);
+            info.LoginProvider,
+            info.ProviderKey,
+            true);
 
-        return signInResult.Succeeded
-            ? operation.AddSuccess("Пользователь успешно авторизован через внешнего провайдера", callback)
-            : operation.AddError("Ошибка при попытке авторизации");
+        if (!signInResult.Succeeded) return operation.AddError("Ошибка при попытке авторизации");
+
+        await _accessor.HttpContext!.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            ClaimsPrincipalHelper.CreateByUser<ApplicationUser, Guid>(user),
+            new AuthenticationProperties
+            {
+                IsPersistent = true,
+                AllowRefresh = true,
+                ExpiresUtc = DateTime.UtcNow.AddDays(14)
+            });
+
+        return operation.AddSuccess(callback);
     }
 
-    private async Task<OperationResult<string>> TokenAuthAsync(
-        OperationResult<string> operation,
+    private async Task<InternalOperation<string>> TokenAuthAsync(
+        InternalOperation<string> operation,
         ApplicationUser user,
         string callback)
     {
@@ -108,11 +127,9 @@ public class ExternalAuthCommandHandler
             accessToken,
             accessTokenExpiryTime,
             user.RefreshToken!,
-            user.RefreshTokenExpiryTime);
+            user.RefreshTokenExpiryTime!.Value);
 
-        return operation.AddSuccess(
-            message: "Пользователь успешно аутентифицирован через внешнего провайдера",
-            data: url);
+        return operation.AddSuccess(url);
     }
 
     private async Task<ApplicationUser?> GetUserByExternalLoginInfoAsync(ExternalLoginInfo info)

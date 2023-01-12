@@ -1,9 +1,13 @@
 ﻿using Paraglider.Infrastructure.Common.Interfaces;
+using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.DataTransferObjects;
 
 public class CityDTO : IDataTransferObject
 {
-    public Guid Id { get; init; }
-    public string Name { get; init; } = null!;
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = null!;
 }

@@ -1,10 +1,10 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Domain.RDB.Enums;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Repository;
+using System.Linq.Expressions;
 
 namespace Paraglider.Data.EntityFrameworkCore.Repositories;
 
@@ -19,23 +19,29 @@ public class CityRepository : Repository<City>, ICityRepository
 
     public override async Task<IEnumerable<City>> FindAsync(Expression<Func<City, bool>> selector)
     {
-        return await _context.Cities.IncludeAll()
+        var cities = await _context.Cities.IncludeAll()
             .Where(selector)
             .ToListAsync();
+
+        return cities;
     }
 
     public override async Task<City?> FindByIdAsync(Guid id)
     {
-        return await _context.Cities.IncludeAll()
+        var city = await _context.Cities.IncludeAll()
             .Where(x => x.Id == id)
             .SingleOrDefaultAsync();
+
+        return city;
     }
 
     public async Task<City?> FindByKeyAsync(Source source, string key)
     {
-        return await _context.Cities.IncludeAll()
+        var city = await _context.Cities.IncludeAll()
             .Where(x => x.Keys.Any(y => y.Source == source && y.Key == key))
             .SingleOrDefaultAsync();
+
+        return city;
     }
 
     public async Task<City?> FindByNameAsync(string name)
@@ -43,20 +49,24 @@ public class CityRepository : Repository<City>, ICityRepository
         var city = await _context.Cities.IncludeAll()
             .Where(u => u.Name == name)
             .SingleOrDefaultAsync();
+
         return city;
     }
 
     public async Task<City> GetDefaultCity()
     {
-        return (await FindByNameAsync(AppData.DefaultCityName))!;
+        var city = await FindByNameAsync(AppData.DefaultCityName);
+        return city!;
     }
 
     public async Task<IEnumerable<string>> GetKeysAsync(Source source)
     {
-        return await _context.Cities
+        var keys = await _context.Cities
             .SelectMany(x => x.Keys)
             .Where(x => x.Source == source)
             .Select(x => x.Key)
             .ToListAsync();
+
+        return keys;
     }
 }
