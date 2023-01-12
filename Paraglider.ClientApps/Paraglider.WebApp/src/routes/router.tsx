@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import { CommonLayout } from "../components/Layout/CommonLayout/CommonLayout";
+import { ErrorBoundary } from "../features/ErrorBoundary";
 import { Main } from "../features/Main";
 
 export const router = createBrowserRouter([
@@ -17,5 +18,6 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+    errorElement: <ErrorBoundary />,
   },
 ]);
