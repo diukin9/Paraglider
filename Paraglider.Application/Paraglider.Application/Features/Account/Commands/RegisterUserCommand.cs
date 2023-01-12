@@ -4,32 +4,37 @@ using Paraglider.Data.EntityFrameworkCore.Factories;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Attributes;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Response;
 using System.ComponentModel.DataAnnotations;
-using static Paraglider.Infrastructure.Common.AppData;
+using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Account.Commands;
 
-public class RegisterUserRequest : IRequest<OperationResult>
+public class RegisterUserRequest : IRequest<InternalOperation>
 {
-    [Required, EmailAddress] 
+    [Required, EmailAddress]
+    [JsonPropertyName("email")]
     public string Email { get; set; }
 
-    [Required, MinLength(8)] 
+    [Required, MinLength(8)]
+    [JsonPropertyName("password")]
     public string Password { get; set; }
 
-    [Required] 
+    [Required]
+    [JsonPropertyName("firstname")]
     public string FirstName { get; set; }
 
-    [Required] 
+    [Required]
+    [JsonPropertyName("surnamee")]
     public string Surname { get; set; }
 
-    [Phone] 
+    [Phone]
+    [JsonPropertyName("phone_number")]
     public string? PhoneNumber { get; set; } //TODO сделать кастомный атрибут PhoneNumber
 
-    [Required, NotEmptyGuid] 
+    [Required]
+    [JsonPropertyName("city_id")]
     public Guid CityId { get; set; }
 
     public RegisterUserRequest(string email, string password, 
@@ -44,37 +49,36 @@ public class RegisterUserRequest : IRequest<OperationResult>
     }
 }
 
-public class RegisterUserHandler : IRequestHandler<RegisterUserRequest, OperationResult>
+public class RegisterUserHandler : IRequestHandler<RegisterUserRequest, InternalOperation>
 {
     private readonly UserManager<ApplicationUser> userManager;
     private readonly ICityRepository cityRepository;
-    private readonly IHttpContextAccessor _accessor;
 
     public RegisterUserHandler(
         UserManager<ApplicationUser> userManager,
-        ICityRepository cityRepository,
-        IHttpContextAccessor accessor)
+        ICityRepository cityRepository)
     {
         this.userManager = userManager;
         this.cityRepository = cityRepository;
-        _accessor = accessor;
     }
 
-    public async Task<OperationResult> Handle(
+    public async Task<InternalOperation> Handle(
         RegisterUserRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new InternalOperation();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
         if (!validation.IsValid()) return operation.AddError(validation);
 
         if (await userManager.FindByEmailAsync(request.Email) != null)
+        {
             return operation.AddError($"Пользователь с email: '{request.Email}' уже существует");
+        }
 
         var city = await cityRepository.FindByIdAsync(request.CityId);
-        if (city is null) return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(City)));
+        if (city is null) return operation.AddError("Город не найден");
 
         var user = UserFactory.Create(new UserData(
             request.FirstName,
@@ -87,8 +91,10 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserRequest, Operatio
         var identityResult = await userManager.CreateAsync(user, request.Password);
 
         if (!identityResult.Succeeded)
+        {
             return operation.AddError(string.Join(';', identityResult.Errors));
+        }
 
-        return operation.AddSuccess("Регистрация прошла успешно.");
+        return operation.AddSuccess();
     }
 }

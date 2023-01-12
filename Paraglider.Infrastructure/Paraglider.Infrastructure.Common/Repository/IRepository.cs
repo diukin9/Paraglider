@@ -25,4 +25,8 @@ public interface IRepository<TEntity> where TEntity : class, new()
     public Task UpdateAsync(TEntity entity);
 
     public Task SaveChangesAsync();
+
+    public Task<int> CountAsync();
+
+    public Task<int> CountAsync(Expression<Func<TEntity, bool>> filter);
 }

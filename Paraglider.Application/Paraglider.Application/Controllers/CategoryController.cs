@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Paraglider.Application.Features.Categories.Commands;
 using Paraglider.Application.Features.Categories.Queries;
-using Paraglider.Application.Features.Planning.Commands;
+using ActionResult = Paraglider.Infrastructure.Common.Helpers.ActionResult;
 
 namespace Paraglider.Application.Controllers;
 
@@ -20,30 +21,38 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("categories")]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(
+        [FromQuery] GetAllCategoriesRequest request,
+        CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetAllCategoriesRequest(), HttpContext.RequestAborted);
-        return response.IsOk ? Ok(response) : BadRequest(response);
+        var response = await _mediator.Send(request, cancellationToken);
+        return ActionResult.Create(response);
     }
 
     [HttpGet("user/planning/categories")]
-    public async Task<IActionResult> GetUserCategories()
+    public async Task<IActionResult> GetUserCategories(
+        [FromQuery] GetUserCategoriesRequest request,
+        CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new GetUserCategoriesRequest(), HttpContext.RequestAborted);
-        return response.IsOk ? Ok(response) : BadRequest(response);
+        var response = await _mediator.Send(request, cancellationToken);
+        return ActionResult.Create(response);
     }
 
     [HttpPost("user/planning/categories")]
-    public async Task<IActionResult> AddCategory([FromBody] AddCategoryToUserRequest request)
+    public async Task<IActionResult> AddCategory(
+        [FromBody] AddCategoryToUserRequest request,
+        CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(request, HttpContext.RequestAborted);
-        return response.IsOk ? Ok(response) : BadRequest(response);
+        var response = await _mediator.Send(request, cancellationToken);
+        return ActionResult.Create(response);
     }
 
     [HttpDelete("user/planning/categories")]
-    public async Task<IActionResult> RemoveCategory([FromBody] RemoveCategoryFromUserRequest request)
+    public async Task<IActionResult> RemoveCategory(
+        [FromBody] RemoveCategoryFromUserRequest request,
+        CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(request, HttpContext.RequestAborted);
-        return response.IsOk ? Ok(response) : BadRequest(response);
+        var response = await _mediator.Send(request, cancellationToken);
+        return ActionResult.Create(response);
     }
 }

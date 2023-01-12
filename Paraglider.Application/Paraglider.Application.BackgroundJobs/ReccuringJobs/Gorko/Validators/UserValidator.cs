@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Paraglider.Domain.Common.Enums;
-using Paraglider.Domain.NoSQL.Entities;
+using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
 
 namespace Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko.Validators;
 
@@ -17,18 +17,13 @@ public class UserValidator : AbstractValidator<Component>
         RuleFor(x => x.AvatarUrl).NotNull().NotEmpty();
 
         RuleFor(x => x.Album).NotNull().NotEmpty();
-        RuleFor(x => x.Album.Media).NotNull().NotEmpty();
-        RuleForEach(x => x.Album.Media).ChildRules(media =>
+        RuleFor(x => x.Album!.Media).NotNull().NotEmpty();
+        RuleForEach(x => x.Album!.Media).ChildRules(media =>
         {
             media.RuleFor(x => x.Url).NotNull().NotEmpty();
         });
 
         RuleFor(x => x.Contacts).NotNull().NotEmpty();
-        RuleFor(x => x.Contacts.PhoneNumbers).NotNull().NotEmpty();
-        RuleForEach(x => x.Contacts.PhoneNumbers).ChildRules(phone =>
-        {
-            phone.RuleFor(x => x).NotNull().NotEmpty();
-        });
 
         RuleFor(x => x.Reviews).NotNull();
         RuleForEach(x => x.Reviews).ChildRules(review =>

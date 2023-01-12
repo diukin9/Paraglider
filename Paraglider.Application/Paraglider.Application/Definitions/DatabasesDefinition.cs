@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
-using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Data.EntityFrameworkCore;
 using Paraglider.Domain.RDB.Entities;
-using Paraglider.Infrastructure.Common.MongoDB;
+using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Infrastructure.Common.Attributes;
 
 namespace Paraglider.Application.Definitions;
@@ -17,7 +15,7 @@ public class DatabasesDefinition : AppDefinition
         services.AddDbContext<ApplicationDbContext>(config =>
         {
             config.UseNpgsql(configuration["ConnectionStrings:PostgreSQL"]);
-        }).AddIdentity<ApplicationUser, ApplicationRole>(config =>
+        }).AddIdentity<ApplicationUser, IdentityRole<Guid>>(config =>
         {
             config.Password.RequireDigit = false;
             config.Password.RequireLowercase = false;
@@ -28,12 +26,5 @@ public class DatabasesDefinition : AppDefinition
         .AddDefaultTokenProviders();
 
         services.AddTransient<IdentityErrorDescriber>();
-
-        var mongoSettings = new MongoDbSettings();
-        configuration.Bind(nameof(MongoDbSettings), mongoSettings);
-        services.AddSingleton<IMongoDbSettings>(mongoSettings);
-
-        var mongoClient = new MongoClient(configuration["ConnectionStrings:MongoDB"]);
-        services.AddSingleton<IMongoClient>(mongoClient);
     }
 }

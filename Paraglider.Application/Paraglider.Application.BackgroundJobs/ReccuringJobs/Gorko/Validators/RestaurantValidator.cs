@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using Paraglider.Domain.Common.Enums;
-using Paraglider.Domain.NoSQL.Entities;
+using Paraglider.Domain.RDB.Entities;
+using Paraglider.Domain.RDB.Enums;
 
 namespace Paraglider.Application.BackgroundJobs.ReccuringJobs.Gorko.Validators;
 
@@ -17,11 +17,6 @@ public class RestaurantValidator : AbstractValidator<Component>
         RuleFor(x => x.AvatarUrl).NotNull().NotEmpty();
 
         RuleFor(x => x.Contacts).NotNull().NotEmpty();
-        RuleFor(x => x.Contacts.PhoneNumbers).NotNull().NotEmpty();
-        RuleForEach(x => x.Contacts.PhoneNumbers).ChildRules(phone =>
-        {
-            phone.RuleFor(x => x).NotNull().NotEmpty();
-        });
 
         RuleFor(x => x.Reviews).NotNull();
         RuleForEach(x => x.Reviews).ChildRules(review =>
@@ -35,10 +30,10 @@ public class RestaurantValidator : AbstractValidator<Component>
         RuleForEach(x => x.Halls).ChildRules(hall =>
         {
             hall.RuleFor(x => x.Name).NotNull().NotEmpty();
-            hall.RuleFor(x => x.RentalPrice).NotNull().NotEmpty();
+            hall.RuleFor(x => x.Price).NotNull().NotEmpty();
             hall.RuleFor(x => x.Capacity).NotNull().NotEmpty();
             hall.RuleFor(x => x.Album).NotNull().NotEmpty();
-            hall.RuleFor(x => x.Album.Media).NotNull();
+            hall.RuleFor(x => x.Album!.Media).NotNull();
         });
 
         RuleFor(x => x.Album).Null();

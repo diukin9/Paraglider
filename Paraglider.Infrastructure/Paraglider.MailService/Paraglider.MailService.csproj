@@ -15,7 +15,6 @@
   <ItemGroup>
     <PackageReference Include="MailKit" Version="3.4.3" />
     <PackageReference Include="MimeKit" Version="3.4.3" />
-    <PackageReference Include="RestSharp" Version="108.0.3" />
   </ItemGroup>
 
 </Project>

@@ -14,7 +14,7 @@ using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Auth.Commands;
 
-public class GetTokenRequest : IRequest<OperationResult<Infrastructure.Common.Models.Token>>
+public class GetTokenRequest : IRequest<InternalOperation<Infrastructure.Common.Models.Token>>
 {
     [Required]
     [JsonPropertyName("login")]
@@ -26,7 +26,7 @@ public class GetTokenRequest : IRequest<OperationResult<Infrastructure.Common.Mo
 }
 
 public class GetTokenCommandHandler 
-    : IRequestHandler<GetTokenRequest, OperationResult<Infrastructure.Common.Models.Token>>
+    : IRequestHandler<GetTokenRequest, InternalOperation<Infrastructure.Common.Models.Token>>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
@@ -42,11 +42,11 @@ public class GetTokenCommandHandler
         _bearerSettings = bearerSettings;
     }
 
-    public async Task<OperationResult<Infrastructure.Common.Models.Token>> Handle(
+    public async Task<InternalOperation<Infrastructure.Common.Models.Token>> Handle(
         GetTokenRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<Infrastructure.Common.Models.Token>();
+        var operation = new InternalOperation<Infrastructure.Common.Models.Token>();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
@@ -54,19 +54,13 @@ public class GetTokenCommandHandler
 
         //получаем пользователя
         var user = await _userManager.FindByNameIdentifierAsync(request.Login);
-        if (user is null)
-        {
-            return operation.AddError("Неверный логин или пароль");
-        }
+        if (user is null) return operation.AddError("Неверный логин или пароль");
 
         var checkPasswordResult = await _signInManager
             .CheckPasswordSignInAsync(user, request.Password, false);
 
         //проверяем, что передан верный пароль
-        if (!checkPasswordResult.Succeeded)
-        {
-            return operation.AddError("Неверный логин или пароль");
-        }
+        if (!checkPasswordResult.Succeeded) return operation.AddError("Неверный логин или пароль");
 
         //прокинем необходимые клеймы для будушей генерации токена
         var claims = new List<Claim>()
@@ -99,14 +93,14 @@ public class GetTokenCommandHandler
             await _userManager.UpdateAsync(user);
         }
 
-        var token = new Infrastructure.Common.Models.Token()
+        var token = new Token()
         {
             AccessToken = accessToken,
             AccessTokenExpiryTime = accessTokenExpiryTime,
             RefreshToken = user.RefreshToken,
-            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime,
+            RefreshTokenExpiryTime = user.RefreshTokenExpiryTime!.Value,
         };
 
-        return operation.AddSuccess(string.Empty, token);
+        return operation.AddSuccess(token);
     }
 }

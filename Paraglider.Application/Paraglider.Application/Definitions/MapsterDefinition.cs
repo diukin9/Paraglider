@@ -1,11 +1,10 @@
 ﻿using Mapster;
 using MapsterMapper;
 using Paraglider.Application.BackgroundJobs.ReccuringJobs.Abstractions;
-using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Data.EntityFrameworkCore;
-using Paraglider.Data.MongoDB;
-using System.Reflection;
+using Paraglider.Infrastructure.Common.AppDefinition;
 using Paraglider.Infrastructure.Common.Attributes;
+using System.Reflection;
 
 namespace Paraglider.Application.Definitions;
 
@@ -18,7 +17,6 @@ public class MapsterDefinition : AppDefinition
 
         typeAdapterConfig.Scan(Assembly.GetExecutingAssembly()!);
         typeAdapterConfig.Scan(Assembly.GetAssembly(typeof(ApplicationDbContext))!);
-        typeAdapterConfig.Scan(Assembly.GetAssembly(typeof(ComponentDataAccess))!);
         typeAdapterConfig.Scan(Assembly.GetAssembly(typeof(IReccuringJob))!);
 
         var mapperConfig = new Mapper(typeAdapterConfig);

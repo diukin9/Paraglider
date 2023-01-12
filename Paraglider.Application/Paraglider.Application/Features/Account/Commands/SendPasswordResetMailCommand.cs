@@ -8,18 +8,19 @@ using Paraglider.Infrastructure.Common.Response;
 using Paraglider.MailService;
 using Paraglider.MailService.Models;
 using System.ComponentModel.DataAnnotations;
-using static Paraglider.Infrastructure.Common.AppData;
+using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Account.Commands;
 
-public class SendPasswordResetMailRequest : IRequest<OperationResult>
+public class SendPasswordResetMailRequest : IRequest<InternalOperation>
 {
-    [Required, EmailAddress] 
+    [Required, EmailAddress]
+    [JsonPropertyName("email")]
     public string Email { get; set; } = null!;
 }
 
 public class SendPasswordResetMailCommandHandler 
-    : IRequestHandler<SendPasswordResetMailRequest, OperationResult>
+    : IRequestHandler<SendPasswordResetMailRequest, InternalOperation>
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMailService _mailService;
@@ -38,22 +39,23 @@ public class SendPasswordResetMailCommandHandler
         _linkGenerator = linkGenerator;
     }
 
-    public async Task<OperationResult> Handle(
+    public async Task<InternalOperation> Handle(
         SendPasswordResetMailRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
+        var operation = new InternalOperation();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
         if (!validation.IsValid()) return operation.AddError(validation);
 
         var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user == null)
-            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(user)));
+        if (user == null) return operation.AddError("Пользователь не найден");
 
         if (!await _userManager.IsEmailConfirmedAsync(user))
-            return operation.AddError("Сначала необходимо подтвердить почтовый ящик.");
+        {
+            return operation.AddError("Почтовый ящик не подтвержден");
+        }
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
          
@@ -63,8 +65,10 @@ public class SendPasswordResetMailCommandHandler
             controller: nameof(AccountController).Replace("Controller", string.Empty).ToLower(),
             values: new { userId = user.Id, token });
 
-        await _mailService.SendAsync(MailMessage.ResetPassword(request.Email, handlerUrl!), cancellationToken);
+        await _mailService.SendAsync(
+            MailMessage.ResetPassword(request.Email, handlerUrl!), 
+            cancellationToken);
 
-        return operation.AddSuccess($"Инструкция для смены пароля была отправлена на почту '{request.Email}'");
+        return operation.AddSuccess();
     }
 }

@@ -17,10 +17,25 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ApplicationUserComponent", b =>
+                {
+                    b.Property<Guid>("ApplicationUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FavouritesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ApplicationUserId", "FavouritesId");
+
+                    b.HasIndex("FavouritesId");
+
+                    b.ToTable("UserFavourites", (string)null);
+                });
 
             modelBuilder.Entity("CategoryPlanning", b =>
                 {
@@ -35,6 +50,33 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.HasIndex("PlanningId");
 
                     b.ToTable("PlanningCategories", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -140,31 +182,15 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ApplicationRole", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Album", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex");
-
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("Albums");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ApplicationUser", b =>
@@ -223,7 +249,7 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("RefreshTokenExpiryTime")
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SecurityStamp")
@@ -250,9 +276,6 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("PlanningId")
-                        .IsUnique();
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -287,20 +310,88 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.ToTable("Cities");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ComponentAdditionHistory", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Component", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ComponentId")
+                    b.Property<Guid?>("AlbumId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("Capacity")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExternalId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("ManufactureYear")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<TimeSpan?>("MinRentLength")
+                        .HasColumnType("interval");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("Popularity")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CityId");
+
+                    b.ToTable("Components");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ComponentAddHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ComponentAdditionHistory");
                 });
@@ -325,32 +416,31 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.ToTable("ComponentDescs");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalAuthInfo", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Contact", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ExternalId")
+                    b.Property<Guid?>("ComponentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Key")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ExternalProvider")
-                        .HasColumnType("integer");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("ExternalProvider", "ExternalId");
+                    b.HasIndex("ComponentId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetExternalAuthInfo");
+                    b.ToTable("Contacts");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCategoryKey", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExtCategoryKey", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -370,7 +460,7 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("ExternalCategoryKey");
+                    b.ToTable("ExtCategoryKey");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCityKey", b =>
@@ -394,6 +484,85 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.HasIndex("CityId");
 
                     b.ToTable("ExternalCityKey");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExtlAuthInfo", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ExternalId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Provider")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Provider", "ExternalId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("ExternalAuthInfo");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Hall", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("AlbumId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ComponentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("MinimalPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.HasIndex("ComponentId");
+
+                    b.ToTable("Halls");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Media", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AlbumId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlbumId");
+
+                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Payment", b =>
@@ -427,10 +596,16 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateOnly?>("WeddingDate")
                         .HasColumnType("date");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Plannings");
                 });
@@ -447,9 +622,8 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Property<Guid>("ComponentDescId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ComponentId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("ComponentId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("PlanningId")
                         .HasColumnType("uuid");
@@ -458,29 +632,79 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("ComponentId");
+
                     b.HasIndex("PlanningId");
 
                     b.ToTable("PlanningComponents");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.UserComponent", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Review", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("ComponentId")
+                    b.Property<string>("Author")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("AvatarUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid?>("ComponentId")
                         .HasColumnType("uuid");
+
+                    b.Property<double>("Evaluation")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ComponentId");
 
-                    b.ToTable("UserComponents");
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Service", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ComponentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ComponentId");
+
+                    b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("ApplicationUserComponent", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Component", null)
+                        .WithMany()
+                        .HasForeignKey("FavouritesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CategoryPlanning", b =>
@@ -500,7 +724,7 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Paraglider.Domain.RDB.Entities.ApplicationRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -527,7 +751,7 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Paraglider.Domain.RDB.Entities.ApplicationRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -557,15 +781,52 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.RDB.Entities.Planning", "Planning")
-                        .WithOne()
-                        .HasForeignKey("Paraglider.Domain.RDB.Entities.ApplicationUser", "PlanningId")
+                    b.Navigation("City");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Component", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Album", "Album")
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("City");
+                    b.HasOne("Paraglider.Domain.RDB.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Planning");
+                    b.Navigation("Album");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("City");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ComponentAddHistory", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Component", "Component")
+                        .WithMany()
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.RDB.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Component");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ComponentDesc", b =>
@@ -582,12 +843,10 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                                 .HasColumnType("uuid");
 
                             b1.Property<TimeOnly?>("IntervalEnd")
-                                .HasColumnType("time without time zone")
-                                .HasColumnName("End");
+                                .HasColumnType("time without time zone");
 
                             b1.Property<TimeOnly?>("IntervalStart")
-                                .HasColumnType("time without time zone")
-                                .HasColumnName("Start");
+                                .HasColumnType("time without time zone");
 
                             b1.HasKey("ComponentDescId");
 
@@ -602,7 +861,31 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Navigation("TimeInterval");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalAuthInfo", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Contact", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Component", null)
+                        .WithMany("Contacts")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExtCategoryKey", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Category", null)
+                        .WithMany("Keys")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCityKey", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.City", null)
+                        .WithMany("Keys")
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExtlAuthInfo", b =>
                 {
                     b.HasOne("Paraglider.Domain.RDB.Entities.ApplicationUser", "User")
                         .WithMany("ExternalAuthInfo")
@@ -613,18 +896,72 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCategoryKey", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Hall", b =>
                 {
-                    b.HasOne("Paraglider.Domain.RDB.Entities.Category", null)
-                        .WithMany("Keys")
-                        .HasForeignKey("CategoryId");
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Album", "Album")
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Component", null)
+                        .WithMany("Halls")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("Paraglider.Domain.RDB.ValueObjects.Capacity", "Capacity", b1 =>
+                        {
+                            b1.Property<Guid>("HallId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<int?>("Max")
+                                .HasColumnType("integer");
+
+                            b1.Property<int?>("Min")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("HallId");
+
+                            b1.ToTable("Halls");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HallId");
+                        });
+
+                    b.OwnsOne("Paraglider.Domain.RDB.ValueObjects.HallPrice", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("HallId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal?>("PricePerPerson")
+                                .HasColumnType("numeric");
+
+                            b1.Property<decimal?>("RentalPrice")
+                                .HasColumnType("numeric");
+
+                            b1.HasKey("HallId");
+
+                            b1.ToTable("Halls");
+
+                            b1.WithOwner()
+                                .HasForeignKey("HallId");
+                        });
+
+                    b.Navigation("Album");
+
+                    b.Navigation("Capacity")
+                        .IsRequired();
+
+                    b.Navigation("Price")
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ExternalCityKey", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Media", b =>
                 {
-                    b.HasOne("Paraglider.Domain.RDB.Entities.City", null)
-                        .WithMany("Keys")
-                        .HasForeignKey("CityId");
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Album", null)
+                        .WithMany("Media")
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Payment", b =>
@@ -638,6 +975,15 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                     b.Navigation("ComponentDesc");
                 });
 
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Planning", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.ApplicationUser", null)
+                        .WithOne("Planning")
+                        .HasForeignKey("Paraglider.Domain.RDB.Entities.Planning", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.PlanningComponent", b =>
                 {
                     b.HasOne("Paraglider.Domain.RDB.Entities.Category", "Category")
@@ -646,7 +992,13 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Paraglider.Domain.RDB.Entities.Planning", "Planning")
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Component", "Component")
+                        .WithMany()
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Planning", null)
                         .WithMany("PlanningComponents")
                         .HasForeignKey("PlanningId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -654,25 +1006,58 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
 
                     b.Navigation("Category");
 
-                    b.Navigation("Planning");
+                    b.Navigation("Component");
                 });
 
-            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.UserComponent", b =>
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Review", b =>
                 {
-                    b.HasOne("Paraglider.Domain.RDB.Entities.ApplicationUser", "User")
-                        .WithMany("Favourites")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Component", null)
+                        .WithMany("Reviews")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.Navigation("User");
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Service", b =>
+                {
+                    b.HasOne("Paraglider.Domain.RDB.Entities.Component", null)
+                        .WithMany("Services")
+                        .HasForeignKey("ComponentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("Paraglider.Domain.RDB.ValueObjects.Price", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("ServiceId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<decimal?>("Max")
+                                .HasColumnType("numeric");
+
+                            b1.Property<decimal?>("Min")
+                                .HasColumnType("numeric");
+
+                            b1.HasKey("ServiceId");
+
+                            b1.ToTable("Services");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ServiceId");
+                        });
+
+                    b.Navigation("Price")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Album", b =>
+                {
+                    b.Navigation("Media");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("ExternalAuthInfo");
 
-                    b.Navigation("Favourites");
+                    b.Navigation("Planning")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Category", b =>
@@ -683,6 +1068,17 @@ namespace Paraglider.Data.EntityFrameworkCore.Migrations
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.City", b =>
                 {
                     b.Navigation("Keys");
+                });
+
+            modelBuilder.Entity("Paraglider.Domain.RDB.Entities.Component", b =>
+                {
+                    b.Navigation("Contacts");
+
+                    b.Navigation("Halls");
+
+                    b.Navigation("Reviews");
+
+                    b.Navigation("Services");
                 });
 
             modelBuilder.Entity("Paraglider.Domain.RDB.Entities.ComponentDesc", b =>

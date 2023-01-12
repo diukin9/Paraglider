@@ -4,10 +4,10 @@ using Paraglider.Domain.RDB.Entities;
 
 namespace Paraglider.Data.EntityFrameworkCore.EntityConfigurations;
 
-public class ExternalAuthInfoConfiguration : IEntityTypeConfiguration<ExternalAuthInfo>
+public class ExternalAuthInfoConfiguration : IEntityTypeConfiguration<ExtlAuthInfo>
 {
-    public void Configure(EntityTypeBuilder<ExternalAuthInfo> builder)
+    public void Configure(EntityTypeBuilder<ExtlAuthInfo> builder)
     {
-        builder.HasAlternateKey(x => new { x.ExternalProvider, x.ExternalId });
+        builder.HasAlternateKey(x => new { x.Provider, x.ExternalId });
     }
 }

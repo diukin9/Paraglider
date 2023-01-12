@@ -22,18 +22,13 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.4.0" />
+    <PackageReference Include="Hangfire.Core" Version="1.7.32" />
+    <PackageReference Include="Mapster" Version="7.3.0" />
     <PackageReference Include="runtime.any.System.Runtime.Handles" Version="4.3.0" />
-    <PackageReference Include="System.Collections" Version="4.3.0" />
-    <PackageReference Include="System.Diagnostics.Debug" Version="4.3.0" />
-    <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.Extensions" Version="4.3.1" />
-    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Paraglider.Data\Paraglider.Data.EntityFrameworkCore\Paraglider.Data.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\..\Paraglider.Domain\Paraglider.Domain.NoSQL\Paraglider.Domain.NoSQL.csproj" />
     <ProjectReference Include="..\..\Paraglider.Infrastructure\Paraglider.Clients.Gorko\Paraglider.Clients.Gorko.csproj" />
   </ItemGroup>
 

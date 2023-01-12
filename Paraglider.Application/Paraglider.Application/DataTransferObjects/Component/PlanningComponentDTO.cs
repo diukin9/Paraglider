@@ -5,10 +5,9 @@ namespace Paraglider.Application.DataTransferObjects;
 
 public class PlanningComponentDTO : IDataTransferObject
 {
-    [JsonIgnore]
-    public string ComponentId { get; set; } = null!;
-
+    [JsonPropertyName("component")]
     public ComponentDTO? Component { get; set; }
 
+    [JsonPropertyName("component_desc")]
     public ComponentDescDTO ComponentDesc { get; set; } = null!;
 }

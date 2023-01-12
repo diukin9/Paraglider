@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj" />
-    <ProjectReference Include="..\Paraglider.Domain.Common\Paraglider.Domain.Common.csproj" />
-    <ProjectReference Include="..\Paraglider.Domain.NoSQL\Paraglider.Domain.NoSQL.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,60 +1,56 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Paraglider.Application.DataTransferObjects;
-using Paraglider.Domain.NoSQL.Entities;
+using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
 using Paraglider.Infrastructure.Common;
-using Paraglider.Infrastructure.Common.Attributes;
 using Paraglider.Infrastructure.Common.Extensions;
-using Paraglider.Infrastructure.Common.MongoDB;
 using Paraglider.Infrastructure.Common.Response;
 using System.ComponentModel.DataAnnotations;
-using static Paraglider.Infrastructure.Common.AppData;
+using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Components.Queries;
 
-public class GetComponentByIdRequest : IRequest<OperationResult<ComponentDTO>>
+public class GetComponentByIdRequest : IRequest<InternalOperation<ComponentDTO>>
 {
-    [Required] 
-    public string Id { get; set; } = null!;
+    [Required]
+    [JsonPropertyName("component_id")]
+    public Guid Id { get; set; }
 
-    public GetComponentByIdRequest(string id)
+    public GetComponentByIdRequest(Guid id)
     {
         Id = id;
     }
 }
 
-public class GetComponentByIdQueryHandler 
-    : IRequestHandler<GetComponentByIdRequest, OperationResult<ComponentDTO>>
+public class GetComponentByIdQueryHandler
+    : IRequestHandler<GetComponentByIdRequest, InternalOperation<ComponentDTO>>
 {
-    private readonly IMongoDataAccess<Component> _components;
+    private readonly IComponentRepository _componentRepository;
     private readonly IMapper _mapper;
 
     public GetComponentByIdQueryHandler(
-        IMongoDataAccess<Component> components,
+        IComponentRepository componentRepository,
         IMapper mapper)
     {
-        _components = components;
+        _componentRepository = componentRepository;
         _mapper = mapper;
     }
 
-    public async Task<OperationResult<ComponentDTO>> Handle(
-        GetComponentByIdRequest request, 
+    public async Task<InternalOperation<ComponentDTO>> Handle(
+        GetComponentByIdRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<ComponentDTO>();
+        var operation = new InternalOperation<ComponentDTO>();
 
         //валидируем полученные данные
         var validation = AttributeValidator.Validate(request);
         if (!validation.IsValid()) return operation.AddError(validation);
 
         //проверяем, что такой компонент существует
-        var component = await _components.FindByIdAsync(request.Id);
-        if (component is null)
-        {
-            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(Component)));
-        }
+        var component = await _componentRepository.FindByIdAsync(request.Id);
+        if (component is null) return operation.AddError("Компонент не найден");
 
         var model = _mapper.Map<ComponentDTO>(component);
-        return operation.AddSuccess(string.Empty, model);
+        return operation.AddSuccess(model);
     }
 }

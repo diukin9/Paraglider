@@ -2,5 +2,6 @@
 
 public class DatabaseInitializerException : Exception 
 {
-    public DatabaseInitializerException(string message = "Error during database initialization execution") : base(message) { }
+    private const string MESSAGE = "Error during database initialization execution";
+    public DatabaseInitializerException(string message = MESSAGE) : base(message) { }
 }

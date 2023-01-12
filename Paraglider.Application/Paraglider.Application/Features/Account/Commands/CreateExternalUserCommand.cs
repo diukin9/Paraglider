@@ -10,14 +10,16 @@ using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Helpers;
 using Paraglider.Infrastructure.Common.Response;
 using System.Security.Claims;
-using static Paraglider.Infrastructure.Common.AppData;
 
 namespace Paraglider.Application.Features.Account.Commands;
 
-public record CreateExternalUserRequest() : IRequest<OperationResult<UserDTO>>;
+public class CreateExternalUserRequest : IRequest<InternalOperation<UserDTO>>
+{
+
+}
 
 public class CreateExternalUserCommandHandler
-    : IRequestHandler<CreateExternalUserRequest, OperationResult<UserDTO>>
+    : IRequestHandler<CreateExternalUserRequest, InternalOperation<UserDTO>>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly UserManager<ApplicationUser> _userManager;
@@ -39,18 +41,15 @@ public class CreateExternalUserCommandHandler
         _mapper = mapper;
     }
 
-    public async Task<OperationResult<UserDTO>> Handle(
+    public async Task<InternalOperation<UserDTO>> Handle(
         CreateExternalUserRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult<UserDTO>();
+        var operation = new InternalOperation<UserDTO>();
 
         //получаем ExternalLoginInfo
         var info = await _signInManager.GetExternalLoginInfoAsync();
-        if (info is null)
-        {
-            return operation.AddError(ExceptionMessages.ObjectNotFound(nameof(ExternalLoginInfo)));
-        }
+        if (info is null) return operation.AddError("Не удалось получить данные пользователя");
 
         //получаем от провайдера необходимые данные для создания пользователя
         var provider = Enum.Parse<AuthProvider>(info.LoginProvider);
@@ -60,8 +59,7 @@ public class CreateExternalUserCommandHandler
 
         if (new[] { externalId, firstName, surname }.Any(string.IsNullOrEmpty))
         {
-            var message = "Не удалось получить основную информацию о пользователе от внешнего провайдера.";
-            return operation.AddError(message);
+            return operation.AddError("Не удалось получить данные пользователя");
         }
 
         //формируем username внешнего пользователя и пытаемся получить почту, если провайдер делится ею
@@ -69,7 +67,7 @@ public class CreateExternalUserCommandHandler
         var email = info.Principal.Claims.GetByClaimType(ClaimTypes.Email);
 
         //пытаемся получить город пользователя на основе его ip
-        var cityName =  await InternetProtocolHelper.GetInfoAsync(_accessor.HttpContext);
+        var cityName = await InternetProtocolHelper.GetInfoAsync(_accessor.HttpContext);
         var city = await _cityRepository.FindByNameAsync(cityName?.City ?? string.Empty);
 
         //создаем пользователя через фабрику
@@ -91,6 +89,6 @@ public class CreateExternalUserCommandHandler
             return operation.AddError(string.Join("; ", identityResult.Errors));
         }
 
-        return operation.AddSuccess(string.Empty, _mapper.Map<UserDTO>(user));
+        return operation.AddSuccess(_mapper.Map<UserDTO>(user));
     }
 }

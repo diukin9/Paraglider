@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Paraglider.Infrastructure\Paraglider.Infrastructure.Common\Paraglider.Infrastructure.Common.csproj" />
-    <ProjectReference Include="..\Paraglider.Domain.Common\Paraglider.Domain.Common.csproj" />
   </ItemGroup>
 
 </Project>

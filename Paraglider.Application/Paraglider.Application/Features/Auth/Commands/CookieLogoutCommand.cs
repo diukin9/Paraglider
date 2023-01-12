@@ -1,30 +1,31 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Identity;
-using Paraglider.Domain.RDB.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Paraglider.Infrastructure.Common.Response;
 
 namespace Paraglider.Application.Features.Auth.Commands;
 
-public class CookieLogoutRequest : IRequest<OperationResult>
+public class CookieLogoutRequest : IRequest<InternalOperation>
 {
 
 }
 
-public class CookieLogoutCommandHandler : IRequestHandler<CookieLogoutRequest, OperationResult>
+public class CookieLogoutCommandHandler : IRequestHandler<CookieLogoutRequest, InternalOperation>
 {
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IHttpContextAccessor _accessor;
 
-    public CookieLogoutCommandHandler(SignInManager<ApplicationUser> signInManager)
+    public CookieLogoutCommandHandler(IHttpContextAccessor accessor)
     {
-        _signInManager = signInManager;
+        _accessor = accessor;
     }
 
-    public async Task<OperationResult> Handle(
+    public async Task<InternalOperation> Handle(
         CookieLogoutRequest request,
         CancellationToken cancellationToken)
     {
-        var operation = new OperationResult();
-        await _signInManager.SignOutAsync();
-        return operation.AddSuccess("Пользователь успешно вышел из аккаунта");
+        var operation = new InternalOperation();
+        var scheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        await _accessor.HttpContext!.SignOutAsync(scheme);
+        return operation.AddSuccess();
     }
 }

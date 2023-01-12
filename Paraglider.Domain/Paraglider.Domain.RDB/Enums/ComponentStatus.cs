@@ -1,9 +1,9 @@
 ﻿namespace Paraglider.Domain.RDB.Enums;
 
-public enum AgreementStatus
+public enum ComponentStatus
 {
-    PreSelection,
-    Agreed,
-    PartiallyPaid,
-    Paid
+    Announced,
+    Available,
+    Hidden,
+    Archived
 }

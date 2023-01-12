@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Paraglider.Application.Features.City.Queries;
+using ActionResult = Paraglider.Infrastructure.Common.Helpers.ActionResult;
 
 namespace Paraglider.Application.Controllers;
 
@@ -20,6 +21,6 @@ public class CityController : ControllerBase
     public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetCitiesQuery(), cancellationToken);
-        return response.IsOk ? Ok(response) : BadRequest(response);
+        return ActionResult.Create(response);
     }
 }
