@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Paraglider.Data.EntityFrameworkCore.Factories;
 using Paraglider.Data.EntityFrameworkCore.Repositories.Interfaces;
@@ -6,8 +8,6 @@ using Paraglider.Domain.RDB.Entities;
 using Paraglider.Infrastructure.Common;
 using Paraglider.Infrastructure.Common.Extensions;
 using Paraglider.Infrastructure.Common.Response;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace Paraglider.Application.Features.Account.Commands;
 
@@ -26,7 +26,7 @@ public class RegisterUserRequest : IRequest<InternalOperation>
     public string FirstName { get; set; }
 
     [Required]
-    [JsonPropertyName("surnamee")]
+    [JsonPropertyName("surname")]
     public string Surname { get; set; }
 
     [Phone]
